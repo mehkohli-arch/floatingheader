@@ -1,6 +1,5 @@
 // =====================================================================
-//  Heart Suspender Clip  -  heart pacifier-clip style, hinge hidden,
-//  with a thickness dial that is independent of opening/closing
+//  Heart Clip  -  heart-shaped suspender-style locking clip
 // ---------------------------------------------------------------------
 //  From the front you only see a heart with a keychain ring at the top.
 //
@@ -12,28 +11,29 @@
 //                  the flowstar trim clips in here and hangs below
 //
 //  Mechanism (side view), all hidden behind the front heart:
-//   * JAW ARM  - pivots on pin B. Its tail (above B) is what the heart's
-//                cam pushes. This part and the heart behave exactly the
-//                same at every dial setting, so opening/closing never
-//                changes.
-//   * BLADE    - the gripping jaw with barbed teeth. It hangs on the same
-//                pin B, between the arm's two cheeks.
-//   * DIAL CAM - a spiral cam on a little shaft through the arm's cheeks,
-//                sitting in front of the blade. Turning its lever sets how
-//                far back the blade sits (0.6 - 5 mm grip). The spiral is
-//                shallow, so the blade's push can't turn it (self-locking).
-//   * HEART    - pivots on pin A behind the arm's tail; its cam locks
-//                past dead-center.
+//   * JAW ARM - pivots on pin B. The heart's cam pushes its tail. The arm
+//               and the heart move exactly the same at every wheel setting.
+//   * BLADE   - the gripping jaw with barbed teeth; hangs on pin B between
+//               the arm's cheeks.
+//   * CAM     - shallow spiral on the dial shaft, in front of the blade.
+//               It sets how far back the blade sits (0.3 - 5 mm trim) and
+//               is self-locking: the blade's push can't turn it.
+//   * WHEEL   - toothed thumbwheel on the dial shaft, at the right-hand
+//               edge between the two hearts.
+//   * HEART   - pivots on pin A behind the arm's tail; its cam locks past
+//               dead-center. Opens by lifting the bottom edge (bevelled
+//               underneath) or pressing the top backward.
 //
-//  Printed parts: BODY, HEART, ARM, BLADE, CAM, DIAL (shaft + lever), CAP,
-//                 2x PIN
-//  PART = "assembly" | "open" | "body" | "heart" | "arm" | "blade" | "cam"
-//         | "dial" | "cap" | "pin" | "plate"
+//  Printed parts: BODY, HEART, ARM, BLADE, CAM, DIAL (shaft), WHEEL, CAP,
+//                 2x PIN.  Print FIT_TEST first.
+//  PART = "assembly" | "open" | "plate" | "fit_test" | "body" | "heart"
+//         | "arm" | "blade" | "cam" | "dial" | "wheel" | "cap" | "pin"
+//  Tuned for a Creality Ender 3 V3 SE printing PETG.
 // =====================================================================
 
 PART   = "plate";
-STEP   = 5;           // preview: dial step 0 (thickest) .. 9 (thinnest)
-CAMROT = 0;           // (checking only)         // preview: trim thickness the dial is set for (0.6 - 5)
+GRIP   = 2.5;         // preview: trim thickness the wheel is set for (0.3 - 5 mm)
+CAMROT = 0;           // (used only by the collision checks)
 
 /* [Heart] */
 heart_w     = 52;
@@ -46,7 +46,7 @@ round_c     = 0.8;
 /* [Keychain ring] */
 ring_hole   = 7;
 ring_wall   = 3.2;
-ring_t      = 3.2;
+ring_t      = 2.6;    // same as the back plate, so the heart can slide down past it during assembly
 
 /* [Jaw] */
 tooth_h     = 1.0;    // big interlocking barbs: canvas is forced into a deep zigzag
@@ -56,7 +56,7 @@ preload     = 0.4;    // how deep the barbs interlock into the trim
 grip_min    = 0.0;    // thinnest setting (with preload)
 grip_max    = 5.2;    // thickest setting
 blade_hw    = 5.9;    // blade half width (0.3 mm side gap: room for first-layer squish)
-blade_t     = 1.8;
+blade_t     = 2.8;    // stiff: carries the full clamping force
 mouth_y     = -6.5;
 bite_y      = -2;
 y_B         = 13;
@@ -64,12 +64,12 @@ B_r         = 3.2;
 cheek_in    = 6.2;
 cheek_out   = 7.5;
 tail_len    = 4.6;
+tail_t      = 3.6;    // the bar the heart's cam presses: thick, it carries ~2x the clamp force
 
 /* [Dial cam] */
 y_K         = 6.5;    // cam shaft height (6.5 below B)
 cam_rmin    = 2.0;
-cam_sweep   = 300;    // degrees of spiral
-n_steps     = 10;     // flat steps on the cam: no creep, 0.5 mm per click (one wheel tooth)
+cam_sweep   = 300;    // degrees of spiral (shallow enough to self-lock; more would let its high end hit the blade at 5 mm)
 shaft_r     = 1.5;
 wheel_r     = 4.0;    // gear wheel root radius (teeth reach wheel_r + 1.1)
 wheel_teeth = 12;     // coarse teeth: flick one tooth = one click (easy with long nails)
@@ -84,7 +84,7 @@ overcenter  = 12;    // firm click: a snag can't flip the heart open
 ear_in      = 7.9;
 ear_out     = 9.6;
 knuck_in    = 10.0;
-knuck_out   = 12.5;
+knuck_out   = 13.5;   // hinge posts 3.5 mm thick
 knuckle_r   = 3.4;
 
 /* [Pins] */
@@ -118,7 +118,7 @@ tilt_k   = 1.35;                              // blade tilts, so the top teeth m
 cam_trav = tilt_k * grip_max * (y_B - y_K) / arm_L;
 cam_rmax = cam_rmin + cam_trav;
 z_K      = bl_front + cam_rmax;                // cam axis
-heart_back = max(tail_back + 2.9, z_K + cam_rmax + 0.35);   // room for the dial cam
+heart_back = max(tail_back + tail_t + 0.4, z_K + cam_rmax + 0.35);   // room for the dial cam
 heart_front= heart_back + heart_t;
 // blade angle for a cam radius d (rotation about B, negative = forward)
 c0       = bl_front - z_B;
@@ -130,13 +130,12 @@ function beta_for(d) = asin((d + c0) / KR) - Kphi;
 function d_for(g)    = cam_rmax - tilt_k * g * (y_B - y_K) / arm_L;
 function cam_r(phi)  = cam_rmin + cam_trav * phi / cam_sweep;
 // dial rotation for a cam radius d: contact direction is ~straight back
-function rho_for(d)  = (-90 + beta_for(d)) - (d - cam_rmin) / cam_trav * cam_sweep;
-// stepped cam: step k has a flat at angle phi_k, distance d_k from the shaft
-half_step = cam_sweep / n_steps / 2;
-function phi_k(k) = (k + 0.5) * cam_sweep / n_steps;
-function d_k(k)   = cam_r(phi_k(k));
-function g_k(k)   = (cam_rmax - d_k(k)) / (tilt_k * (y_B - y_K) / arm_L);   // trim it fits
-function rho_k(k) = (-90 + beta_for(d_k(k))) - phi_k(k);
+// spiral rise per radian, and the small extra reach of a spiral pressing a
+// flat face (its high point sits just past the normal): d + b^2 / 2d
+cam_b    = cam_trav / (cam_sweep * PI / 180);
+function d_eff(d)    = d + cam_b * cam_b / (2 * d);
+function blade_beta(d) = beta_for(d_eff(d));
+function rho_for(d)  = (-90 + blade_beta(d)) - (d - cam_rmin) / cam_trav * cam_sweep;
 
 // ---------------- helpers --------------------------------------------
 module heart_up(w) {
@@ -216,10 +215,10 @@ module arm_cheek2d() {
             hull() {   // flat front edge so the arm prints face-down
                 translate([y_B, z_B]) circle(B_r);
                 translate([y_K, z_K]) circle(shaft_r + 1.3);
-                translate([y_K, tail_back + 2.5 - 0.01]) square([y_A - 4 - y_K, 0.01]);
+                translate([y_K - shaft_r - 1.3, tail_back + tail_t - 0.01]) square([y_A - 4 - y_K + shaft_r + 1.3, 0.01]);
             }
-            hull() { translate([y_B, z_B]) circle(B_r); translate([y_A - 4, tail_back]) square([2, 2.5]); }
-            translate([y_A - 4, tail_back]) square([tail_len, 2.5]);
+            hull() { translate([y_B, z_B]) circle(B_r); translate([y_A - 4, tail_back]) square([2, tail_t]); }
+            translate([y_A - 4, tail_back]) square([tail_len, tail_t]);
         }
         // arm prints face-down, so these holes' tips point to -z
         translate([y_B, z_B]) td2d(r_mov, -90);
@@ -229,7 +228,21 @@ module arm_cheek2d() {
 module arm() {
     for (sx = [-1, 1]) mirror([sx < 0 ? 1 : 0, 0, 0]) x_band(cheek_in, cheek_out) arm_cheek2d();
     // tail bridge across the full width (above the blade hub)
-    x_band(-cheek_out, cheek_out) translate([y_A - 4, tail_back]) square([tail_len, 2.5]);
+    x_band(-cheek_out, cheek_out) translate([y_A - 4, tail_back]) square([tail_len, tail_t]);
+    // thick bosses outside the cheeks around the pin and dial shaft: stiffen
+    // the arm and centre it between the hinge posts (0.4 mm gap each side)
+    for (sx = [-1, 1]) mirror([sx < 0 ? 1 : 0, 0, 0]) x_band(cheek_out - 0.01, knuck_in - 0.4) difference() {
+        intersection() {
+            hull() {   // reaches the arm's flat front face, so it prints face-down
+                translate([y_B, z_B]) circle(B_r);
+                translate([y_K, z_K]) circle(shaft_r + 1.3);
+                translate([y_K - shaft_r - 1.3, tail_back + tail_t - 0.01]) square([y_B + 2.6 - y_K + shaft_r + 1.3, 0.01]);
+            }
+            translate([-50, -50]) square([50 + y_B + 2.6, 100]);    // stays clear of the heart's ears
+        }
+        translate([y_B, z_B]) td2d(r_mov, -90);
+        translate([y_K, z_K]) td2d(shaft_clr + shaft_r, -90);
+    }
 }
 
 // ---------------- BLADE (reference pose = thinnest) ---------------------
@@ -255,12 +268,9 @@ module blade() { yz_extrude(2 * blade_hw) blade2d(); }
 // ---------------- DIAL CAM + SHAFT --------------------------------------
 module cam2d() {
     difference() {
-        // 12 flats: whichever flat faces the blade is pressed square-on, so a
-        // pull on the trim can't turn the cam (no creep)
-        polygon(concat(
-            [for (k = [0 : n_steps - 1]) for (s = [-1, 1])
-                d_k(k) / cos(half_step) * [cos(phi_k(k) + s * half_step), sin(phi_k(k) + s * half_step)]],
-            [cam_rmin * [cos(359), sin(359)]]));
+        // shallow spiral: friction holds it, so a pull can't turn it
+        polygon(concat([for (a = [0 : 3 : cam_sweep]) cam_r(a) * [cos(a), sin(a)]],
+                       [cam_rmin * [cos(359), sin(359)]]));
         // D-bore
         intersection() { circle(shaft_r + bore_clr); translate([-5, -5]) square([5 + shaft_r - 0.25 + bore_clr, 10]); }
     }
@@ -331,19 +341,6 @@ module cap() {
     }
 }
 
-// Spacer rings on pin B: keep the jaw arm centred between the hinge posts
-washer_t  = knuck_in - cheek_out - 0.4;
-module washer() {
-    difference() {
-        cylinder(r = 2.6, h = washer_t);
-        translate([0, 0, -1]) cylinder(r = r_mov, h = washer_t + 2);
-    }
-}
-module washers_asm() {
-    for (sx = [-1, 1]) translate([sx > 0 ? cheek_out + 0.2 : -cheek_out - 0.2 - washer_t, y_B, z_B])
-        rotate([0, 90, 0]) washer();
-}
-
 // ---------------- FRONT HEART (pivot A, closed pose) -------------------
 module heart() {
     c = round_c; steps = 4;
@@ -395,8 +392,8 @@ module pin() {
 module heart_at(a) { rot_about([y_A, z_A], a) heart(); }
 // the whole jaw group (arm + blade + cam + dial) for a grip setting g and
 // an extra opening angle (negative = open)
-module jaw_group(k, open_a = 0) {
-    d = d_k(k); b = beta_for(d); r = rho_k(k);
+module jaw_group(g, open_a = 0) {
+    d = d_for(g); b = blade_beta(d); r = rho_for(d);
     rot_about([y_B, z_B], open_a) {
         color("lightpink") arm();
         color("pink") rot_about([y_B, z_B], b) blade();
@@ -408,44 +405,40 @@ module print_plate() {
     body();
     translate([heart_w + 4, 0, heart_front]) mirror([0, 0, 1]) heart();
     // small parts to the left of the body
-    translate([-heart_w/2 - 12, 0, tail_back + 2.5]) mirror([0, 0, 1]) arm();          // face down
+    translate([-heart_w/2 - 14, 0, tail_back + tail_t]) mirror([0, 0, 1]) arm();      // face down
     translate([-heart_w/2 - 18, -44, blade_hw]) rotate([0, 90, 0]) blade();          // on its side
     translate([-heart_w/2 - 14, -14, 0]) cam_print();                                 // flat
-    translate([-heart_w/2 - 28, -28, 0]) dial_print();
+    translate([-heart_w/2 - 22, -58, 0]) dial_print();
     translate([-heart_w/2 - 50, -14, 0]) wheel_print();
     translate([-heart_w/2 - 32, -14, 0]) cap();
     for (i = [0, 1]) translate([0, heart_pt - 6 - i * 5, (pin_d - 0.3)/2]) pin();
-    for (i = [0, 1]) translate([-heart_w/2 - 34 - i * 7, -40, 0]) washer();
 }
 
 if (PART == "assembly") {
-    color("hotpink") body(); jaw_group(STEP); color("crimson") heart();
+    color("hotpink") body(); jaw_group(GRIP); color("crimson") heart();
     color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
-    color("lightpink") washers_asm();
 } else if (PART == "open") {
-    color("hotpink") body(); jaw_group(STEP, -12); color("crimson") heart_at(-65);
+    color("hotpink") body(); jaw_group(GRIP, -12); color("crimson") heart_at(-65);
     color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
 } else if (PART == "body")      body();
 else if (PART == "heart")       translate([0, 0, heart_front]) mirror([0, 0, 1]) heart();
 else if (PART == "heart_asm")   heart();
-else if (PART == "arm")         translate([0, 0, tail_back + 2.5]) mirror([0, 0, 1]) arm();   // face down
+else if (PART == "arm")         translate([0, 0, tail_back + tail_t]) mirror([0, 0, 1]) arm();   // face down
 else if (PART == "arm_asm")     arm();
 else if (PART == "blade")       translate([0, 0, blade_hw]) rotate([0, 90, 0]) blade();
-else if (PART == "blade_asm")   rot_about([y_B, z_B], beta_for(d_k(STEP))) blade();
+else if (PART == "blade_asm")   rot_about([y_B, z_B], blade_beta(d_for(GRIP))) blade();
 else if (PART == "cam")         cam_print();
-else if (PART == "cam_asm")     cam(rho_k(STEP));
+else if (PART == "cam_asm")     cam(rho_for(d_for(GRIP)));
 else if (PART == "dial")        dial_print();
 else if (PART == "fit_test")    fit_test();
-else if (PART == "washer")      washer();
 else if (PART == "cam_rot")     cam(CAMROT);
 else if (PART == "dial_rot")    dial(CAMROT);
-else if (PART == "washers_asm") washers_asm();
-else if (PART == "dial_asm")    dial(rho_k(STEP));
+else if (PART == "dial_asm")    dial(rho_for(d_for(GRIP)));
 else if (PART == "wheel")       wheel_print();
 else if (PART == "cap")         cap();
 else if (PART == "pin")         translate([0, 0, (pin_d - 0.3)/2]) pin();
 else                            print_plate();
 
-echo(STEPS = [for (k = [0 : n_steps - 1]) [k, round(g_k(k) * 100) / 100]]);
+echo(str("spiral rise ", cam_b, " mm/rad; pressure angle at r=2: ", atan(cam_b / cam_rmin), " deg"));
 echo(str("cam ", cam_rmin, "-", cam_rmax, " z_K=", z_K, " beta(thin)=", beta_for(d_for(grip_min)),
          " beta(thick)=", beta_for(d_for(grip_max)), " heart_back=", heart_back, " heart_front=", heart_front));
