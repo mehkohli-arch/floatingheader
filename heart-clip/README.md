@@ -33,7 +33,7 @@ With the heart open, the mouth is always at least 1 mm wider than the thickest t
 
 ## Pulling and tugging
 - The teeth are one-way barbs on both jaws: the trim slides in easily, and a pull digs them in. Canvas weave grips these very well.
-- A pull can't flip the heart open (the cam is past center) or turn the dial (it's locked by the closed jaw).
+- A pull can't flip the heart open, because the cam is past center. The dial is held by its detent clicks. If it ever creeps on positions 2–4, tell me and I'll deepen the detents.
 - **Estimate, not tested:** about 6–16 N of clamping and well over 30 kg of strength in the ring, pins and jaw. Give it a few firm tugs before trusting it.
 
 ## Parts (`stl/`)
@@ -53,7 +53,7 @@ The clip is 52 mm wide, about 64 mm tall with the ring, and about 18 mm thick.
 ## Assembly
 1. Put the jaw between the lower knuckles, blade pointing down.
 2. Slide the dial pin in from the **right** side (the big hole), lever outside, through the jaw and out of the small hole on the left.
-   It only goes through the jaw with the lever pointing forward.
+   Wiggle the lever until the off-center middle lines up with the jaw's hole and slides through.
 3. Press the cap onto the pin's left end with a drop of CA glue. Glue the cap to the pin only, not to the body, so the dial can still turn.
 4. Put the heart's hinge between the upper knuckles, behind the jaw's tail, and push pin A through. Add a drop of glue on pin A's ends.
 
