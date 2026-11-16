@@ -20,7 +20,11 @@
 //
 //  Thickness: swap the front jaw (push pin B out). Each size covers 1 mm,
 //  and the blade bends a little like the steel in a metal clip:
-//      JAW_SIZE 0 = 0-1 mm   1 = 1-2 mm   2 = 2-3 mm   3 = 3-4 mm
+//      JAW_SIZE 0 = 0-1 mm   1 = 1-2 mm   2 = 2-3 mm
+//      JAW_SIZE 3 = 3-4 mm   4 = 4-5 mm   5 = 5-6 mm (e.g. folded fabric)
+//
+//  Teeth on both jaws are one-way barbs: the flat face points DOWN, so the
+//  flowstar slides in easily but a pull digs the teeth in harder.
 //
 //  Printed parts: BODY, HEART, JAW, 2x PIN
 //  PART = "assembly" | "open" | "body" | "jaw" | "heart" | "pin" | "plate"
@@ -43,9 +47,9 @@ ring_wall   = 3.2;
 ring_t      = 3.2;
 
 /* [Jaw] */
-tooth_h     = 0.6;
-ridge_h     = 0.4;
-preload     = 0.4;
+tooth_h     = 0.7;
+ridge_h     = 0.6;
+preload     = 0.6;
 size_step   = 1.0;
 jaw_hw      = 7.5;    // grip width / 2
 jaw_t       = 2.5;
@@ -139,7 +143,8 @@ module back_teeth() {
     pitch = 1.2;
     for (i = [0 : 5])
         translate([0, bite_y + (i - 2.5) * pitch, plate_t - 0.01])
-            yz_extrude(2 * jaw_hw) polygon([[-pitch/2, 0], [pitch/2, 0], [0, tooth_h]]);
+            yz_extrude(2 * jaw_hw)   // barb: steep face down, ramp up
+                polygon([[-pitch/2, 0], [-pitch/2 + 0.15, tooth_h], [pitch/2, 0]]);
 }
 module body() {
     difference() {
@@ -172,7 +177,7 @@ module jaw_profile(size) {   // (y,z)
                      [mouth_y, bb + blade_t], [mouth_y, bb + 0.9]]);
             for (i = [0 : 5])
                 translate([bite_y + (i - 2.5) * 1.2 + 0.6, bb + 0.01])
-                    polygon([[-0.6, 0], [0.6, 0], [0, -ridge_h]]);
+                    polygon([[-0.6, 0], [-0.45, -ridge_h], [0.6, 0]]);   // barb
             // web from hub up to the tail, and the tail the cam pushes on
             hull() {
                 translate([y_B, z_B]) circle(B_r);
@@ -233,7 +238,7 @@ module jaw_print(size) { translate([0, 0, jaw_hw]) rotate([0, 90, 0]) jaw(size);
 module print_plate() {
     body();
     translate([heart_w + 4, 0, heart_front]) mirror([0, 0, 1]) heart();
-    for (i = [0 : 3]) translate([-heart_w/2 - 18 - i * 15, 6, 0]) jaw_print(i);
+    for (i = [0 : 5]) translate([-heart_w/2 - 18 - (i % 3) * 15, i < 3 ? 6 : -32, 0]) jaw_print(i);
     for (i = [0, 1]) translate([0, heart_pt - 6 - i * 5, (pin_d - 0.3)/2]) pin();
 }
 
