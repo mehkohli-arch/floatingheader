@@ -8,55 +8,58 @@ Hang it from your bag by the ring. The jaw mouth opens downward between the fron
 ![how it hangs](images/how_it_hangs.png)
 
 ## How it works
-- **Body:** a heart-shaped back plate with barbed teeth, two pairs of hinge knuckles and the keychain ring.
-- **Front jaw:** pivots on the dial pin. Below the pin it's the gripping blade; above the pin it has a short tail.
-- **Front heart:** the locking lever, on pin A behind the jaw's tail. Its cam pushes the tail forward, which swings the blade back onto the teeth.
-  Lift the heart's point out and up to release the jaw, push the trim up into the mouth, then fold the heart flat.
-  The cam rolls past dead-center and locks; a pull on the trim pushes the heart further closed.
+- **Jaw arm:** pivots on pin B. Its tail is what the heart's cam pushes.
+- **Front heart:** the locking lever, on pin A. Lift its point out and up to open, fold it flat to lock. The cam rolls past dead-center, so a pull on the trim pushes the heart further closed.
+- **Blade:** the gripping jaw with one-way barbed teeth. It hangs on the same pin B, between the arm's two cheeks.
+- **Dial cam:** a small spiral cam on a shaft through the arm, in front of the blade. Its lever sets how far back the blade sits.
 
-## Thickness dial (one jaw, nothing to swap)
-The lower hinge pin is a **dial pin** with an off-center middle. A small lever on its right-hand end, hidden between the two hearts, clicks into 5 positions.
-Each click moves the jaw's pivot, which shifts the gripping edge about 1.15 mm. Set it with the heart open.
+**The dial never affects opening or closing.** The heart and the jaw arm move exactly the same at every dial setting; the dial only moves the blade inside the arm.
+I checked this in the model at 0.6, 1.5, 2.5, 3.5, 4.5 and 5.0 mm: same heart motion, same lock, no collisions.
 
-![dial](images/dial_side.png)
+## Setting the dial (do it once for your trim)
+With the heart open, the dial lever is on the right side of the jaw arm. Turn it so the blade sits further back for thin trim, or further forward for thick trim.
+Then close the heart on the trim: it should snap down firmly. Too stiff to close? Turn the dial a little toward thick. Trim slips? Turn it a little toward thin.
+The dial is continuous (no clicks) and covers about **0.6–5 mm**, from a single canvas layer up to the trim folded in half.
+Its spiral is shallow enough that the trim's push can't turn it.
 
-| Dial position | Lever points | Grips |
-|---|---|---|
-| 1 | up | 0 – 0.6 mm (thin fabric) |
-| 2 | | 0.6 – 1.7 mm (single canvas layer, hemmed edge) |
-| 3 | forward | 1.7 – 2.9 mm |
-| 4 | | 2.9 – 4.0 mm (folded canvas) |
-| 5 | down | 4.0 – 5.2 mm (folded canvas over a seam) |
+| Trim | Grip gap the model gives |
+|---|---|
+| 0.6 mm | 0.14 mm (squeezed) |
+| 1.5 mm | 1.07 mm |
+| 2.5 mm | 2.07 mm |
+| 3.5 mm | 3.05 mm |
+| 4.5 mm | 4.00 mm |
+| 5.0 mm | 4.47 mm |
 
-Within each position, the jaw blade bends slightly, like the steel in a metal clip, so the heart always snaps fully flat.
-With the heart open, the mouth is always at least 1 mm wider than the thickest trim for that position.
+With the heart open, the mouth is always 2.3+ mm wider than the trim it's set for.
 
 ## Pulling and tugging
-- The teeth are one-way barbs on both jaws: the trim slides in easily, and a pull digs them in. Canvas weave grips these very well.
-- A pull can't flip the heart open, because the cam is past center. The dial is held by its detent clicks. If it ever creeps on positions 2–4, tell me and I'll deepen the detents.
-- **Estimate, not tested:** about 6–16 N of clamping and well over 30 kg of strength in the ring, pins and jaw. Give it a few firm tugs before trusting it.
+- Barbed teeth on both jaws: the trim slides in easily, and a pull digs the teeth in. Canvas weave grips these well.
+- A pull can't flip the heart open, because its cam is past center. It also can't turn the dial, because the spiral is self-locking.
+- **Estimate, not tested:** the ring, pins, arm and blade are each far stronger than the grip, so a hard yank pulls the trim out of the teeth before anything breaks. Give it a few firm tugs before trusting it.
 
 ## Parts (`stl/`)
 | File | Print orientation |
 |---|---|
-| `heart_clip_all_parts.stl` | everything laid out, 122 × 81 mm |
+| `heart_clip_all_parts.stl` | everything laid out, 143 × 89 mm |
 | `body.stl` | back flat on bed |
 | `heart.stl` | front face down |
-| `jaw.stl` | standing on edge (as exported) |
-| `dial.stl` | standing up, lever on the bed (as exported). Use a brim |
+| `arm.stl` | front face down |
+| `blade.stl` | on its side |
+| `cam.stl` | flat |
+| `dial.stl` | standing, lever on the bed. Use a brim |
 | `cap.stl` | flat |
-| `pin.stl` | lying flat |
+| `pin.stl` | lying flat. **Print 2** (pins A and B) |
 
-No supports are needed. **Print the jaw and dial in PETG** because the jaw blade has to spring. The body and heart can be PLA. Use 0.2 mm layers, 4 walls and 40%+ infill.
-The clip is 52 mm wide, about 64 mm tall with the ring, and about 18 mm thick.
+No supports are needed. PETG is recommended for the arm, blade, cam and dial; PLA is fine for the body and heart. Use 0.2 mm layers, 4 walls and 40%+ infill.
+The clip is 52 mm wide, about 64 mm tall with the ring, and about 19 mm thick.
 
 ## Assembly
-1. Put the jaw between the lower knuckles, blade pointing down.
-2. Slide the dial pin in from the **right** side (the big hole), lever outside, through the jaw and out of the small hole on the left.
-   Wiggle the lever until the off-center middle lines up with the jaw's hole and slides through.
-3. Press the cap onto the pin's left end with a drop of CA glue. Glue the cap to the pin only, not to the body, so the dial can still turn.
-4. Put the heart's hinge between the upper knuckles, behind the jaw's tail, and push pin A through. Add a drop of glue on pin A's ends.
+1. Put the blade between the arm's cheeks, teeth facing back, and set both between the lower knuckles. Push a pin through (pin B).
+2. Put the cam between the cheeks, in front of the blade. Slide the dial shaft in from the right (lever outside), through the cheek, cam and other cheek. The D-shaped shaft keys into the cam.
+3. Glue the cap onto the shaft's left end. Glue only the cap to the shaft, so the dial can still turn.
+4. Put the heart's hinge between the upper knuckles, behind the arm's tail, and push the second pin through (pin A). Add a drop of glue on the pin ends.
 
 ## Customising (`heart_suspender_clip.scad`)
-`PART` = `assembly` | `open` | `body` | `heart` | `jaw` | `dial` | `cap` | `pin` | `plate`, and `DIAL` = 0–4 for previews.
-Useful parameters are `ecc` (dial range), `dial_ang` (click positions), `preload`, `blade_t` (grip stiffness), `heart_w` and `ring_hole`.
+`PART` = `assembly` | `open` | `body` | `heart` | `arm` | `blade` | `cam` | `dial` | `cap` | `pin` | `plate`, and `GRIP` sets the trim thickness for previews.
+Useful parameters are `grip_max` (dial range), `preload`, `heart_w` and `ring_hole`.
