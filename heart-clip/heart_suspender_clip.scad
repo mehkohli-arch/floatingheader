@@ -39,11 +39,17 @@ pin_clr_body = 0.15;  // pin clearance in cheeks (snug)
 pin_clr_lever= 0.25;  // pin clearance in lever (free spin)
 hub_wall     = 2.0;   // lever wall around pin
 cheek_r      = 4.0;   // cheek knuckle radius around the pin
-lever_half   = 12.5;  // half-width of lever neck = grip width / 2
+lever_half   = 9.6;   // half-width of the cam = grip width / 2
 side_clr     = 0.4;   // gap between lever neck and cheeks
 tooth_h      = 0.6;   // body tooth height
-grip_gap     = 0.6;   // cam-tip to tooth-crest gap when closed
-open_gap     = 3.0;   // jaw gap with lever open
+preload      = 1.0;   // how far the cam pushes the spring jaw with nothing in it
+open_gap     = 4.5;   // free jaw gap with the heart flipped open
+
+/* [Spring jaw] -- makes the clip fit many thicknesses (0 to ~5 mm) */
+tongue_t     = 1.5;   // spring tongue thickness (thinner = softer)
+tongue_w     = 18;    // spring tongue width
+tongue_top   = 31;    // where the tongue joins the heart (longer = more travel)
+tongue_slot  = 0.8;   // slot around the tongue
 overcenter   = 10;    // degrees the cam rests past dead-center
 
 $fn = 64;
@@ -56,9 +62,9 @@ dip      = 3;                            // front heart's point sits this far be
 y_b      = y_p - dip - lever_inset*sqrt(2); // body heart point
 r_hole_l = pin_d/2 + pin_clr_lever;
 rh       = r_hole_l + hub_wall;          // hub radius
-crest    = plate_t + tooth_h;
+crest    = tongue_t + tooth_h;
 z_p      = crest + open_gap + rh;        // hinge axis z
-R_cam    = z_p - crest - grip_gap;       // cam radius to tip
+R_cam    = z_p - crest + preload;        // cam radius to tip
 z_front  = z_p + rh;                     // front face of lever
 xc       = lever_half + side_clr;        // cheek inner face
 y_wide   = y_p + cheek_r + 0.6;          // where lever widens past cheeks
@@ -144,14 +150,29 @@ module cheeks() {
     }
 }
 
-module teeth() {
+module teeth() {          // on the spring tongue
     pitch = 1.2;
     n = 6;
     yc = y_p + R_cam * cam_dir[0];          // where the cam tip lands
     for (i = [0 : n - 1])
-        translate([0, yc + (i - (n-1)/2) * pitch, plate_t - 0.01])
-            yz_extrude(2 * xc - 0.4)
+        translate([0, yc + (i - (n-1)/2) * pitch, tongue_t - 0.01])
+            yz_extrude(tongue_w)
                 polygon([[-pitch/2, 0], [pitch/2, 0], [0, tooth_h]]);
+}
+
+// slot that frees the tongue + thinning so it flexes backward
+module tongue_cut() {
+    tw = tongue_w/2;
+    // U-slot through the plate
+    difference() {
+        translate([-tw - tongue_slot, tab_y0 - 1, -1])
+            cube([2*(tw + tongue_slot), tongue_top + tongue_slot - tab_y0 + 1, 10]);
+        translate([-tw, tab_y0 - 2, -2]) cube([2*tw, tongue_top + tongue_slot - tab_y0 + 5, 12]);
+    }
+    // thin the tongue (front side) so it is springy
+    translate([-tw - 0.01, tab_y0 - 1, tongue_t]) cube([2*tw + 0.02, tongue_top - tab_y0 + 1, 5]);
+    // lead-in chamfer on the tongue tip so a thick edge can push its way in
+    translate([0, tab_y0, tongue_t]) rotate([45, 0, 0]) cube([2*tw + 0.02, 2.5, 2.5], center = true);
 }
 
 module body() {
@@ -160,10 +181,11 @@ module body() {
             soft_prism(plate_t) outline2d();
             soft_prism(ring_t) ring2d();
             cheeks();
-            teeth();
         }
         ring_hole_cut();
+        tongue_cut();
     }
+    teeth();
 }
 
 // ---------------- LEVER (modelled closed) ----------------------------
@@ -192,8 +214,9 @@ module lever() {
                 yz_extrude(2 * lever_half) translate([y_p, z_p]) circle(rh + 0.01);
             }
             // stop bump: lands on the back plate just past over-center
-            translate([0, y_b + 0.62 * H, plate_t + 0.4])
-                cylinder(d1 = 3, d2 = 6, h = z_front - lever_t - plate_t - 0.4 + 0.01);
+            for (sx = [-1, 1])   // land beside the tongue, on solid plate
+                translate([sx * (tongue_w/2 + tongue_slot + 4), y_b + 0.62 * H, plate_t + 0.4])
+                    cylinder(d1 = 3, d2 = 6, h = z_front - lever_t - plate_t - 0.4 + 0.01);
         }
         translate([0, y_p, z_p]) teardrop_x(r_hole_l, 100, -1);
         // comb teeth across the cam tip
