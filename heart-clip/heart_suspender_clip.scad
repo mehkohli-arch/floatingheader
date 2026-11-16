@@ -48,13 +48,14 @@ ring_wall   = 3.2;
 ring_t      = 3.2;
 
 /* [Jaw] */
-tooth_h     = 0.7;
-ridge_h     = 0.6;
-preload     = 0.5;    // squeeze at the thinnest dial setting
+tooth_h     = 1.0;    // big interlocking barbs: canvas is forced into a deep zigzag
+tooth_p     = 2.0;    // tooth pitch
+ridge_h     = 1.0;
+preload     = 1.0;    // how deep the barbs interlock into the trim
 grip_min    = 0.0;    // thinnest setting (with preload)
 grip_max    = 5.2;    // thickest setting
 blade_hw    = 6.0;    // blade half width (grip width 12 mm)
-blade_t     = 2.0;
+blade_t     = 1.8;
 mouth_y     = -6.5;
 bite_y      = -2;
 y_B         = 13;
@@ -74,7 +75,7 @@ lever_len   = 4.5;
 y_A         = 21;
 A_r         = 3.2;
 open_lift   = 2.4;
-overcenter  = 8;
+overcenter  = 12;    // firm click: a snag can't flip the heart open
 ear_in      = 7.9;
 ear_out     = 9.6;
 knuck_in    = 10.0;
@@ -97,8 +98,6 @@ z_B      = plate_t + 0.3 + B_r;
 z_A      = plate_t + 0.3 + A_r;
 R_cam    = A_r + open_lift;
 tail_back= z_A + R_cam;
-heart_back = tail_back + 2.5 + 1.4;    // room for the dial cam
-heart_front= heart_back + heart_t;
 cam_dir  = [-sin(overcenter), cos(overcenter)];
 r_mov    = pin_d/2 + pin_clr_mov;
 
@@ -110,6 +109,8 @@ tilt_k   = 1.35;                              // blade tilts, so the top teeth m
 cam_trav = tilt_k * grip_max * (y_B - y_K) / arm_L;
 cam_rmax = cam_rmin + cam_trav;
 z_K      = bl_front + cam_rmax;                // cam axis
+heart_back = max(tail_back + 2.9, z_K + cam_rmax + 0.35);   // room for the dial cam
+heart_front= heart_back + heart_t;
 // blade angle for a cam radius d (rotation about B, negative = forward)
 c0       = bl_front - z_B;
 KBy      = y_K - y_B;  KBz = z_K - z_B;
@@ -161,11 +162,10 @@ module knuckle_pair() {
     hull() { translate([y_B, z_B]) circle(knuckle_r); translate([y_B - knuckle_r, 0]) square([2*knuckle_r, 0.01]); }
 }
 module back_teeth() {
-    pitch = 1.2;
-    for (i = [0 : 5])
-        translate([0, bite_y + (i - 2.5) * pitch, plate_t - 0.01])
-            yz_extrude(2 * blade_hw)
-                polygon([[-pitch/2, 0], [-pitch/2 + 0.15, tooth_h], [pitch/2, 0]]);
+    for (i = [0 : 4])
+        translate([0, bite_y + (i - 2) * tooth_p, plate_t - 0.01])
+            yz_extrude(2 * blade_hw)     // barb: steep face down, ramp up
+                polygon([[-tooth_p/2, 0], [-tooth_p/2 + 0.25, tooth_h], [tooth_p/2, 0]]);
 }
 module body() {
     difference() {
@@ -215,9 +215,9 @@ module blade2d() {
             }
             polygon([[mouth_y + 1.2, bl_back], [y_K + 3, bl_back], [y_K + 3, bl_front],
                      [mouth_y, bl_front], [mouth_y, bl_back + 0.9]]);
-            for (i = [0 : 5])
-                translate([bite_y + (i - 2.5) * 1.2 + 0.6, bl_back + 0.01])
-                    polygon([[-0.6, 0], [-0.45, -ridge_h], [0.6, 0]]);
+            for (i = [0 : 4])     // barbs sit between the body's teeth
+                translate([bite_y + (i - 2) * tooth_p + tooth_p/2, bl_back + 0.01])
+                    polygon([[-tooth_p/2, 0], [-tooth_p/2 + 0.25, -ridge_h], [tooth_p/2, 0]]);
         }
         translate([y_B, z_B]) circle(r_mov);
     }
@@ -270,9 +270,11 @@ module heart() {
                 translate([y_A, z_A]) circle(A_r);
                 translate([y_A - 5, heart_back]) square([8, 0.01]);
             }
-            for (sx = [-1, 1])
-                translate([sx * 12, 2, plate_t + 0.4])
-                    cylinder(d1 = 2.4, d2 = 4.4, h = heart_back - plate_t - 0.4 + 0.01);
+            // hidden stop tabs on the ears: rest on the back plate when closed
+            for (sx = [-1, 1]) mirror([sx < 0 ? 1 : 0, 0, 0]) x_band(ear_in, ear_out) hull() {
+                translate([y_A, z_A]) circle(A_r);
+                translate([y_A - 6, plate_t + 0.12]) square([2.5, 0.01]);
+            }
         }
         translate([0, y_A, z_A]) teardrop_x(r_mov, 100, -1);
         for (i = [0 : steps - 1])
