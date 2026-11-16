@@ -61,6 +61,7 @@ A_r         = 3.2;
 open_lift   = 1.6;   // jaw swing at the cam when open (~x3 at the mouth)
 overcenter  = 8;     // degrees the cam rests past dead-center
 ear_hw      = 10.6;  // half width of heart hub / cam
+ear_in      = 5.0;   // ears run from here out to ear_hw (hidden behind the lobes)
 wall_in     = 11.0;  // inner face of the side knuckles
 knuckle_r   = 3.4;
 
@@ -82,7 +83,7 @@ z_A      = jaw_front + open_lift + A_r;
 R_cam    = z_A - jaw_front;
 heart_back  = z_A + A_r + 0.4;
 heart_front = heart_back + heart_t;
-heart_top   = y_A - 1;
+heart_top   = y_A + 0.5;                  // lobes rise just past the hinge
 heart_pt    = heart_top - heart_H;
 cam_dir  = [sin(overcenter), -cos(overcenter)];
 r_mov    = pin_d/2 + pin_clr_mov;
@@ -126,10 +127,15 @@ module knuckles() {
     for (sx = [-1, 1])
         intersection() {
             translate([sx > 0 ? wall_in : -block_w/2, -1, -1]) cube([block_w/2 - wall_in, 100, 100]);
-            yz_extrude(100) hull() {
-                translate([y_A, z_A]) circle(knuckle_r);
-                translate([y_B, z_B]) circle(knuckle_r);
-                translate([y_A - knuckle_r, 0]) square([y_B - y_A + 2*knuckle_r, 0.01]);
+            yz_extrude(100) {      // two separate knuckles so the lobes can swing past
+                hull() {
+                    translate([y_A, z_A]) circle(knuckle_r);
+                    translate([y_A - knuckle_r, 0]) square([2*knuckle_r, 0.01]);
+                }
+                hull() {
+                    translate([y_B, z_B]) circle(knuckle_r);
+                    translate([y_B - knuckle_r, 0]) square([2*knuckle_r, 0.01]);
+                }
             }
         }
 }
@@ -184,12 +190,7 @@ module jaw_profile(size) {   // (y,z)
 module jaw(size = JAW_SIZE) { yz_extrude(2 * jaw_hw) jaw_profile(size); }
 
 // ---------------- HEART LEVER (closed pose) ----------------------------
-module heart_outline() {
-    union() {
-        heart2d();
-        rrect(-ear_hw, y_A - 6, 2 * ear_hw, 7, 2);   // hinge bar above the cleft
-    }
-}
+module heart_outline() { heart2d(); }
 module heart() {
     c = round_c; steps = 4;
     difference() {
@@ -200,11 +201,14 @@ module heart() {
                     translate([y_A, z_A]) circle(A_r);
                     translate([y_A, z_A] + (R_cam - 1) * cam_dir) circle(1);
                 }
-                hull() {
-                    translate([y_A, z_A]) circle(A_r);
-                    translate([y_A - 6, heart_back]) square([7, heart_t]);
-                }
             }
+            // two hidden ears join the hub to the back of the lobes
+            for (sx = [-1, 1])
+                translate([sx * (ear_in + ear_hw)/2, 0, 0])
+                    yz_extrude(ear_hw - ear_in) hull() {
+                        translate([y_A, z_A]) circle(A_r);
+                        translate([y_A - 6, heart_back]) square([6 + heart_top - 0.8 - y_A, 0.01]);
+                    }
             for (sx = [-1, 1])
                 translate([sx * 12.3, 5, plate_t + 0.4])
                     cylinder(d1 = 2.4, d2 = 4.4, h = heart_back - plate_t - 0.4 + 0.01);
@@ -244,7 +248,7 @@ if (PART == "assembly") {
     color("hotpink") body(); color("lightpink") jaw(); color("crimson") heart();
     color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
 } else if (PART == "open") {
-    color("hotpink") body(); color("lightpink") jaw_at(-10); color("crimson") heart_at(-80);
+    color("hotpink") body(); color("lightpink") jaw_at(-10); color("crimson") heart_at(-100);
     color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
 } else if (PART == "body")      body();
 else if (PART == "jaw")         jaw_print(JAW_SIZE);

@@ -3,7 +3,7 @@
 Modelled on the classic metal heart suspender / pacifier clip. A small jaw block has a keychain ring on top, and the heart hangs below it as the locking lever.
 Hang it from your bag by the ring. The jaw mouth opens downward behind the heart, and the flowstar clips in there and hangs below.
 
-![closed](images/closed.png) ![open](images/open.png)
+![closed](images/closed.png) ![angle](images/closed_angle.png) ![open](images/open.png)
 
 ![how it hangs](images/how_it_hangs.png)
 
