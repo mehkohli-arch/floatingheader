@@ -54,7 +54,7 @@ ridge_h     = 1.0;
 preload     = 1.0;    // how deep the barbs interlock into the trim
 grip_min    = 0.0;    // thinnest setting (with preload)
 grip_max    = 5.2;    // thickest setting
-blade_hw    = 6.0;    // blade half width (grip width 12 mm)
+blade_hw    = 5.9;    // blade half width (0.3 mm side gap: room for first-layer squish)
 blade_t     = 1.8;
 mouth_y     = -6.5;
 bite_y      = -2;
@@ -84,8 +84,12 @@ knuckle_r   = 3.4;
 
 /* [Pins] */
 pin_d       = 3.0;
-pin_clr_wall= 0.15;
-pin_clr_mov = 0.25;
+// Tuned for Creality Ender 3 V3 SE + PETG (holes print a little small and
+// PETG oozes). Print fit_test first and adjust if needed.
+pin_clr_wall= 0.20;   // pins in the body's hinge posts (snug)
+pin_clr_mov = 0.30;   // pins in parts that swing (free)
+shaft_clr   = 0.25;   // dial shaft in the arm
+bore_clr    = 0.20;   // dial shaft in the cam's D-bore
 
 $fn = 64;
 
@@ -135,8 +139,10 @@ module heart_up(w) {
 module heart2d() { translate([0, heart_pt]) heart_up(heart_w); }
 module teardrop_x(r, len, up = 1) {
     rotate([0, 90, 0]) linear_extrude(height = len, center = true)
-        rotate(up > 0 ? 180 : 0) union() { circle(r); rotate(45) square(r); }
+        rotate(up > 0 ? 90 : -90) td_base(r);   // tip points +z (up=1) or -z (up=-1)
 }
+module td_base(r) { union() { circle(r); rotate(45) square(r); } }   // tip toward +y
+module td2d(r, ang) { rotate(ang - 90) td_base(r); }                  // 2D teardrop, tip at angle
 module yz_extrude(len) {
     rotate([90, 0, 90]) linear_extrude(height = len, center = true) children();
 }
@@ -194,8 +200,9 @@ module arm_cheek2d() {
             hull() { translate([y_B, z_B]) circle(B_r); translate([y_A - 4, tail_back]) square([2, 2.5]); }
             translate([y_A - 4, tail_back]) square([tail_len, 2.5]);
         }
-        translate([y_B, z_B]) circle(r_mov);
-        translate([y_K, z_K]) circle(shaft_r + 0.15);
+        // arm prints face-down, so these holes' tips point to -z
+        translate([y_B, z_B]) td2d(r_mov, -90);
+        translate([y_K, z_K]) td2d(shaft_r + shaft_clr, -90);
     }
 }
 module arm() {
@@ -230,29 +237,63 @@ module cam2d() {
         polygon([for (a = [0 : 5 : cam_sweep]) cam_r(a) * [cos(a), sin(a)],
                  cam_rmin * [cos(359), sin(359)]]);
         // D-bore
-        intersection() { circle(shaft_r + 0.12); translate([-5, -5]) square([5 + shaft_r - 0.25 + 0.12, 10]); }
+        intersection() { circle(shaft_r + bore_clr); translate([-5, -5]) square([5 + shaft_r - 0.25 + bore_clr, 10]); }
     }
 }
 module cam(rho) { translate([0, y_K, z_K]) rotate([rho, 0, 0]) yz_extrude(2 * blade_hw - 0.4) cam2d(); }
-module dial(rho) {
-    translate([0, y_K, z_K]) rotate([rho, 0, 0]) {
-        // D-shaft through both cheeks, out 1.5 mm on the left for the cap
-        intersection() {
+module dial_local() {   // axis along X at the origin; D-flat at y = shaft_r - 0.25
+    intersection() {
+        union() {
+            // D-shaft through both cheeks, out 1.5 mm on the left for the cap
             rotate([0, 90, 0]) translate([0, 0, -cheek_out - 1.5]) cylinder(r = shaft_r, h = 2 * cheek_out + 1.5 + 0.2);
-            translate([-30, -5, -5]) cube([60, 5 + shaft_r - 0.25, 10]);
+            // lever outside the right cheek
+            x_band(cheek_out + 0.2, cheek_out + 2.0) hull() {
+                circle(shaft_r + 0.9);
+                translate(lever_len * [cos(150), sin(150)]) circle(1.4);
+            }
         }
-        // lever outside the right cheek
-        x_band(cheek_out + 0.2, cheek_out + 2.0) hull() {
-            circle(shaft_r + 0.9);
-            translate(lever_len * [cos(150), sin(150)]) circle(1.4);
-        }
+        // the flat: keys into the cam, and lets the dial print lying down
+        translate([-30, -10, -10]) cube([60, 10 + shaft_r - 0.25, 20]);
     }
 }
+module dial(rho) { translate([0, y_K, z_K]) rotate([rho, 0, 0]) dial_local(); }
+// lying on its flat: layers run along the shaft (strong), no wobble on a bed-slinger
+module dial_print() { translate([0, 0, shaft_r - 0.25]) rotate([-90, 0, 0]) dial_local(); }
+
+// Fit test: print this first. Pin holes like the hinge posts (horizontal,
+// clearance 0.10 / 0.15 / 0.20 / 0.25 / 0.30 / 0.35, marked with 1-6
+// notches) and vertical D-holes like the cam (0.10 / 0.20 / 0.30).
+fit_clr = [0.10, 0.15, 0.20, 0.25, 0.30, 0.35];
+module fit_test() {
+    difference() {
+        cube([52, 8, 8]);
+        for (i = [0 : 5]) {
+            translate([4.5 + i * 8.5, 4, 4]) rotate([0, 0, 90]) teardrop_x(pin_d/2 + fit_clr[i], 20, 1);
+            for (k = [0 : i]) translate([4.5 + i * 8.5 - i * 0.6 + k * 1.2 - 0.3, -1, 7.4]) cube([0.6, 10, 1]);
+        }
+    }
+    translate([0, 12, 0]) difference() {
+        cube([28, 8, 6]);
+        for (i = [0 : 2]) translate([5 + i * 9, 4, -1]) linear_extrude(height = 8)
+            intersection() { circle(shaft_r + [0.1, 0.2, 0.3][i]); translate([-5, -5]) square([5 + shaft_r - 0.25 + [0.1, 0.2, 0.3][i], 10]); }
+        for (i = [0 : 2]) for (k = [0 : i]) translate([5 + i * 9 - i * 0.6 + k * 1.2 - 0.3, -1, 5.4]) cube([0.6, 1.5, 1]);
+    }
+    translate([36, 16, (pin_d - 0.3)/2]) intersection() {   // short test pin
+        rotate([0, 90, 0]) cylinder(d = pin_d, h = 14, center = true, $fn = 48);
+        cube([15, pin_d + 1, pin_d - 0.3], center = true);
+    }
+    // short D-shaft piece (lying on its flat) to try in the D-holes
+    translate([36, 24, shaft_r - 0.25]) rotate([-90, 0, 0]) intersection() {
+        rotate([0, 90, 0]) cylinder(r = shaft_r, h = 14, center = true);
+        translate([-10, -10, -10]) cube([20, 10 + shaft_r - 0.25, 20]);
+    }
+}
+
 module cam_print() { linear_extrude(height = 2 * blade_hw - 0.4) cam2d(); }
 module cap() {
     difference() {
         cylinder(d = 5, h = 1.6);
-        translate([0, 0, 0.4]) cylinder(r = shaft_r + 0.02, h = 5);
+        translate([0, 0, 0.4]) cylinder(r = shaft_r + 0.1, h = 5);
     }
 }
 
@@ -315,7 +356,7 @@ module print_plate() {
     translate([-heart_w/2 - 12, 0, tail_back + 2.5]) mirror([0, 0, 1]) arm();          // face down
     translate([-heart_w/2 - 18, -44, blade_hw]) rotate([0, 90, 0]) blade();          // on its side
     translate([-heart_w/2 - 14, -14, 0]) cam_print();                                 // flat
-    translate([-heart_w/2 - 24, -14, cheek_out + 2.0]) rotate([0, 90, 0]) translate([0, -y_K, -z_K]) dial(-60);
+    translate([-heart_w/2 - 28, -28, 0]) dial_print();
     translate([-heart_w/2 - 32, -14, 0]) cap();
     for (i = [0, 1]) translate([0, heart_pt - 6 - i * 5, (pin_d - 0.3)/2]) pin();
 }
@@ -335,7 +376,8 @@ else if (PART == "blade")       translate([0, 0, blade_hw]) rotate([0, 90, 0]) b
 else if (PART == "blade_asm")   rot_about([y_B, z_B], beta_for(d_for(GRIP))) blade();
 else if (PART == "cam")         cam_print();
 else if (PART == "cam_asm")     cam(rho_for(d_for(GRIP)));
-else if (PART == "dial")        translate([0, 0, cheek_out + 2.0]) rotate([0, 90, 0]) translate([0, -y_K, -z_K]) dial(-60);
+else if (PART == "dial")        dial_print();
+else if (PART == "fit_test")    fit_test();
 else if (PART == "dial_asm")    dial(rho_for(d_for(GRIP)));
 else if (PART == "cap")         cap();
 else if (PART == "pin")         translate([0, 0, (pin_d - 0.3)/2]) pin();
