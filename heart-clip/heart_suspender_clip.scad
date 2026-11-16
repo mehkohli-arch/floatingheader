@@ -1,22 +1,20 @@
 // =====================================================================
 //  Heart Suspender Clip  (lever / locking-tab style, no screw)
 // ---------------------------------------------------------------------
-//  Hangs heart-side-up: a little hinge bar on top of the heart holds the jaw,
-//  which clips onto a strap/bag/belt; a keychain ring at the heart's POINT
-//  carries the charm (star, keys, ...). The whole front heart is the tab.
+//  Hang it from your keys by the ring at the TOP of the heart. The jaw sits
+//  in a little hinge bar under the heart's point and clips onto the star (or
+//  any strap/fabric) below. The whole front heart is the locking tab.
 //
 //  Three printed parts:
-//    1. BODY  - heart back plate with hinge bar, keychain ring, gripping teeth
+//    1. BODY  - heart back plate, keychain ring on top, hinge bar + teeth below
 //    2. LEVER - front heart (the locking tab) with an over-center toothed cam
 //    3. PIN   - hinge pin (or use a 3 mm steel rod / cut nail)
 //
-//  Flip the tab out, slide the strap in from the top, press the tab back
-//  down. The cam rolls just past dead-center and locks; the charm's weight
-//  pulls it tighter, not open.
+//  Flip the heart out, push the star's edge up into the jaw from below, press
+//  the heart back down. The cam rolls just past dead-center and locks; the
+//  star's weight pulls it tighter, not open.
 //
-//  Modelling frame: the heart is modelled point-UP (lobes at y=0) so the
-//  mechanism maths stays simple; previews rotate it lobes-up (bar on top).
-//  X = width, Y = along the heart, Z = out of the back plate.
+//  X = width, Y = up, Z = out of the back plate (heart upright as modelled).
 //
 //  PART = "assembly" | "open" | "body" | "lever" | "pin" | "plate"
 // =====================================================================
@@ -53,7 +51,9 @@ $fn = 64;
 // ---------------- derived -------------------------------------------
 s        = heart_w / (1 + sqrt(2)/2);    // heart base square side
 H        = s * (3/(2*sqrt(2)) + 0.5);    // heart height
-y_p      = lever_inset - cheek_r - 0.6;  // hinge axis: just above the front heart
+y_p      = cheek_r + 2.4;                // hinge axis (bottom bar)
+dip      = 3;                            // front heart's point sits this far below the axis
+y_b      = y_p - dip - lever_inset*sqrt(2); // body heart point
 r_hole_l = pin_d/2 + pin_clr_lever;
 rh       = r_hole_l + hub_wall;          // hub radius
 crest    = plate_t + tooth_h;
@@ -77,7 +77,7 @@ module heart_up(w) {                     // classic heart, point at origin
     }
 }
 // heart in the modelling frame: lobes at y=0, point at y=H
-module heart2d(w) { translate([0, H]) mirror([0, 1]) heart_up(w); }
+module heart2d(w) { translate([0, y_b]) heart_up(w); }
 
 // teardrop hole along X; tip toward +z (up=1) or -z (up=-1)
 module teardrop_x(r, len, up = 1) {
@@ -102,25 +102,26 @@ module soft_prism(h, c = round_c, steps = 5) {
 }
 
 // ---------------- BODY -----------------------------------------------
-// hinge bar above the heart that carries the jaw
+// hinge bar under the heart's point that carries the jaw
 module tab2d() {
     translate([-tab_hw, tab_y0]) offset(r = 3) offset(delta = -3)
-        square([2 * tab_hw, 6 - tab_y0]);
+        square([2 * tab_hw, y_p + cheek_r + 2 - tab_y0]);
 }
 module outline2d() { union() { heart2d(heart_w); tab2d(); } }
 
 ring_r  = ring_hole/2 + ring_wall;
-ring_cy = H + ring_hole/2 + 0.6;          // ring hole sits just past the point
+ring_cy = y_b + H + 1.3;                  // ring hole sits just above the lobes
 
 module ring2d() {
     difference() {
         hull() {
             translate([0, ring_cy]) circle(ring_r);
-            translate([0, H - 5]) circle(3);
+            translate([0, y_b + s*sqrt(2) - 2]) circle(3);
         }
         translate([0, ring_cy]) circle(d = ring_hole);
     }
 }
+module ring_hole_cut() { translate([0, ring_cy, -1]) cylinder(d = ring_hole, h = 20); }
 
 module cheek_profile() {     // (y,z)
     hull() {
@@ -154,32 +155,28 @@ module teeth() {
 }
 
 module body() {
-    union() {
-        soft_prism(plate_t) outline2d();
-        soft_prism(ring_t) ring2d();
-        cheeks();
-        teeth();
+    difference() {
+        union() {
+            soft_prism(plate_t) outline2d();
+            soft_prism(ring_t) ring2d();
+            cheeks();
+            teeth();
+        }
+        ring_hole_cut();
     }
 }
 
 // ---------------- LEVER (modelled closed) ----------------------------
-module lever_profile() {     // (y,z) hub + cam lobe + neck
+module lever_profile() {     // (y,z) hub barrel + cam lobe
     tip_c = [y_p, z_p] + (R_cam - 1) * cam_dir;
     hull() {
         translate([y_p, z_p]) circle(rh);
         translate(tip_c) circle(1);
     }
-    hull() {
-        translate([y_p, z_p]) circle(rh);
-        translate([y_p, z_front - lever_t]) square([y_wide + 2 - y_p, lever_t]);
-    }
 }
 
 module lever_outline() {
-    offset(r = 1) offset(delta = -1) intersection() {
-        offset(r = -lever_inset) heart2d(heart_w);
-        translate([-50, y_wide]) square([100, 100]);
-    }
+    offset(r = 1) offset(delta = -1) offset(r = -lever_inset) heart2d(heart_w);
 }
 
 module lever() {
@@ -189,8 +186,13 @@ module lever() {
             yz_extrude(2 * lever_half) lever_profile();
             translate([0, 0, z_front - lever_t])
                 linear_extrude(height = lever_t) lever_outline();
+            // heart point is welded onto the hub barrel
+            intersection() {
+                translate([0, 0, z_p]) linear_extrude(height = z_front - z_p) lever_outline();
+                yz_extrude(2 * lever_half) translate([y_p, z_p]) circle(rh + 0.01);
+            }
             // stop bump: lands on the back plate just past over-center
-            translate([0, H * 0.58, plate_t + 0.4])
+            translate([0, y_b + 0.62 * H, plate_t + 0.4])
                 cylinder(d1 = 3, d2 = 6, h = z_front - lever_t - plate_t - 0.4 + 0.01);
         }
         translate([0, y_p, z_p]) teardrop_x(r_hole_l, 100, -1);
@@ -206,7 +208,7 @@ module lever() {
                 linear_extrude(height = c/steps + 0.002) difference() {
                     square(300, center = true);
                     offset(delta = -(steps - i) * c/steps) lever_outline();
-                    // keep the hinge neck full width
+                    // keep the hub barrel round
                     translate([-lever_half - 1, y_p - rh - 1])
                         square([2*lever_half + 2, y_wide - y_p + rh + 1]);
                 }
@@ -229,7 +231,7 @@ module pin() {
 }
 
 // ---------------- outputs --------------------------------------------
-module upright() { translate([0, H, 0]) rotate([0, 0, 180]) children(); }
+module upright() { children(); }
 
 module print_plate() {
     body();
