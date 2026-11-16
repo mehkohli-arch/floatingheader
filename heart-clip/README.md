@@ -1,52 +1,44 @@
-# Heart suspender clip (lever / locking-tab style)
+# Heart suspender clip (heart pacifier-clip style)
 
-A heart-shaped clip in the classic suspender style, with a flip-up locking tab instead of a screw.
-Hang it from your bag by the keychain ring at the top. The jaw at the bottom grips your flowstar, which hangs below.
+Modelled on the classic metal heart suspender / pacifier clip. A small jaw block has a keychain ring on top, and the heart hangs below it as the locking lever.
+Hang it from your bag by the ring. The jaw mouth opens downward behind the heart, and the flowstar clips in there and hangs below.
 
 ![closed](images/closed.png) ![open](images/open.png)
 
-## Fits many thicknesses (0 to about 5 mm)
-This works the way a metal suspender clip does: the lever cam pushes against a spring.
-The jaw's back face is a **spring tongue** cut into the back plate. When you snap the heart shut, the cam always closes to the same locked position, and the tongue bends back by however much the flowstar's edge needs.
-
 ![how it hangs](images/how_it_hangs.png)
 
-| Edge thickness | Tongue bends back | Clamp force (PLA) |
-|---|---|---|
-| 0 (fabric) | 0.9 mm | ~2.6 N |
-| 2 mm | 2.9 mm | ~9 N |
-| 4 mm | 4.9 mm | ~15 N |
-| 5 mm | 5.9 mm | ~18 N |
+## How it works
+- **Body:** a jaw block with teeth, two hinge knuckles and the keychain ring.
+- **Front jaw:** a plate on the top pin that swings open at the bottom.
+- **Heart:** the locking lever, on the second pin. The cam on its hinge presses the front jaw shut.
+  Lift the heart up and over to release the jaw, push the flowstar's edge up into the mouth, then fold the heart back down.
+  The cam rolls 8° past dead-center and locks. Two small stops on the back of the heart rest it flat.
 
-The jaw opens 5.6 mm with nothing in it. The cam locks 11° past center, so the flowstar's weight pulls it tighter, not open.
+## Thickness: three swappable front jaws
+| Front jaw | Grips | Mouth opens to |
+|---|---|---|
+| `jaw_size0.stl` | 0 – 1.4 mm (fabric, straps) | 3.5 mm |
+| `jaw_size1.stl` | 1.4 – 2.8 mm | 4.8 mm |
+| `jaw_size2.stl` | 2.8 – 4.2 mm | 4.7 mm |
+
+Each jaw's lower blade bends up to ~1.4 mm, like the steel plate in a metal clip, so the heart always snaps fully flat. To swap a jaw, push out the top pin.
 
 ## Parts (`stl/`)
-| File | Print orientation | Notes |
-|---|---|---|
-| `heart_clip_all_parts.stl` | as laid out | all three parts on one plate |
-| `body.stl`  | back flat on bed | heart, keychain ring, hinge bar, spring tongue with teeth |
-| `lever.stl` | front face down  | the front heart (locking tab) with toothed over-center cam |
-| `pin.stl`   | lying flat       | 3 mm hinge pin. A 3 mm steel rod or a cut nail also works |
+| File | Print orientation |
+|---|---|
+| `heart_clip_all_parts.stl` | everything laid out (body, heart, 3 jaws, 2 pins) |
+| `body.stl` | back flat on bed |
+| `heart.stl` | front face down |
+| `jaw_size0/1/2.stl` | standing on edge (as exported) |
+| `pin_x2.stl` | lying flat, print 2. A 3 mm steel rod also works |
 
-No supports are needed. **PETG is recommended** because it springs back best. PLA works too, but if you'll often clip things over ~4 mm thick, use PETG. Use 0.2 mm layers, 4 walls and 40%+ infill.
-
-![plate](images/print_plate.png)
+No supports are needed. PETG is best for the jaw blade; PLA works. Use 0.2 mm layers, 4 walls and 40%+ infill.
 
 ## Assembly
-1. Set the front heart between the two hinge blocks.
-2. Push the pin through block, cam and block. Add a drop of CA glue at each end.
-
-## Use
-1. Put the keychain ring on your bag.
-2. Flip the heart out at the top to open the mouth at the bottom.
-3. Push the flowstar's edge up into the jaw.
-4. Press the heart flat until it snaps.
+1. Put the front jaw between the knuckles, then push a pin through the **top** holes.
+2. Put the heart's hinge between the knuckles, then push a pin through the **lower** holes.
+3. Add a drop of CA glue on the pin ends that sit in the knuckles. Leave them unglued if you want to swap jaws later.
 
 ## Customising (`heart_suspender_clip.scad`)
-Set `PART` to `assembly`, `open`, `body`, `lever`, `pin` or `plate`. Useful parameters:
-- `heart_w`: overall size (default 44 mm)
-- `ring_hole`: keychain ring hole (default 7 mm)
-- `tongue_t`: spring stiffness. Use 1.7 for a stronger grip, 1.3 for softer
-- `preload`: grip on very thin things
-- `open_gap`: how wide the jaw opens
-- `pin_clr_lever` / `pin_clr_body`: hinge fit for your printer
+`PART` = `assembly` | `open` | `body` | `jaw` | `heart` | `pin` | `plate`, and `JAW_SIZE` = 0/1/2.
+Useful parameters are `heart_w`, `ring_hole`, `size_step`, `preload` (grip strength), `blade_t` (blade stiffness) and the pin clearances.

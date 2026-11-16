@@ -1,80 +1,95 @@
 // =====================================================================
-//  Heart Suspender Clip  (lever / locking-tab style, no screw)
+//  Heart Suspender Clip  -  classic "heart pacifier clip" layout
 // ---------------------------------------------------------------------
-//  Hang it from your keys by the ring at the TOP of the heart. The jaw sits
-//  in a little hinge bar under the heart's point and clips onto the star (or
-//  any strap/fabric) below. The whole front heart is the locking tab.
+//  Hanging as used (Y up, Z toward the front):
 //
-//  Three printed parts:
-//    1. BODY  - heart back plate, keychain ring on top, hinge bar + teeth below
-//    2. LEVER - front heart (the locking tab) with an over-center toothed cam
-//    3. PIN   - hinge pin (or use a 3 mm steel rod / cut nail)
+//        O        keychain ring  -> clips to your bag
+//     [=====]     jaw block with hinge knuckles on the sides
+//      /\ /\
+//     (  <3 )     heart = locking lever, hinged at its top edge
+//      \   /
+//       \ /       jaw mouth opens DOWNWARD behind the heart;
+//                 the flowstar is clipped here and hangs below
 //
-//  Flip the heart out, push the star's edge up into the jaw from below, press
-//  the heart back down. The cam rolls just past dead-center and locks; the
-//  star's weight pulls it tighter, not open.
+//  Lift the heart up and over the top -> the cam on its hinge lets go of
+//  the front jaw, which swings open. Push the flowstar's edge up into the
+//  mouth, fold the heart back down: the cam rolls just past dead-center and
+//  locks the front jaw onto the teeth.
 //
-//  X = width, Y = up, Z = out of the back plate (heart upright as modelled).
+//  Thickness: the front jaw comes in three sizes (swap it by pushing the
+//  top pin out). Each covers a ~1.4 mm range because the jaw's lower blade
+//  bends a little, like the steel plate in a metal clip.
+//      JAW_SIZE 0 = 0 - 1.4 mm (fabric, straps)
+//      JAW_SIZE 1 = 1.4 - 2.8 mm
+//      JAW_SIZE 2 = 2.8 - 4.2 mm
 //
-//  PART = "assembly" | "open" | "body" | "lever" | "pin" | "plate"
+//  Printed parts:  BODY, JAW, HEART, 2x PIN
+//  PART = "assembly" | "open" | "body" | "jaw" | "heart" | "pin" | "plate"
 // =====================================================================
 
-PART = "plate";
+PART     = "plate";
+JAW_SIZE = 0;
 
 /* [Size] */
-heart_w      = 44;    // overall width of the body heart (mm)
-plate_t      = 2.6;   // back plate thickness
-lever_inset  = 2.5;   // how much smaller the front heart is than the body
-lever_t      = 3.5;   // lever thickness
-round_c      = 1.0;   // soft (stepped 45 deg) edge size
+heart_w     = 38;    // heart width
+heart_t     = 3.0;   // heart thickness
+block_w     = 27;    // jaw block width
+block_h     = 35;    // jaw block height
+plate_t     = 2.6;   // back plate thickness
+round_c     = 0.8;   // soft edge size
 
 /* [Keychain ring] */
-ring_hole    = 7;     // hole for a split ring / lobster clasp
-ring_wall    = 3.2;   // ring band width
-ring_t       = 3.2;   // ring thickness
+ring_hole   = 7;
+ring_wall   = 3.2;
+ring_t      = 3.2;
 
-/* [Hinge + cam] */
-pin_d        = 3.0;   // hinge pin diameter
-pin_clr_body = 0.15;  // pin clearance in cheeks (snug)
-pin_clr_lever= 0.25;  // pin clearance in lever (free spin)
-hub_wall     = 2.0;   // lever wall around pin
-cheek_r      = 4.0;   // cheek knuckle radius around the pin
-lever_half   = 9.6;   // half-width of the cam = grip width / 2
-side_clr     = 0.4;   // gap between lever neck and cheeks
-tooth_h      = 0.6;   // body tooth height
-preload      = 1.0;   // how far the cam pushes the spring jaw with nothing in it
-open_gap     = 4.5;   // free jaw gap with the heart flipped open
+/* [Jaw] */
+tooth_h     = 0.6;   // back teeth height
+ridge_h     = 0.4;   // front-jaw ridge height
+preload     = 0.5;   // squeeze at the low end of each size
+size_step   = 1.4;   // thickness step between jaw sizes
+jaw_hw      = 10.2;  // half width of the front jaw (grip width / 2)
+jaw_t       = 2.5;   // front jaw thickness at the cam
+blade_t     = 1.1;   // lower blade thickness (bends ~1.4 mm at the tip)
+blade_top   = 19.5;  // where the blade meets the thick part
+y_B         = 30;    // front-jaw pivot height
+B_r         = 3.2;
 
-/* [Spring jaw] -- makes the clip fit many thicknesses (0 to ~5 mm) */
-tongue_t     = 1.5;   // spring tongue thickness (thinner = softer)
-tongue_w     = 18;    // spring tongue width
-tongue_top   = 31;    // where the tongue joins the heart (longer = more travel)
-tongue_slot  = 0.8;   // slot around the tongue
-overcenter   = 10;    // degrees the cam rests past dead-center
+/* [Heart hinge + cam] */
+y_A         = 22;    // heart pivot height
+A_r         = 3.2;
+open_lift   = 1.6;   // jaw swing at the cam when open (~x3 at the mouth)
+overcenter  = 8;     // degrees the cam rests past dead-center
+ear_hw      = 10.6;  // half width of heart hub / cam
+wall_in     = 11.0;  // inner face of the side knuckles
+knuckle_r   = 3.4;
+
+/* [Pins] */
+pin_d       = 3.0;
+pin_clr_wall= 0.15;
+pin_clr_mov = 0.25;
 
 $fn = 64;
 
 // ---------------- derived -------------------------------------------
-s        = heart_w / (1 + sqrt(2)/2);    // heart base square side
-H        = s * (3/(2*sqrt(2)) + 0.5);    // heart height
-y_p      = cheek_r + 2.4;                // hinge axis (bottom bar)
-dip      = 3;                            // front heart's point sits this far below the axis
-y_b      = y_p - dip - lever_inset*sqrt(2); // body heart point
-r_hole_l = pin_d/2 + pin_clr_lever;
-rh       = r_hole_l + hub_wall;          // hub radius
-crest    = tongue_t + tooth_h;
-z_p      = crest + open_gap + rh;        // hinge axis z
-R_cam    = z_p - crest + preload;        // cam radius to tip
-z_front  = z_p + rh;                     // front face of lever
-xc       = lever_half + side_clr;        // cheek inner face
-y_wide   = y_p + cheek_r + 0.6;          // where lever widens past cheeks
-cheek_w  = 4.5;                          // cheek width
-tab_hw   = xc + cheek_w;                  // half-width of the hinge bar
-tab_y0   = y_p - cheek_r - 2.4;           // top edge of the jaw (strap goes in here)
-cam_dir  = [-sin(overcenter), -cos(overcenter)];   // in (y,z)
+s        = heart_w / (1 + sqrt(2)/2);
+heart_H  = s * (3/(2*sqrt(2)) + 0.5);
+crest    = plate_t + tooth_h;                  // back teeth crest
+jaw_back = crest - preload + ridge_h;          // front-jaw back plane (thin size)
+jaw_front= jaw_back + jaw_t;
+z_B      = plate_t + 0.3 + B_r;
+z_A      = jaw_front + open_lift + A_r;
+R_cam    = z_A - jaw_front;
+heart_back  = z_A + A_r + 0.4;
+heart_front = heart_back + heart_t;
+heart_top   = y_A - 1;
+heart_pt    = heart_top - heart_H;
+cam_dir  = [sin(overcenter), -cos(overcenter)];
+r_mov    = pin_d/2 + pin_clr_mov;
+bite_y   = 4;
 
-// ---------------- 2D helpers ----------------------------------------
-module heart_up(w) {                     // classic heart, point at origin
+// ---------------- helpers --------------------------------------------
+module heart_up(w) {
     ss = w / (1 + sqrt(2)/2);
     rotate(45) union() {
         square(ss);
@@ -82,198 +97,163 @@ module heart_up(w) {                     // classic heart, point at origin
         translate([ss, ss/2]) circle(d = ss, $fn = 128);
     }
 }
-// heart in the modelling frame: lobes at y=0, point at y=H
-module heart2d(w) { translate([0, y_b]) heart_up(w); }
-
-// teardrop hole along X; tip toward +z (up=1) or -z (up=-1)
+module heart2d() { translate([0, heart_pt]) heart_up(heart_w); }
 module teardrop_x(r, len, up = 1) {
     rotate([0, 90, 0]) linear_extrude(height = len, center = true)
-        rotate(up > 0 ? 180 : 0) union() {
-            circle(r);
-            rotate(45) square(r);
-        }
+        rotate(up > 0 ? 180 : 0) union() { circle(r); rotate(45) square(r); }
 }
-
 module yz_extrude(len) {
     rotate([90, 0, 90]) linear_extrude(height = len, center = true) children();
 }
-
-// prism of a 2D shape with a soft stepped 45-deg top edge
-module soft_prism(h, c = round_c, steps = 5) {
+module soft_prism(h, c = round_c, steps = 4) {
     linear_extrude(height = h - c) children();
     for (i = [0 : steps - 1])
         translate([0, 0, h - c + i * c/steps])
-            linear_extrude(height = c/steps + 0.001)
-                offset(delta = -(i+1) * c/steps) children();
+            linear_extrude(height = c/steps + 0.001) offset(delta = -(i+1) * c/steps) children();
 }
+module rrect(x0, y0, w, h, r) { translate([x0, y0]) offset(r = r) offset(delta = -r) square([w, h]); }
 
-// ---------------- BODY -----------------------------------------------
-// hinge bar under the heart's point that carries the jaw
-module tab2d() {
-    translate([-tab_hw, tab_y0]) offset(r = 3) offset(delta = -3)
-        square([2 * tab_hw, y_p + cheek_r + 2 - tab_y0]);
-}
-module outline2d() { union() { heart2d(heart_w); tab2d(); } }
-
-ring_r  = ring_hole/2 + ring_wall;
-ring_cy = y_b + H + 1.3;                  // ring hole sits just above the lobes
-
+// ---------------- BODY -------------------------------------------------
+ring_cy = block_h + ring_hole/2 + 1.2;
+module block2d() { rrect(-block_w/2, 0, block_w, block_h, 3); }
 module ring2d() {
-    difference() {
-        hull() {
-            translate([0, ring_cy]) circle(ring_r);
-            translate([0, y_b + s*sqrt(2) - 2]) circle(3);
-        }
-        translate([0, ring_cy]) circle(d = ring_hole);
-    }
-}
-module ring_hole_cut() { translate([0, ring_cy, -1]) cylinder(d = ring_hole, h = 20); }
-
-module cheek_profile() {     // (y,z)
     hull() {
-        translate([y_p, z_p]) circle(cheek_r);
-        translate([y_p - cheek_r, 0]) square([2*cheek_r, 0.01]);
+        translate([0, ring_cy]) circle(ring_hole/2 + ring_wall);
+        translate([-6, block_h - 4]) square([12, 1]);
     }
 }
-
-module cheeks() {
-    difference() {
+module knuckles() {
+    for (sx = [-1, 1])
         intersection() {
-            linear_extrude(height = 50) offset(delta = -0.3) outline2d();
-            yz_extrude(200) cheek_profile();
-            union() {
-                translate([ xc, -50, -1]) cube([100, 200, 100]);
-                translate([-xc - 100, -50, -1]) cube([100, 200, 100]);
+            translate([sx > 0 ? wall_in : -block_w/2, -1, -1]) cube([block_w/2 - wall_in, 100, 100]);
+            yz_extrude(100) hull() {
+                translate([y_A, z_A]) circle(knuckle_r);
+                translate([y_B, z_B]) circle(knuckle_r);
+                translate([y_A - knuckle_r, 0]) square([y_B - y_A + 2*knuckle_r, 0.01]);
             }
         }
-        translate([0, y_p, z_p]) teardrop_x(pin_d/2 + pin_clr_body, 200, 1);
-    }
 }
-
-module teeth() {          // on the spring tongue
+module back_teeth() {
     pitch = 1.2;
-    n = 6;
-    yc = y_p + R_cam * cam_dir[0];          // where the cam tip lands
-    for (i = [0 : n - 1])
-        translate([0, yc + (i - (n-1)/2) * pitch, tongue_t - 0.01])
-            yz_extrude(tongue_w)
-                polygon([[-pitch/2, 0], [pitch/2, 0], [0, tooth_h]]);
+    for (i = [0 : 5])
+        translate([0, bite_y + (i - 2.5) * pitch, plate_t - 0.01])
+            yz_extrude(2 * jaw_hw) polygon([[-pitch/2, 0], [pitch/2, 0], [0, tooth_h]]);
 }
-
-// slot that frees the tongue + thinning so it flexes backward
-module tongue_cut() {
-    tw = tongue_w/2;
-    // U-slot through the plate
-    difference() {
-        translate([-tw - tongue_slot, tab_y0 - 1, -1])
-            cube([2*(tw + tongue_slot), tongue_top + tongue_slot - tab_y0 + 1, 10]);
-        translate([-tw, tab_y0 - 2, -2]) cube([2*tw, tongue_top + tongue_slot - tab_y0 + 5, 12]);
-    }
-    // thin the tongue (front side) so it is springy
-    translate([-tw - 0.01, tab_y0 - 1, tongue_t]) cube([2*tw + 0.02, tongue_top - tab_y0 + 1, 5]);
-    // lead-in chamfer on the tongue tip so a thick edge can push its way in
-    translate([0, tab_y0, tongue_t]) rotate([45, 0, 0]) cube([2*tw + 0.02, 2.5, 2.5], center = true);
-}
-
 module body() {
     difference() {
         union() {
-            soft_prism(plate_t) outline2d();
+            soft_prism(plate_t) block2d();
             soft_prism(ring_t) ring2d();
-            cheeks();
+            knuckles();
+            back_teeth();
         }
-        ring_hole_cut();
-        tongue_cut();
-    }
-    teeth();
-}
-
-// ---------------- LEVER (modelled closed) ----------------------------
-module lever_profile() {     // (y,z) hub barrel + cam lobe
-    tip_c = [y_p, z_p] + (R_cam - 1) * cam_dir;
-    hull() {
-        translate([y_p, z_p]) circle(rh);
-        translate(tip_c) circle(1);
+        translate([0, ring_cy, -1]) cylinder(d = ring_hole, h = 20);
+        translate([0, y_A, z_A]) teardrop_x(pin_d/2 + pin_clr_wall, 100, 1);
+        translate([0, y_B, z_B]) teardrop_x(pin_d/2 + pin_clr_wall, 100, 1);
     }
 }
 
-module lever_outline() {
-    offset(r = 1) offset(delta = -1) offset(r = -lever_inset) heart2d(heart_w);
-}
-
-module lever() {
-    c = round_c; steps = 5;
+// ---------------- FRONT JAW (pivots at B, closed pose) ---------------
+module jaw_profile(size) {   // (y,z)
+    off = size * size_step;
+    bb  = jaw_back + off;                    // blade back plane
     difference() {
         union() {
-            yz_extrude(2 * lever_half) lever_profile();
-            translate([0, 0, z_front - lever_t])
-                linear_extrude(height = lever_t) lever_outline();
-            // heart point is welded onto the hub barrel
-            intersection() {
-                translate([0, 0, z_p]) linear_extrude(height = z_front - z_p) lever_outline();
-                yz_extrude(2 * lever_half) translate([y_p, z_p]) circle(rh + 0.01);
+            // upper thick part: cam pushes here
+            translate([blade_top - 2, jaw_back]) square([y_B - blade_top + 2, jaw_t]);
+            hull() {
+                translate([y_B, z_B]) circle(B_r);
+                translate([y_B - 3, jaw_back]) square([3, jaw_t]);
             }
-            // stop bump: lands on the back plate just past over-center
-            for (sx = [-1, 1])   // land beside the tongue, on solid plate
-                translate([sx * (tongue_w/2 + tongue_slot + 4), y_b + 0.62 * H, plate_t + 0.4])
-                    cylinder(d1 = 3, d2 = 6, h = z_front - lever_t - plate_t - 0.4 + 0.01);
+            // joggle down to the blade
+            hull() {
+                translate([blade_top - 2, jaw_back]) square([2, jaw_t]);
+                translate([blade_top - 4, bb]) square([2, blade_t]);
+            }
+            // flexible blade with lead-in chamfer at the mouth
+            polygon([[1.2, bb], [blade_top - 2, bb], [blade_top - 2, bb + blade_t],
+                     [0, bb + blade_t], [0, bb + 1.0]]);
+            // gripping ridges
+            for (i = [0 : 5])
+                translate([bite_y + (i - 2.5) * 1.2 + 0.6, bb + 0.01])
+                    polygon([[-0.6, 0], [0.6, 0], [0, -ridge_h]]);
         }
-        translate([0, y_p, z_p]) teardrop_x(r_hole_l, 100, -1);
-        // comb teeth across the cam tip
-        pitch = 1.6;
-        for (x = [-lever_half + pitch/2 : pitch : lever_half])
-            translate([x, y_p, z_p]) rotate([-overcenter, 0, 0])
-                translate([0, 0, -R_cam]) rotate([0, 45, 0])
-                    cube([0.85, 6, 0.85], center = true);
-        // soft front edge (bed side when printing, 45 deg is fine)
+        translate([y_B, z_B]) circle(r_mov);
+    }
+}
+module jaw(size = JAW_SIZE) { yz_extrude(2 * jaw_hw) jaw_profile(size); }
+
+// ---------------- HEART LEVER (closed pose) ----------------------------
+module heart_outline() {
+    union() {
+        heart2d();
+        rrect(-ear_hw, y_A - 6, 2 * ear_hw, 7, 2);   // hinge bar above the cleft
+    }
+}
+module heart() {
+    c = round_c; steps = 4;
+    difference() {
+        union() {
+            translate([0, 0, heart_back]) linear_extrude(height = heart_t) heart_outline();
+            yz_extrude(2 * ear_hw) {
+                hull() {
+                    translate([y_A, z_A]) circle(A_r);
+                    translate([y_A, z_A] + (R_cam - 1) * cam_dir) circle(1);
+                }
+                hull() {
+                    translate([y_A, z_A]) circle(A_r);
+                    translate([y_A - 6, heart_back]) square([7, heart_t]);
+                }
+            }
+            for (sx = [-1, 1])
+                translate([sx * 12.3, 5, plate_t + 0.4])
+                    cylinder(d1 = 2.4, d2 = 4.4, h = heart_back - plate_t - 0.4 + 0.01);
+        }
+        translate([0, y_A, z_A]) teardrop_x(r_mov, 100, -1);
         for (i = [0 : steps - 1])
-            translate([0, 0, z_front - (i+1) * c/steps])
+            translate([0, 0, heart_front - (i+1) * c/steps])
                 linear_extrude(height = c/steps + 0.002) difference() {
                     square(300, center = true);
-                    offset(delta = -(steps - i) * c/steps) lever_outline();
-                    // keep the hub barrel round
-                    translate([-lever_half - 1, y_p - rh - 1])
-                        square([2*lever_half + 2, y_wide - y_p + rh + 1]);
+                    offset(delta = -(steps - i) * c/steps) heart_outline();
                 }
     }
 }
 
-module lever_rotated(a) {    // a = opening angle in degrees
-    translate([0, y_p, z_p]) rotate([a, 0, 0]) translate([0, -y_p, -z_p]) lever();
-}
-
-// ---------------- PIN ------------------------------------------------
-function pin_half_len() = tab_hw - 0.3;
-
+// ---------------- PIN --------------------------------------------------
+pin_L = block_w - 0.6;
 module pin() {
-    L = 2 * pin_half_len() - 0.6;
     intersection() {
-        rotate([0, 90, 0]) cylinder(d = pin_d, h = L, center = true, $fn = 48);
-        cube([L + 1, pin_d + 1, pin_d - 0.3], center = true);   // flats for printing
+        rotate([0, 90, 0]) cylinder(d = pin_d, h = pin_L, center = true, $fn = 48);
+        cube([pin_L + 1, pin_d + 1, pin_d - 0.3], center = true);
     }
 }
 
-// ---------------- outputs --------------------------------------------
-module upright() { children(); }
+// ---------------- poses / outputs -------------------------------------
+module heart_at(a) { translate([0, y_A, z_A]) rotate([a, 0, 0]) translate([0, -y_A, -z_A]) heart(); }
+module jaw_at(a)   { translate([0, y_B, z_B]) rotate([a, 0, 0]) translate([0, -y_B, -z_B]) jaw(); }
+module jaw_print(size) { translate([0, 0, jaw_hw]) rotate([0, 90, 0]) jaw(size); }
 
 module print_plate() {
     body();
-    translate([heart_w + 4, 0, z_front]) mirror([0, 0, 1]) lever();
-    translate([heart_w/2 + 2, -6, (pin_d - 0.3)/2]) pin();
+    translate([block_w/2 + heart_w/2 + 4, 0, heart_front]) mirror([0, 0, 1]) heart();
+    for (i = [0 : 2]) translate([-block_w/2 - 14 - i * 11, 0, 0]) jaw_print(i);
+    for (i = [0, 1]) translate([0, -8 - i * 5, (pin_d - 0.3)/2]) pin();
 }
 
-if (PART == "assembly") upright() {
-    color("hotpink") body();
-    color("crimson") lever();
-    color("silver") translate([0, y_p, z_p]) pin();
-} else if (PART == "open") upright() {
-    color("hotpink") body();
-    color("crimson") lever_rotated(100);
-    color("silver") translate([0, y_p, z_p]) pin();
-} else if (PART == "body")  body();
-else if (PART == "lever")   translate([0, 0, z_front]) mirror([0, 0, 1]) lever();
-else if (PART == "pin")     translate([0, 0, (pin_d - 0.3)/2]) pin();
-else                        print_plate();
+if (PART == "assembly") {
+    color("hotpink") body(); color("lightpink") jaw(); color("crimson") heart();
+    color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
+} else if (PART == "open") {
+    color("hotpink") body(); color("lightpink") jaw_at(-10); color("crimson") heart_at(-80);
+    color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
+} else if (PART == "body")      body();
+else if (PART == "jaw")         jaw_print(JAW_SIZE);
+else if (PART == "jaw_asm")     jaw();
+else if (PART == "heart")       translate([0, 0, heart_front]) mirror([0, 0, 1]) heart();
+else if (PART == "heart_asm")   heart();
+else if (PART == "pin")         translate([0, 0, (pin_d - 0.3)/2]) pin();
+else                            print_plate();
 
-echo(str("H=", H, " y_p=", y_p, " hinge z=", z_p, "  cam R=", R_cam,
-         "  front z=", z_front, "  pin length=", 2*pin_half_len() - 0.6));
+echo(str("z_A=", z_A, " z_B=", z_B, " R_cam=", R_cam, " jaw_back=", jaw_back,
+         " jaw_front=", jaw_front, " heart_back=", heart_back, " heart_front=", heart_front,
+         " heart_pt=", heart_pt, " pin_L=", pin_L));
