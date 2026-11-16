@@ -32,7 +32,8 @@
 // =====================================================================
 
 PART   = "plate";
-GRIP   = 2.0;         // preview: trim thickness the dial is set for (0.6 - 5)
+GRIP   = 2.0;
+CAMROT = 0;           // (checking only)         // preview: trim thickness the dial is set for (0.6 - 5)
 
 /* [Heart] */
 heart_w     = 52;
@@ -69,7 +70,7 @@ y_K         = 6.5;    // cam shaft height (6.5 below B)
 cam_rmin    = 2.0;
 cam_sweep   = 300;    // degrees of spiral
 shaft_r     = 1.5;
-lever_len   = 4.5;
+wheel_r     = 4.9;    // dial thumbwheel radius: clears the heart and spacer rings all the way round
 
 /* [Heart hinge + cam] */
 y_A         = 21;
@@ -246,10 +247,11 @@ module dial_local() {   // axis along X at the origin; D-flat at y = shaft_r - 0
         union() {
             // D-shaft through both cheeks, out 1.5 mm on the left for the cap
             rotate([0, 90, 0]) translate([0, 0, -cheek_out - 1.5]) cylinder(r = shaft_r, h = 2 * cheek_out + 1.5 + 0.2);
-            // lever outside the right cheek
-            x_band(cheek_out + 0.2, cheek_out + 2.0) hull() {
-                circle(shaft_r + 0.9);
-                translate(lever_len * [cos(150), sin(150)]) circle(1.4);
+            // knurled thumbwheel outside the right cheek, with an index notch
+            x_band(cheek_out + 0.2, cheek_out + 2.0) difference() {
+                circle(wheel_r);
+                for (a = [0 : 20 : 340]) rotate(a) translate([wheel_r, 0]) circle(0.45, $fn = 12);
+                rotate(270) translate([wheel_r, 0]) rotate(45) square(1.6, center = true);
             }
         }
         // the flat: keys into the cam, and lets the dial print lying down
@@ -297,6 +299,19 @@ module cap() {
     }
 }
 
+// Spacer rings on pin B: keep the jaw arm centred between the hinge posts
+washer_t  = knuck_in - cheek_out - 0.4;
+module washer() {
+    difference() {
+        cylinder(r = 2.6, h = washer_t);
+        translate([0, 0, -1]) cylinder(r = r_mov, h = washer_t + 2);
+    }
+}
+module washers_asm() {
+    for (sx = [-1, 1]) translate([sx > 0 ? cheek_out + 0.2 : -cheek_out - 0.2 - washer_t, y_B, z_B])
+        rotate([0, 90, 0]) washer();
+}
+
 // ---------------- FRONT HEART (pivot A, closed pose) -------------------
 module heart() {
     c = round_c; steps = 4;
@@ -314,7 +329,7 @@ module heart() {
             // hidden stop tabs on the ears: rest on the back plate when closed
             for (sx = [-1, 1]) mirror([sx < 0 ? 1 : 0, 0, 0]) x_band(ear_in, ear_out) hull() {
                 translate([y_A, z_A]) circle(A_r);
-                translate([y_A - 6, plate_t + 0.12]) square([2.5, 0.01]);
+                translate([y_A - 3.7, plate_t + 0.12]) square([1.7, 0.01]);   // close to the hinge: clears the spacer rings
             }
         }
         translate([0, y_A, z_A]) teardrop_x(r_mov, 100, -1);
@@ -359,11 +374,13 @@ module print_plate() {
     translate([-heart_w/2 - 28, -28, 0]) dial_print();
     translate([-heart_w/2 - 32, -14, 0]) cap();
     for (i = [0, 1]) translate([0, heart_pt - 6 - i * 5, (pin_d - 0.3)/2]) pin();
+    for (i = [0, 1]) translate([-heart_w/2 - 34 - i * 7, -40, 0]) washer();
 }
 
 if (PART == "assembly") {
     color("hotpink") body(); jaw_group(GRIP); color("crimson") heart();
     color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
+    color("lightpink") washers_asm();
 } else if (PART == "open") {
     color("hotpink") body(); jaw_group(GRIP, -12); color("crimson") heart_at(-65);
     color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
@@ -378,6 +395,10 @@ else if (PART == "cam")         cam_print();
 else if (PART == "cam_asm")     cam(rho_for(d_for(GRIP)));
 else if (PART == "dial")        dial_print();
 else if (PART == "fit_test")    fit_test();
+else if (PART == "washer")      washer();
+else if (PART == "cam_rot")     cam(CAMROT);
+else if (PART == "dial_rot")    dial(CAMROT);
+else if (PART == "washers_asm") washers_asm();
 else if (PART == "dial_asm")    dial(rho_for(d_for(GRIP)));
 else if (PART == "cap")         cap();
 else if (PART == "pin")         translate([0, 0, (pin_d - 0.3)/2]) pin();
