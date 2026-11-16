@@ -1,15 +1,17 @@
 # Heart suspender clip (lever / locking-tab style)
 
 A heart-shaped clip in the classic suspender style, with a flip-up locking tab instead of a screw.
+The jaw sits in a small hinge bar on top of the heart, so it clips onto a strap, bag or belt. A keychain ring at the heart's point holds the charm (star, keys, etc.), so the heart hangs right-side up.
 
 ![closed](images/closed.png) ![open](images/open.png)
 
 ## Parts (`stl/`)
 | File | Print orientation | Notes |
 |---|---|---|
-| `body.stl`  | back flat on bed | heart plate, strap loop, hinge cheeks, teeth |
-| `lever.stl` | front face down  | heart tab with toothed over-center cam |
+| `body.stl`  | back flat on bed | heart plate, hinge bar, keychain ring, teeth |
+| `lever.stl` | front face down  | the front heart (locking tab) with toothed over-center cam |
 | `pin.stl`   | lying flat       | 3 mm hinge pin. A 3 mm steel rod or a cut nail also works |
+| `heart_clip_all_parts.stl` | as laid out | all three parts on one plate |
 
 No supports are needed: the horizontal holes are teardrop-shaped. Use PETG or PLA, 0.2 mm layers, at least 4 walls, and 40%+ infill so the cam and cheeks are solid.
 
@@ -20,13 +22,14 @@ No supports are needed: the horizontal holes are teardrop-shaped. Use PETG or PL
 2. Push the pin through cheek, lever, then the other cheek. Add a drop of CA glue at each end, or melt the ends slightly.
 
 ## Use
-Flip the heart tab up to open a ~3 mm gap. Slide the fabric in from the point of the heart, then press the tab down.
-The cam rolls 10° past dead-center onto the teeth and locks. Pulling the fabric pulls it tighter.
+Flip the front heart out to open a ~3 mm gap under the hinge bar. Slide the strap in from the top, then press the heart back down.
+The cam rolls 10° past dead-center onto the teeth and locks. The charm's weight pulls it tighter, not open.
+Put a split ring or lobster clasp through the ring at the bottom for the star.
 
 ## Customising (`heart_suspender_clip.scad`)
 Set `PART` to `assembly`, `open`, `body`, `lever`, `pin` or `plate`. Useful parameters:
 - `heart_w`: overall size (default 44 mm)
-- `strap_w` / `strap_gap`: strap loop opening for the strap you attach
+- `ring_hole`: keychain ring hole (default 7 mm)
 - `grip_gap`: lower this for thin fabric, raise it for thick fabric
 - `pin_clr_lever` / `pin_clr_body`: hinge fit for your printer
 - `overcenter`: increase for a harder snap
