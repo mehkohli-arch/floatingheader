@@ -6,35 +6,41 @@ A heart-shaped, suspender-style locking clip for hanging a flowstar from a bag. 
 
 ## Using it
 1. **Ring:** put a keychain ring or lobster clasp through the ring at the top and onto your bag.
-2. **Open:** lift the heart's point out and up. The jaw opens downward, between the two hearts.
+2. **Open:** lift the heart's point out and up (it opens to about 65°, which fully opens the jaw). The jaw opens downward, between the two hearts.
 3. **Insert:** push the flowstar's canvas trim up into the jaw. It slides in over the barbs.
 4. **Close:** fold the heart flat. It clicks shut and locks.
+5. **Set the grip on the actual trim:** with the clip closed on the trim, roll the knurled wheel at the **right-hand edge**, between the two hearts.
+   - Roll its front edge **up** to tighten, one click at a time, until the trim won't pull out.
+   - Roll it **down** to loosen.
+   - You only do this once for a given trim. The setting stays put.
 
-**Thickness wheel (set once for your trim):** with the heart open, there's a small knurled wheel inside on the right. Roll its front edge **down for thicker** trim and **up for thinner** trim.
-It covers about **0.6 mm** (single canvas) to **5 mm** (trim folded in half).
-If the heart is hard to click shut, roll it a little toward thicker. If the trim slips, roll it toward thinner. The wheel holds its position by itself.
-The wheel only moves the gripping blade. The heart opens and locks exactly the same at every setting.
+![wheel](images/side_wheel.png)
 
-![inside](images/inside.png)
+**How the wheel works:** it turns a cam with 12 flat steps, about 0.4 mm of grip per click, covering trim from 0.2 to 5 mm (single canvas to folded in half).
+- **It can't creep:** whichever flat is in use presses square-on against the blade, so pulling on the trim gives it no turning force at all.
+- **It doesn't touch the lock:** it only moves the gripping blade. The heart opens, closes and locks the same way at every setting.
+- **Wrap-around:** past the tightest click it wraps back round to the loosest.
+
 ![how it works](images/how_it_hangs.png)
 
 ## Strength and tugging
-- **Grip:** both jaws have big one-way barbs that interlock and press 0.4–0.6 mm into the trim when closed, at every wheel setting. That forces canvas into a zigzag that grips far harder than a flat squeeze, and pulling digs the barbs in further.
-- **Lock:** the heart's cam locks past dead-center. A pull on the flowstar pushes the heart further closed, so tugging can't open it. The wheel is self-locking, so tugging can't turn it either.
-- **Easy to use:** opening takes a light lift on the heart's point. Closing is a firm press, and the long heart gives a lot of leverage over the cam.
-- **Parts outlast the grip:** the pins, posts, arm and ring are all much stronger than the grip, so a hard yank would drag the trim out of the teeth before anything breaks. For the most strength, use 3 mm steel pins (cut nails or dowel pins) instead of printed ones.
-- **Rough estimate, not tested:** about 3–7 kg of steady pull before canvas slides. Give it a few firm tugs on the real trim before trusting it.
+- **Grip:** both jaws have big one-way barbs that interlock and press 0.4–1.0 mm into the trim when closed (more on thick folded trim, which squashes more). That forces canvas into a zigzag that grips far harder than a flat squeeze, and pulling digs the barbs in further.
+- **Lock:** the heart's cam locks past dead-center, so a pull on the flowstar pushes the heart further closed. The stepped cam means a pull can't turn the wheel either.
+- **Easy to use:** opening takes a light lift on the heart's point. Closing is a firm press, and the long heart gives plenty of leverage. Tightening the wheel under load takes a firm thumb push, about 1 kg at the rim.
+- **Parts outlast the grip:** the pins, hinge posts, arm and ring are much stronger than the grip, so a hard yank would drag the trim out of the teeth before anything breaks. For the most strength, use 3 mm steel pins (cut nails or dowel pins).
+- **Not tested:** this is a model, not a tested part. Because you set the grip on your own trim with the wheel, its holding power no longer depends on my guess about how much canvas squashes. Still, give it a few firm tugs before trusting it.
 
 ## What was checked in the 3D model
 - Hangs ring-up with the jaw opening downward, and from the front only the heart and ring show.
-- At 0.6, 1.5, 2.5, 3.5, 4.5 and 5.0 mm:
+- At all 12 wheel steps:
   - The heart's motion and lock are identical.
   - Nothing collides.
-  - The barbs press 0.4–0.6 mm into the trim when closed.
-  - The open mouth is at least 2 mm wider than the trim.
+  - The closed barbs press 0.4–1.0 mm into the trim.
+  - The open mouth is at least 1.5 mm wider than the trim.
 - The heart opens to about 65° and rests on hidden stops about 2° past flat.
-- The thumbwheel turns a full 360° without touching anything.
-- Every part is held sideways on its pin (0.4 mm or less of play): the jaw arm by the spacer rings, the heart by its hinge posts.
+- The cam, shaft and wheel turn a full 360° without touching anything.
+- At every step the flat in use faces the blade square-on, so there's no turning force from a pull.
+- Every part is held sideways on its pin (0.4 mm or less of play).
 
 ## Printing on a Creality Ender 3 V3 SE with PETG
 The model is tuned for this printer and filament:
@@ -62,13 +68,13 @@ The model is tuned for this printer and filament:
 | Cooling fan | 30–40 % (100 % for bridges) |
 | Retraction | 0.8 mm at 40 mm/s, wipe on, z-hop 0.2 mm |
 | Walls / top & bottom | 4 / 5 layers |
-| Infill | 40 % gyroid. **100 %** for the pins, dial, cam, blade and spacer rings |
+| Infill | 40 % gyroid. **100 %** for the pins, dial shaft, wheel, cam, blade and spacer rings |
 | Supports / brim | none / optional 3 mm brim on the blade |
 
 **Enclosure:** PETG doesn't need it. Keep the door cracked so the chamber stays under about 35 °C, otherwise PETG can soften in the extruder and jam.
 
 ### 3. Print the clip
-`heart_clip_all_parts.stl` (152 × 89 mm) fits the 220 × 220 bed and takes about 4–5 hours. Every part is already in its print orientation.
+`heart_clip_all_parts.stl` (162 × 89 mm) fits the 220 × 220 bed and takes about 4–5 hours. Every part is already in its print orientation.
 
 | Part | Qty | Notes |
 |---|---|---|
@@ -77,7 +83,8 @@ The model is tuned for this printer and filament:
 | `arm.stl` | 1 | jaw arm |
 | `blade.stl` | 1 | gripping blade |
 | `cam.stl` | 1 | spiral cam |
-| `dial.stl` | 1 | thumbwheel + D-shaft |
+| `dial.stl` | 1 | D-shaft for the cam and wheel |
+| `wheel.stl` | 1 | knurled thumbwheel |
 | `cap.stl` | 1 | holds the dial in |
 | `washer.stl` | 2 | spacer rings for the lower pin |
 | `pin.stl` | 2 | or 3 mm steel pins, 24 mm long |
@@ -91,8 +98,8 @@ After printing, clear any PETG strings from the hinge holes with a 3 mm drill bi
    - Push a pin through.
 2. **Dial:**
    - Put the cam between the arm's side plates, in front of the blade.
-   - Slide the dial in from the right, wheel outside, through the arm and the cam's D-hole.
-   - Glue the cap onto the shaft's left end. Glue only the cap to the shaft, so the wheel can still turn.
+   - Slide the D-shaft in from the right, through the arm and the cam's D-hole.
+   - Glue the cap onto its left end and the wheel onto its right end. Glue only to the shaft, so it all still turns.
 3. **Upper pin:** put the heart's hinge between the upper hinge posts, behind the top of the arm, and push the second pin through.
 4. **Glue:** add a drop of CA glue where each pin end sits in the hinge posts, so the pins can't walk out.
 

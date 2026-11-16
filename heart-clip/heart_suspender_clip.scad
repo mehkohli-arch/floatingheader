@@ -32,7 +32,7 @@
 // =====================================================================
 
 PART   = "plate";
-GRIP   = 2.0;
+STEP   = 6;           // preview: dial step 0 (thickest) .. 11 (thinnest)
 CAMROT = 0;           // (checking only)         // preview: trim thickness the dial is set for (0.6 - 5)
 
 /* [Heart] */
@@ -52,7 +52,7 @@ ring_t      = 3.2;
 tooth_h     = 1.0;    // big interlocking barbs: canvas is forced into a deep zigzag
 tooth_p     = 2.0;    // tooth pitch
 ridge_h     = 1.0;
-preload     = 1.0;    // how deep the barbs interlock into the trim
+preload     = 0.4;    // how deep the barbs interlock into the trim
 grip_min    = 0.0;    // thinnest setting (with preload)
 grip_max    = 5.2;    // thickest setting
 blade_hw    = 5.9;    // blade half width (0.3 mm side gap: room for first-layer squish)
@@ -69,8 +69,11 @@ tail_len    = 4.6;
 y_K         = 6.5;    // cam shaft height (6.5 below B)
 cam_rmin    = 2.0;
 cam_sweep   = 300;    // degrees of spiral
+n_steps     = 12;     // flat steps on the cam: no creep, ~0.4 mm per click
 shaft_r     = 1.5;
-wheel_r     = 4.9;    // dial thumbwheel radius: clears the heart and spacer rings all the way round
+wheel_r     = 4.0;    // thumbwheel at the right-hand edge, between the two hearts
+wheel_x0    = 18.6;   // inner face of the wheel (hidden behind the front heart)
+wheel_t     = 2.0;
 
 /* [Heart hinge + cam] */
 y_A         = 21;
@@ -127,6 +130,12 @@ function d_for(g)    = cam_rmax - tilt_k * g * (y_B - y_K) / arm_L;
 function cam_r(phi)  = cam_rmin + cam_trav * phi / cam_sweep;
 // dial rotation for a cam radius d: contact direction is ~straight back
 function rho_for(d)  = (-90 + beta_for(d)) - (d - cam_rmin) / cam_trav * cam_sweep;
+// stepped cam: step k has a flat at angle phi_k, distance d_k from the shaft
+half_step = cam_sweep / n_steps / 2;
+function phi_k(k) = (k + 0.5) * cam_sweep / n_steps;
+function d_k(k)   = cam_r(phi_k(k));
+function g_k(k)   = (cam_rmax - d_k(k)) / (tilt_k * (y_B - y_K) / arm_L);   // trim it fits
+function rho_k(k) = (-90 + beta_for(d_k(k))) - phi_k(k);
 
 // ---------------- helpers --------------------------------------------
 module heart_up(w) {
@@ -235,8 +244,12 @@ module blade() { yz_extrude(2 * blade_hw) blade2d(); }
 // ---------------- DIAL CAM + SHAFT --------------------------------------
 module cam2d() {
     difference() {
-        polygon([for (a = [0 : 5 : cam_sweep]) cam_r(a) * [cos(a), sin(a)],
-                 cam_rmin * [cos(359), sin(359)]]);
+        // 12 flats: whichever flat faces the blade is pressed square-on, so a
+        // pull on the trim can't turn the cam (no creep)
+        polygon(concat(
+            [for (k = [0 : n_steps - 1]) for (s = [-1, 1])
+                d_k(k) / cos(half_step) * [cos(phi_k(k) + s * half_step), sin(phi_k(k) + s * half_step)]],
+            [cam_rmin * [cos(359), sin(359)]]));
         // D-bore
         intersection() { circle(shaft_r + bore_clr); translate([-5, -5]) square([5 + shaft_r - 0.25 + bore_clr, 10]); }
     }
@@ -245,20 +258,25 @@ module cam(rho) { translate([0, y_K, z_K]) rotate([rho, 0, 0]) yz_extrude(2 * bl
 module dial_local() {   // axis along X at the origin; D-flat at y = shaft_r - 0.25
     intersection() {
         union() {
-            // D-shaft through both cheeks, out 1.5 mm on the left for the cap
-            rotate([0, 90, 0]) translate([0, 0, -cheek_out - 1.5]) cylinder(r = shaft_r, h = 2 * cheek_out + 1.5 + 0.2);
-            // knurled thumbwheel outside the right cheek, with an index notch
-            x_band(cheek_out + 0.2, cheek_out + 2.0) difference() {
-                circle(wheel_r);
-                for (a = [0 : 20 : 340]) rotate(a) translate([wheel_r, 0]) circle(0.45, $fn = 12);
-                rotate(270) translate([wheel_r, 0]) rotate(45) square(1.6, center = true);
-            }
+            // D-shaft: 1.5 mm out on the left for the cap, out to the side edge
+            // on the right for the thumbwheel
+            rotate([0, 90, 0]) translate([0, 0, -cheek_out - 1.5]) cylinder(r = shaft_r, h = cheek_out + 1.5 + wheel_x0 + wheel_t);
         }
         // the flat: keys into the cam, and lets the dial print lying down
         translate([-30, -10, -10]) cube([60, 10 + shaft_r - 0.25, 20]);
     }
 }
-module dial(rho) { translate([0, y_K, z_K]) rotate([rho, 0, 0]) dial_local(); }
+module dial(rho) { translate([0, y_K, z_K]) rotate([rho, 0, 0]) { dial_local(); wheel_local(); } }
+// knurled thumbwheel (separate part, glued onto the shaft's D)
+module wheel2d() {
+    difference() {
+        circle(wheel_r);
+        for (a = [0 : 15 : 345]) rotate(a) translate([wheel_r, 0]) circle(0.4, $fn = 12);
+        intersection() { circle(shaft_r + bore_clr); translate([-5, -5]) square([5 + shaft_r - 0.25 + bore_clr, 10]); }
+    }
+}
+module wheel_local() { x_band(wheel_x0, wheel_x0 + wheel_t) wheel2d(); }
+module wheel_print() { linear_extrude(height = wheel_t) wheel2d(); }
 // lying on its flat: layers run along the shaft (strong), no wobble on a bed-slinger
 module dial_print() { translate([0, 0, shaft_r - 0.25]) rotate([-90, 0, 0]) dial_local(); }
 
@@ -355,8 +373,8 @@ module pin() {
 module heart_at(a) { rot_about([y_A, z_A], a) heart(); }
 // the whole jaw group (arm + blade + cam + dial) for a grip setting g and
 // an extra opening angle (negative = open)
-module jaw_group(g, open_a = 0) {
-    d = d_for(g); b = beta_for(d); r = rho_for(d);
+module jaw_group(k, open_a = 0) {
+    d = d_k(k); b = beta_for(d); r = rho_k(k);
     rot_about([y_B, z_B], open_a) {
         color("lightpink") arm();
         color("pink") rot_about([y_B, z_B], b) blade();
@@ -372,17 +390,18 @@ module print_plate() {
     translate([-heart_w/2 - 18, -44, blade_hw]) rotate([0, 90, 0]) blade();          // on its side
     translate([-heart_w/2 - 14, -14, 0]) cam_print();                                 // flat
     translate([-heart_w/2 - 28, -28, 0]) dial_print();
+    translate([-heart_w/2 - 50, -14, 0]) wheel_print();
     translate([-heart_w/2 - 32, -14, 0]) cap();
     for (i = [0, 1]) translate([0, heart_pt - 6 - i * 5, (pin_d - 0.3)/2]) pin();
     for (i = [0, 1]) translate([-heart_w/2 - 34 - i * 7, -40, 0]) washer();
 }
 
 if (PART == "assembly") {
-    color("hotpink") body(); jaw_group(GRIP); color("crimson") heart();
+    color("hotpink") body(); jaw_group(STEP); color("crimson") heart();
     color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
     color("lightpink") washers_asm();
 } else if (PART == "open") {
-    color("hotpink") body(); jaw_group(GRIP, -12); color("crimson") heart_at(-65);
+    color("hotpink") body(); jaw_group(STEP, -12); color("crimson") heart_at(-65);
     color("silver") { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
 } else if (PART == "body")      body();
 else if (PART == "heart")       translate([0, 0, heart_front]) mirror([0, 0, 1]) heart();
@@ -390,19 +409,21 @@ else if (PART == "heart_asm")   heart();
 else if (PART == "arm")         translate([0, 0, tail_back + 2.5]) mirror([0, 0, 1]) arm();   // face down
 else if (PART == "arm_asm")     arm();
 else if (PART == "blade")       translate([0, 0, blade_hw]) rotate([0, 90, 0]) blade();
-else if (PART == "blade_asm")   rot_about([y_B, z_B], beta_for(d_for(GRIP))) blade();
+else if (PART == "blade_asm")   rot_about([y_B, z_B], beta_for(d_k(STEP))) blade();
 else if (PART == "cam")         cam_print();
-else if (PART == "cam_asm")     cam(rho_for(d_for(GRIP)));
+else if (PART == "cam_asm")     cam(rho_k(STEP));
 else if (PART == "dial")        dial_print();
 else if (PART == "fit_test")    fit_test();
 else if (PART == "washer")      washer();
 else if (PART == "cam_rot")     cam(CAMROT);
 else if (PART == "dial_rot")    dial(CAMROT);
 else if (PART == "washers_asm") washers_asm();
-else if (PART == "dial_asm")    dial(rho_for(d_for(GRIP)));
+else if (PART == "dial_asm")    dial(rho_k(STEP));
+else if (PART == "wheel")       wheel_print();
 else if (PART == "cap")         cap();
 else if (PART == "pin")         translate([0, 0, (pin_d - 0.3)/2]) pin();
 else                            print_plate();
 
+echo(STEPS = [for (k = [0 : n_steps - 1]) [k, round(g_k(k) * 100) / 100]]);
 echo(str("cam ", cam_rmin, "-", cam_rmax, " z_K=", z_K, " beta(thin)=", beta_for(d_for(grip_min)),
          " beta(thick)=", beta_for(d_for(grip_max)), " heart_back=", heart_back, " heart_front=", heart_front));
