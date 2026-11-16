@@ -32,7 +32,7 @@
 // =====================================================================
 
 PART   = "plate";
-STEP   = 6;           // preview: dial step 0 (thickest) .. 11 (thinnest)
+STEP   = 5;           // preview: dial step 0 (thickest) .. 9 (thinnest)
 CAMROT = 0;           // (checking only)         // preview: trim thickness the dial is set for (0.6 - 5)
 
 /* [Heart] */
@@ -69,10 +69,11 @@ tail_len    = 4.6;
 y_K         = 6.5;    // cam shaft height (6.5 below B)
 cam_rmin    = 2.0;
 cam_sweep   = 300;    // degrees of spiral
-n_steps     = 12;     // flat steps on the cam: no creep, ~0.4 mm per click
+n_steps     = 10;     // flat steps on the cam: no creep, 0.5 mm per click (one wheel tooth)
 shaft_r     = 1.5;
-wheel_r     = 4.0;    // thumbwheel at the right-hand edge, between the two hearts
-wheel_x0    = 18.6;   // inner face of the wheel (hidden behind the front heart)
+wheel_r     = 4.0;    // gear wheel root radius (teeth reach wheel_r + 1.1)
+wheel_teeth = 12;     // coarse teeth: flick one tooth = one click (easy with long nails)
+wheel_x0    = 17.6;   // inner face of the wheel (hidden behind the front heart)
 wheel_t     = 2.0;
 
 /* [Heart hinge + cam] */
@@ -137,6 +138,16 @@ function d_k(k)   = cam_r(phi_k(k));
 function g_k(k)   = (cam_rmax - d_k(k)) / (tilt_k * (y_B - y_K) / arm_L);   // trim it fits
 function rho_k(k) = (-90 + beta_for(d_k(k))) - phi_k(k);
 
+// ---------------- helpers --------------------------------------------
+module heart_up(w) {
+    ss = w / (1 + sqrt(2)/2);
+    rotate(45) union() {
+        square(ss);
+        translate([ss/2, ss]) circle(d = ss, $fn = 128);
+        translate([ss, ss/2]) circle(d = ss, $fn = 128);
+    }
+}
+module heart2d() { translate([0, heart_pt]) heart_up(heart_w); }
 // ---------------- helpers --------------------------------------------
 module heart_up(w) {
     ss = w / (1 + sqrt(2)/2);
@@ -270,8 +281,11 @@ module dial(rho) { translate([0, y_K, z_K]) rotate([rho, 0, 0]) { dial_local(); 
 // knurled thumbwheel (separate part, glued onto the shaft's D)
 module wheel2d() {
     difference() {
-        circle(wheel_r);
-        for (a = [0 : 15 : 345]) rotate(a) translate([wheel_r, 0]) circle(0.4, $fn = 12);
+        union() {
+            circle(wheel_r);
+            for (i = [0 : wheel_teeth - 1]) rotate(i * 360 / wheel_teeth)
+                hull() { translate([wheel_r - 0.5, -1.0]) square([0.5, 2.0]); translate([wheel_r + 1.1 - 0.5, 0]) circle(0.5); }
+        }
         intersection() { circle(shaft_r + bore_clr); translate([-5, -5]) square([5 + shaft_r - 0.25 + bore_clr, 10]); }
     }
 }
@@ -351,6 +365,14 @@ module heart() {
             }
         }
         translate([0, y_A, z_A]) teardrop_x(r_mov, 100, -1);
+        // bevel on the BACK edge of the lower half: a fingertip or nail
+        // catches under it to lift the heart (not visible from the front)
+        for (i = [0 : 5])
+            translate([0, 0, heart_back + i * 0.25 - 0.01])
+                linear_extrude(height = 0.25 + 0.01) difference() {
+                    intersection() { square(300, center = true); translate([-150, -150]) square([300, 150 + y_B]); }
+                    offset(delta = -(1.5 - i * 0.25)) heart2d();
+                }
         for (i = [0 : steps - 1])
             translate([0, 0, heart_front - (i+1) * c/steps])
                 linear_extrude(height = c/steps + 0.002) difference() {

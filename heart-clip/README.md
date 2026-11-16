@@ -5,19 +5,23 @@ A heart-shaped, suspender-style locking clip for hanging a flowstar from a bag. 
 ![front](images/front.png) ![angle](images/angle.png) ![open](images/open.png)
 
 ## Using it
+Designed so it works with long nails, shaky hands, or after a few drinks: big simple motions, nothing fiddly, and it can't be left half-locked.
+
 1. **Ring:** put a keychain ring or lobster clasp through the ring at the top and onto your bag.
-2. **Open:** lift the heart's point out and up (it opens to about 65°, which fully opens the jaw). The jaw opens downward, between the two hearts.
-3. **Insert:** push the flowstar's canvas trim up into the jaw. It slides in over the barbs.
-4. **Close:** fold the heart flat. It clicks shut and locks.
-5. **Set the grip on the actual trim:** with the clip closed on the trim, roll the knurled wheel at the **right-hand edge**, between the two hearts.
-   - Roll its front edge **up** to tighten, one click at a time, until the trim won't pull out.
-   - Roll it **down** to loosen.
-   - You only do this once for a given trim. The setting stays put.
+2. **Open, either way:**
+   - **Press the top of the heart backward** with a thumb pad. The heart pivots like a seesaw and pops open. No nails needed.
+   - Or **lift the bottom of the heart.** Its back edge is bevelled, so a fingertip or nail catches under it easily.
+3. **Insert:** push the flowstar's canvas trim up into the jaw between the two hearts. It slides in over the barbs.
+4. **Close:** press anywhere on the heart until it clicks flat. If it isn't fully clicked, the squeezed trim pushes it back open, so you can see straight away that it isn't locked.
+5. **Set the grip once (on the real trim):** with the clip closed on the trim, flick the toothed wheel at the **right-hand edge**, between the two hearts, one tooth at a time.
+   - Each tooth is one click, 0.5 mm. A long nail flicks the teeth easily, and so does a fingertip.
+   - **Up** tightens, **down** loosens. Tighten until the trim won't pull out.
+   - After that, leave it. Daily use is just open, insert, close.
 
-![wheel](images/side_wheel.png)
+![wheel](images/side_wheel.png) ![bevelled edge](images/bottom_edge.png)
 
-**How the wheel works:** it turns a cam with 12 flat steps, about 0.4 mm of grip per click, covering trim from 0.2 to 5 mm (single canvas to folded in half).
-- **It can't creep:** whichever flat is in use presses square-on against the blade, so pulling on the trim gives it no turning force at all.
+**How the wheel works:** it turns a cam with 10 flat steps covering trim from about 0.3 to 5 mm (single canvas to folded in half).
+- **It can't creep:** whichever flat is in use presses square-on against the blade, so pulling on the trim gives it no turning force.
 - **It doesn't touch the lock:** it only moves the gripping blade. The heart opens, closes and locks the same way at every setting.
 - **Wrap-around:** past the tightest click it wraps back round to the loosest.
 
@@ -26,17 +30,18 @@ A heart-shaped, suspender-style locking clip for hanging a flowstar from a bag. 
 ## Strength and tugging
 - **Grip:** both jaws have big one-way barbs that interlock and press 0.4–1.0 mm into the trim when closed (more on thick folded trim, which squashes more). That forces canvas into a zigzag that grips far harder than a flat squeeze, and pulling digs the barbs in further.
 - **Lock:** the heart's cam locks past dead-center, so a pull on the flowstar pushes the heart further closed. The stepped cam means a pull can't turn the wheel either.
-- **Easy to use:** opening takes a light lift on the heart's point. Closing is a firm press, and the long heart gives plenty of leverage. Tightening the wheel under load takes a firm thumb push, about 1 kg at the rim.
+- **Easy to use:** lifting the bottom edge takes a light pull. Pressing the top to pop it open takes a firm thumb press, about 1 kg (a rough figure that depends on how tight the wheel is set). Closing is a firm press, and the long heart gives plenty of leverage.
 - **Parts outlast the grip:** the pins, hinge posts, arm and ring are much stronger than the grip, so a hard yank would drag the trim out of the teeth before anything breaks. For the most strength, use 3 mm steel pins (cut nails or dowel pins).
 - **Not tested:** this is a model, not a tested part. Because you set the grip on your own trim with the wheel, its holding power no longer depends on my guess about how much canvas squashes. Still, give it a few firm tugs before trusting it.
 
 ## What was checked in the 3D model
 - Hangs ring-up with the jaw opening downward, and from the front only the heart and ring show.
-- At all 12 wheel steps:
+- At all 10 wheel steps:
   - The heart's motion and lock are identical.
   - Nothing collides.
   - The closed barbs press 0.4–1.0 mm into the trim.
   - The open mouth is at least 1.5 mm wider than the trim.
+- The front is a plain heart and ring, with no pull tab. The opening grip (bevelled back edge) and the wheel are hidden.
 - The heart opens to about 65° and rests on hidden stops about 2° past flat.
 - The cam, shaft and wheel turn a full 360° without touching anything.
 - At every step the flat in use faces the blade square-on, so there's no turning force from a pull.
@@ -74,7 +79,7 @@ The model is tuned for this printer and filament:
 **Enclosure:** PETG doesn't need it. Keep the door cracked so the chamber stays under about 35 °C, otherwise PETG can soften in the extruder and jam.
 
 ### 3. Print the clip
-`heart_clip_all_parts.stl` (162 × 89 mm) fits the 220 × 220 bed and takes about 4–5 hours. Every part is already in its print orientation.
+`heart_clip_all_parts.stl` (163 × 89 mm) fits the 220 × 220 bed and takes about 4–5 hours. Every part is already in its print orientation.
 
 | Part | Qty | Notes |
 |---|---|---|
@@ -84,7 +89,7 @@ The model is tuned for this printer and filament:
 | `blade.stl` | 1 | gripping blade |
 | `cam.stl` | 1 | spiral cam |
 | `dial.stl` | 1 | D-shaft for the cam and wheel |
-| `wheel.stl` | 1 | knurled thumbwheel |
+| `wheel.stl` | 1 | toothed wheel (10 clicks) |
 | `cap.stl` | 1 | holds the dial in |
 | `washer.stl` | 2 | spacer rings for the lower pin |
 | `pin.stl` | 2 | or 3 mm steel pins, 24 mm long |
