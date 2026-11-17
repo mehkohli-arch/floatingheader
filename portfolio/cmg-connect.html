@@ -270,6 +270,18 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 }
 
   </style>
+  <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
+  <script>
+    (function () {
+      var d = document.documentElement, f = document.fonts;
+      if (!f || !f.load) return;
+      d.classList.add('wf');
+      var done = function () { d.classList.remove('wf'); };
+      Promise.all(['400 1em Lemon', '400 1em "Bricolage Grotesque"', '600 1em "Bricolage Grotesque"', '700 1em "Bricolage Grotesque"', '800 1em "Bricolage Grotesque"', '400 1em Inter', '500 1em Inter', '600 1em Inter', '400 1em "JetBrains Mono"', '500 1em "JetBrains Mono"']
+        .map(function (s) { return f.load(s); })).then(done, done);
+      setTimeout(done, 800);
+    })();
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -301,7 +313,7 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
         </div>
         <figure class="figure rv hero-fig">
           <a href="https://framerusercontent.com/images/QgEevPuS6KxoSRoMHhXK3juJyo.png" target="_blank" rel="noopener" aria-label="Open full-size image: The CMG Connect app on two phones, showing a list of loans and a loan's details">
-            <img src="https://framerusercontent.com/images/QgEevPuS6KxoSRoMHhXK3juJyo.png?scale-down-to=2048" alt="The CMG Connect app on two phones, showing a list of loans and a loan's details" decoding="async">
+            <img src="https://framerusercontent.com/images/QgEevPuS6KxoSRoMHhXK3juJyo.png?scale-down-to=2048" width="1600" height="1018" alt="The CMG Connect app on two phones, showing a list of loans and a loan's details" decoding="async">
           </a>
           <figcaption><span>CMG Connect on mobile: the loans list and a loan's details.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure>
@@ -335,17 +347,17 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
         <div class="rv"><span class="label eyebrow">How I approached it</span><h2>Real tasks, real <em>people</em></h2></div>
         <ol class="steps rv" style="counter-reset: step 0"><li><h3>Turn real work into test tasks</h3><p>I mapped the full journey: signing up, inviting clients, tracking loans, uploading documents and sending invites. Then I broke it into scenarios that match how an agent strings tasks together in a real day.</p><p>Each scenario was scripted to guide people while still leaving room to explore naturally.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/HatL5iK4bM2jVr4SEDNMnk1uV6s.png" target="_blank" rel="noopener" aria-label="Open full-size image: Test flow diagram connecting the app screens agents moved through, from sign-up to tracking a loan">
-            <img src="https://framerusercontent.com/images/HatL5iK4bM2jVr4SEDNMnk1uV6s.png?scale-down-to=2048" alt="Test flow diagram connecting the app screens agents moved through, from sign-up to tracking a loan" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/HatL5iK4bM2jVr4SEDNMnk1uV6s.png?scale-down-to=2048" width="782" height="1600" alt="Test flow diagram connecting the app screens agents moved through, from sign-up to tracking a loan" loading="lazy" decoding="async">
           </a>
           <figcaption><span>The test flow: the series of tasks agents completed.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 1"><li><h3>Build a clickable prototype</h3><p>I built an interactive prototype focused on how the app is organized and how people move through it, not final visual polish.</p><p>I made sure every key action worked (uploading, switching between leads and loans, sending invites) so gaps wouldn't skew the results.</p></li></ol><ol class="steps rv" style="counter-reset: step 2"><li><h3>Run two kinds of tests</h3><p>Between January 4 and 16, 2024, I ran <strong>live sessions</strong> to observe closely and ask follow-up questions, and <strong>self-guided sessions</strong> to see how agents use it on their own. Participants were real estate agents across the US, ages 26 to 64, recruited through the testing platform Userlytics.</p><p>For the self-guided tests, the prototype and instructions had to stand on their own, so I built the task prompts right into the test.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/x2dklygjqrpBtoPerTRXFV0t0Sc.png" target="_blank" rel="noopener" aria-label="Open full-size image: The CMG Connect prototype on a phone as a tester saw it during a self-guided session">
-            <img src="https://framerusercontent.com/images/x2dklygjqrpBtoPerTRXFV0t0Sc.png?scale-down-to=2048" alt="The CMG Connect prototype on a phone as a tester saw it during a self-guided session" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/x2dklygjqrpBtoPerTRXFV0t0Sc.png?scale-down-to=2048" width="774" height="1600" alt="The CMG Connect prototype on a phone as a tester saw it during a self-guided session" loading="lazy" decoding="async">
           </a>
           <figcaption><span>The prototype as testers saw it during a self-guided session.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 3"><li><h3>Measure and find patterns</h3><p>I tracked success or failure at every step to see exactly where people dropped off.</p><p>Then I grouped everything people said and did into themes (called affinity mapping) to spot patterns across testers.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/LJ5fKMoOxF0sSBN9VFk9j9iz5c.png" target="_blank" rel="noopener" aria-label="Open full-size image: Affinity map of sticky notes grouping tester feedback into themes">
-            <img src="https://framerusercontent.com/images/LJ5fKMoOxF0sSBN9VFk9j9iz5c.png?scale-down-to=2048" alt="Affinity map of sticky notes grouping tester feedback into themes" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/LJ5fKMoOxF0sSBN9VFk9j9iz5c.png?scale-down-to=2048" width="870" height="1600" alt="Affinity map of sticky notes grouping tester feedback into themes" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Affinity mapping: grouping feedback into themes.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure>

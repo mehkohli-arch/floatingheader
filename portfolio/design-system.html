@@ -270,6 +270,18 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 }
 
   </style>
+  <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
+  <script>
+    (function () {
+      var d = document.documentElement, f = document.fonts;
+      if (!f || !f.load) return;
+      d.classList.add('wf');
+      var done = function () { d.classList.remove('wf'); };
+      Promise.all(['400 1em Lemon', '400 1em "Bricolage Grotesque"', '600 1em "Bricolage Grotesque"', '700 1em "Bricolage Grotesque"', '800 1em "Bricolage Grotesque"', '400 1em Inter', '500 1em Inter', '600 1em Inter', '400 1em "JetBrains Mono"', '500 1em "JetBrains Mono"']
+        .map(function (s) { return f.load(s); })).then(done, done);
+      setTimeout(done, 800);
+    })();
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -301,7 +313,7 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
         </div>
         <figure class="figure rv hero-fig">
           <a href="https://framerusercontent.com/images/93wF7jLH6RGREUb6Hgw3WqKzAeA.png" target="_blank" rel="noopener" aria-label="Open full-size image: Design system documentation, components and token tables">
-            <img src="https://framerusercontent.com/images/93wF7jLH6RGREUb6Hgw3WqKzAeA.png?scale-down-to=2048" alt="Design system documentation, components and token tables" decoding="async">
+            <img src="https://framerusercontent.com/images/93wF7jLH6RGREUb6Hgw3WqKzAeA.png?scale-down-to=2048" width="1600" height="1018" alt="Design system documentation, components and token tables" decoding="async">
           </a>
           <figcaption><span>The design system: documentation, components and design tokens.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure>
@@ -341,27 +353,27 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
         <div class="rv"><span class="label eyebrow">How I approached it</span><h2>Six steps from chaos to <em>system</em></h2></div>
         <ol class="steps rv" style="counter-reset: step 0"><li><h3>Audit what exists</h3><p>I reviewed every component across the internal apps and logged inconsistencies, duplicates and accessibility issues. I also asked developers about the technical limits they work within.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/FKKZxbYRvadq0N3SyVG1lt4Pmc.png" target="_blank" rel="noopener" aria-label="Open full-size image: Audit spreadsheet logging each component with its issues and accessibility gaps">
-            <img src="https://framerusercontent.com/images/FKKZxbYRvadq0N3SyVG1lt4Pmc.png?scale-down-to=2048" alt="Audit spreadsheet logging each component with its issues and accessibility gaps" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/FKKZxbYRvadq0N3SyVG1lt4Pmc.png?scale-down-to=2048" width="1500" height="838" alt="Audit spreadsheet logging each component with its issues and accessibility gaps" loading="lazy" decoding="async">
           </a>
           <figcaption><span>The audit: logging every component, its issues and accessibility gaps.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 1"><li><h3>Set the rules</h3><p>I defined clear rules for text, spacing and color.</p><p>I used atomic design: start with the smallest basics (colors, spacing, type), combine them into elements (buttons, inputs), then into full patterns (forms, tables). Like letters forming words, then sentences.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/95fPeGyuS0MFMfJ3M4xYIOaCBA4.png" target="_blank" rel="noopener" aria-label="Open full-size image: Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns">
-            <img src="https://framerusercontent.com/images/95fPeGyuS0MFMfJ3M4xYIOaCBA4.png?scale-down-to=2048" alt="Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/95fPeGyuS0MFMfJ3M4xYIOaCBA4.png?scale-down-to=2048" width="1600" height="444" alt="Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Atomic design: small basics build up into elements, then full patterns.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 2"><li><h3>Make it work for everyone</h3><p>I made sure components meet WCAG accessibility standards: readable color contrast, visible focus outlines, labels for screen readers, and full keyboard use. I tested the core flows with a keyboard and a screen reader.</p></li></ol><ol class="steps rv" style="counter-reset: step 3"><li><h3>Write it down</h3><p>I co-wrote guidelines explaining <em>why</em> and <em>when</em> to use each component, with accessibility notes and specs engineers can build from directly.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/1pMvnUWXBJnIgaRNw9Xiht2200.png" target="_blank" rel="noopener" aria-label="Open full-size image: Component documentation pages with usage guidelines for designers and developers">
-            <img src="https://framerusercontent.com/images/1pMvnUWXBJnIgaRNw9Xiht2200.png?scale-down-to=2048" alt="Component documentation pages with usage guidelines for designers and developers" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/1pMvnUWXBJnIgaRNw9Xiht2200.png?scale-down-to=2048" width="1600" height="1018" alt="Component documentation pages with usage guidelines for designers and developers" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Usage guidelines written for designers and engineers.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 4"><li><h3>Coach and collaborate</h3><p>I gave ongoing feedback through design critiques, and co-ran design and engineering meetings to make sure the system was buildable and adopted.</p></li></ol><ol class="steps rv" style="counter-reset: step 5"><li><h3>Finish the job</h3><p>I took ownership of the unfinished work: the design tokens and the complete component builds.</p><p><strong>Design tokens</strong> are named settings, like "primary color" or "small spacing," defined once and used everywhere. Change a token, and every product using it updates. I finalized a token setup that keeps the whole system consistent and easy to extend.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/GlEBb9v5sQnnkzM2lqv0JvTLZHY.png" target="_blank" rel="noopener" aria-label="Open full-size image: Design tokens in Figma: named color and spacing settings for each component">
-            <img src="https://framerusercontent.com/images/GlEBb9v5sQnnkzM2lqv0JvTLZHY.png?scale-down-to=2048" alt="Design tokens in Figma: named color and spacing settings for each component" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/GlEBb9v5sQnnkzM2lqv0JvTLZHY.png?scale-down-to=2048" width="1080" height="1080" alt="Design tokens in Figma: named color and spacing settings for each component" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Design tokens: named color and spacing settings for each component.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><figure class="figure rv">
           <a href="https://framerusercontent.com/images/TjBv6AWGzLsV0qUqVry58TLI1s.png" target="_blank" rel="noopener" aria-label="Open full-size image: A table header component built with tokens, with its color, state and size options">
-            <img src="https://framerusercontent.com/images/TjBv6AWGzLsV0qUqVry58TLI1s.png?scale-down-to=2048" alt="A table header component built with tokens, with its color, state and size options" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/TjBv6AWGzLsV0qUqVry58TLI1s.png?scale-down-to=2048" width="1600" height="1600" alt="A table header component built with tokens, with its color, state and size options" loading="lazy" decoding="async">
           </a>
           <figcaption><span>A finished component built entirely with tokens, with its options for color, state and size.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure>

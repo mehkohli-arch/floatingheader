@@ -270,6 +270,18 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 }
 
   </style>
+  <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
+  <script>
+    (function () {
+      var d = document.documentElement, f = document.fonts;
+      if (!f || !f.load) return;
+      d.classList.add('wf');
+      var done = function () { d.classList.remove('wf'); };
+      Promise.all(['400 1em Lemon', '400 1em "Bricolage Grotesque"', '600 1em "Bricolage Grotesque"', '700 1em "Bricolage Grotesque"', '800 1em "Bricolage Grotesque"', '400 1em Inter', '500 1em Inter', '600 1em Inter', '400 1em "JetBrains Mono"', '500 1em "JetBrains Mono"']
+        .map(function (s) { return f.load(s); })).then(done, done);
+      setTimeout(done, 800);
+    })();
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -301,7 +313,7 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
         </div>
         <figure class="figure rv hero-fig">
           <a href="https://framerusercontent.com/images/Ki5eeqHvlQgDVSTycpmvDDHDdjA.png" target="_blank" rel="noopener" aria-label="Open full-size image: The finished customer list with the details panel and savings comparison">
-            <img src="https://framerusercontent.com/images/Ki5eeqHvlQgDVSTycpmvDDHDdjA.png?scale-down-to=2048" alt="The finished customer list with the details panel and savings comparison" decoding="async">
+            <img src="https://framerusercontent.com/images/Ki5eeqHvlQgDVSTycpmvDDHDdjA.png?scale-down-to=2048" width="1600" height="897" alt="The finished customer list with the details panel and savings comparison" decoding="async">
           </a>
           <figcaption><span>The finished design: a list of customers who could save, with a details panel.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure>
@@ -335,27 +347,27 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
         <div class="rv"><span class="label eyebrow">How I approached it</span><h2>Speed without losing <em>clarity</em></h2></div>
         <ol class="steps rv" style="counter-reset: step 0"><li><h3>Work within the constraint</h3><p>With no time for full research, I focused on one thing: showing the right information in the right place.</p></li></ol><ol class="steps rv" style="counter-reset: step 1"><li><h3>Map the whole journey</h3><p>An officer opens the list, sorts and filters by opportunity, picks a customer, and reviews their details and possible savings.</p><p>I grouped information the way officers make decisions: the customer's data, quick rate options, and a savings comparison.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/PTMUpJLtCVsqO1NEuvWd30fopk.png" target="_blank" rel="noopener" aria-label="Open full-size image: Early wireframes planning what information each screen shows">
-            <img src="https://framerusercontent.com/images/PTMUpJLtCVsqO1NEuvWd30fopk.png?scale-down-to=2048" alt="Early wireframes planning what information each screen shows" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/PTMUpJLtCVsqO1NEuvWd30fopk.png?scale-down-to=2048" width="1600" height="1200" alt="Early wireframes planning what information each screen shows" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Early wireframes: deciding what information officers need, and where it goes.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 2"><li><h3>Design fast with existing building blocks</h3><p>Reusing the design system's ready-made parts let me move straight to detailed, realistic designs and refine from there.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/1ZGELDmcHJTzhPLUsKziI7fpM.png" target="_blank" rel="noopener" aria-label="Open full-size image: A wireframe and the final design of the quick rates and savings panel, side by side">
-            <img src="https://framerusercontent.com/images/1ZGELDmcHJTzhPLUsKziI7fpM.png?scale-down-to=2048" alt="A wireframe and the final design of the quick rates and savings panel, side by side" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/1ZGELDmcHJTzhPLUsKziI7fpM.png?scale-down-to=2048" width="1600" height="1135" alt="A wireframe and the final design of the quick rates and savings panel, side by side" loading="lazy" decoding="async">
           </a>
           <figcaption><span>From wireframe to final design: the quick rates and savings panel.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><figure class="figure rv">
           <a href="https://framerusercontent.com/images/WBqOw1f6Po9Hlt2RGoztBbLMtOc.png" target="_blank" rel="noopener" aria-label="Open full-size image: Wireframe and final design of the savings comparison, side by side">
-            <img src="https://framerusercontent.com/images/WBqOw1f6Po9Hlt2RGoztBbLMtOc.png?scale-down-to=2048" alt="Wireframe and final design of the savings comparison, side by side" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/WBqOw1f6Po9Hlt2RGoztBbLMtOc.png?scale-down-to=2048" width="1507" height="1240" alt="Wireframe and final design of the savings comparison, side by side" loading="lazy" decoding="async">
           </a>
           <figcaption><span>The savings comparison, from rough layout to finished design.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 3"><li><h3>Review quickly, hand off cleanly</h3><p>I checked designs with stakeholders in fast review rounds, then delivered production-ready designs and a fully working prototype straight to engineering.</p></li></ol><figure class="figure rv">
           <a href="https://framerusercontent.com/images/Xl8eYoF6wH3aS79wjDYfzFSZyjQ.png" target="_blank" rel="noopener" aria-label="Open full-size image: Bird's-eye view of all screens and flows delivered to engineering">
-            <img src="https://framerusercontent.com/images/Xl8eYoF6wH3aS79wjDYfzFSZyjQ.png?scale-down-to=2048" alt="Bird's-eye view of all screens and flows delivered to engineering" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/Xl8eYoF6wH3aS79wjDYfzFSZyjQ.png?scale-down-to=2048" width="1600" height="870" alt="Bird's-eye view of all screens and flows delivered to engineering" loading="lazy" decoding="async">
           </a>
           <figcaption><span>A bird's-eye view of everything I handed to engineering.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><figure class="figure rv">
           <a href="https://framerusercontent.com/images/oa5uXQ2hgENkZeYy2VjL1RCU6wI.png" target="_blank" rel="noopener" aria-label="Open full-size image: Second bird's-eye view of the delivered screens and flows">
-            <img src="https://framerusercontent.com/images/oa5uXQ2hgENkZeYy2VjL1RCU6wI.png?scale-down-to=2048" alt="Second bird's-eye view of the delivered screens and flows" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/oa5uXQ2hgENkZeYy2VjL1RCU6wI.png?scale-down-to=2048" width="1600" height="905" alt="Second bird's-eye view of the delivered screens and flows" loading="lazy" decoding="async">
           </a>
           <figcaption><span>The full set of screens and flows, delivered alongside a working prototype.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure>
@@ -372,7 +384,7 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
   <ul><li><strong>Customer data:</strong> loan balance, credit and home value, which used to live in several systems.</li><li><strong>Quick rates:</strong> instant "what if" refinance options for that customer.</li><li><strong>Savings comparison:</strong> current loan and new loan side by side, showing the change in monthly payment, savings and total cost.</li></ul>
   <p>Officers no longer calculate options by hand or ask experts for one-off numbers. They can see a customer's options in seconds.</p></div><figure class="figure rv">
           <a href="https://framerusercontent.com/images/lhl1ornF2D2Qx9QXMy845kD9EsA.png" target="_blank" rel="noopener" aria-label="Open full-size image: The final design: the customer list with the details panel open, showing customer data, quick rates and savings">
-            <img src="https://framerusercontent.com/images/lhl1ornF2D2Qx9QXMy845kD9EsA.png?scale-down-to=2048" alt="The final design: the customer list with the details panel open, showing customer data, quick rates and savings" loading="lazy" decoding="async">
+            <img src="https://framerusercontent.com/images/lhl1ornF2D2Qx9QXMy845kD9EsA.png?scale-down-to=2048" width="1600" height="1100" alt="The final design: the customer list with the details panel open, showing customer data, quick rates and savings" loading="lazy" decoding="async">
           </a>
           <figcaption><span>The final design: the customer list with the details panel open.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
         </figure><div class="read rv"><h3>How it works in practice</h3>

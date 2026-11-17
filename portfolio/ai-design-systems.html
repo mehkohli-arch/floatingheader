@@ -270,6 +270,18 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 }
 
   </style>
+  <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
+  <script>
+    (function () {
+      var d = document.documentElement, f = document.fonts;
+      if (!f || !f.load) return;
+      d.classList.add('wf');
+      var done = function () { d.classList.remove('wf'); };
+      Promise.all(['400 1em Lemon', '400 1em "Bricolage Grotesque"', '600 1em "Bricolage Grotesque"', '700 1em "Bricolage Grotesque"', '800 1em "Bricolage Grotesque"', '400 1em Inter', '500 1em Inter', '600 1em Inter', '400 1em "JetBrains Mono"', '500 1em "JetBrains Mono"']
+        .map(function (s) { return f.load(s); })).then(done, done);
+      setTimeout(done, 800);
+    })();
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
