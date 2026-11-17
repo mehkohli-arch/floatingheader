@@ -309,7 +309,7 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 /* ═════════ Design tokens + components (single source of truth) ═════════ */
 :root {
   /* Type scale */
-  --t-display: clamp(64px, 11vw, 156px); /* Lemon: name, "Let's talk" */
+  --t-display: clamp(64px, 11vw, 156px); /* Lemon: your name only */
   --t-h1: clamp(40px, 6vw, 80px);        /* page and section titles */
   --t-h2: clamp(26px, 3.6vw, 44px);      /* section headings, modal titles */
   --t-h3: 22px;                          /* card, step and box titles */
@@ -335,7 +335,8 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 
 /* Type */
 strong { font-weight: 600; }
-.hero h1, .contact h2 { font: 400 var(--t-display)/.92 var(--f-sig); letter-spacing: -.02em; }
+.hero h1 { font: 400 var(--t-display)/.92 var(--f-sig); letter-spacing: -.02em; }
+.contact h2 { font: 400 var(--t-h1)/1 var(--f-sig); letter-spacing: -.02em; }
 .c-hero h1, .sec-head h2 { font: 800 var(--t-h1)/1 var(--f-head); letter-spacing: -.03em; }
 .sec-head h2 em, .c-section h2 em { font-family: var(--f-sig); font-weight: 400; font-size: 1em; font-style: normal; letter-spacing: -.01em; }
 .c-section h2, .hero .role, dialog.qv .qv-head h2, .next strong { font: 800 var(--t-h2)/1.1 var(--f-head); letter-spacing: -.02em; }
@@ -378,12 +379,34 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
 /* Icons inside text and buttons */
 .cm-caret, .zoom-btn span, .award span[aria-hidden], .tag[aria-hidden] { font-size: var(--icon-sm); line-height: 1; }
 
+/* Case study cards: number and description line up the same way on every card */
+.cs .impact { display: grid; grid-template-columns: 108px minmax(0, 1fr); align-items: center; gap: 14px; }
+.cs .impact b { white-space: nowrap; }
+.cs .thumb { position: relative; }
+.cs .thumb .flag { position: absolute; top: 14px; left: 14px; z-index: 1; margin: 0; }
+.tag, .award { display: inline-flex; align-items: center; gap: 6px; }
+/* Footer: both items on one line, icon spaced from text */
+.foot { align-items: center; }
+.foot a { display: inline-flex; align-items: center; gap: 6px; min-height: var(--btn-md); }
+/* Education: date always in the right-hand column */
+.about .edu li { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 2px; align-items: baseline; }
+.about .edu li b { grid-column: 1; grid-row: 1; }
+.about .edu .yr { grid-column: 2; grid-row: 1; text-align: right; white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
+.about .edu .sch { grid-column: 1; grid-row: 2; color: var(--muted); }
+
 @media (max-width: 640px) {
   .nav > a, .cm-btn { min-height: var(--btn-md); padding: 0 10px; }
 }
 @media (max-width: 374px) {
   .nav > a, .cm-btn { padding: 0 7px; font-size: 13px; }
 }
+
+/* Icons: one drawn set, centered with text */
+.nw { white-space: nowrap; }
+.ic { display: inline-flex; width: var(--icon-sm); height: var(--icon-sm); flex: none; vertical-align: -0.125em; }
+.ic svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+.go i .ic, .next i .ic, .qv-x .ic, .lb-close .ic { width: var(--icon-md); height: var(--icon-md); vertical-align: 0; }
+.btn .ic, .hbtn .ic, .back .ic, .ex-link .ic, .ql .ic, .qv-cta .ic, .zoom-btn .ic, .qv-nav .ic, .cm-btn .ic { vertical-align: 0; }
 
   </style>
   <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
@@ -414,14 +437,14 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
   <nav class="nav" aria-label="Primary">
     <a class="sig" href="index.html" aria-label="Meher Kohli, home">M.</a>
     <a href="index.html">Home</a>
-    <div class="cm"><button type="button" class="cm-btn" aria-expanded="false" aria-controls="cm-list">Case studies <span class="cm-caret" aria-hidden="true">▾</span></button><ul class="cm-list" id="cm-list" hidden><li><a href="ai-design-systems.html"><span class="cm-kind">Design systems + AI</span>AI-Ready Design Systems</a></li><li><a href="design-system.html" aria-current="page"><span class="cm-kind">Design systems</span>Employee Experience Design System</a></li><li><a href="servicing-loans.html"><span class="cm-kind">Product design</span>Servicing Loans Pipeline</a></li><li><a href="cmg-connect.html"><span class="cm-kind">UX research</span>CMG Connect: Realtor App</a></li></ul></div>
+    <div class="cm"><button type="button" class="cm-btn" aria-expanded="false" aria-controls="cm-list">Case studies <span class="cm-caret" aria-hidden="true"><span class="ic ic-caret" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9l6 6 6-6"/></svg></span></span></button><ul class="cm-list" id="cm-list" hidden><li><a href="ai-design-systems.html"><span class="cm-kind">Design systems + AI</span>AI-Ready Design Systems</a></li><li><a href="design-system.html" aria-current="page"><span class="cm-kind">Design systems</span>Employee Experience Design System</a></li><li><a href="servicing-loans.html"><span class="cm-kind">Product design</span>Servicing Loans Pipeline</a></li><li><a href="cmg-connect.html"><span class="cm-kind">UX research</span>CMG Connect: Realtor App</a></li></ul></div>
     <a href="index.html#about">About</a>
     <a class="cta" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
   </nav>
 
   <header class="c-hero plum">
     <div class="wrap">
-      <a class="back" href="index.html">← Home</a>
+      <a class="back" href="index.html"><span class="ic ic-left" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Home</a>
       <span class="kind label">Case study 02 · Design systems</span>
       <h1>Employee Experience Design System</h1>
       <p class="summary">Turning a patchwork of internal apps into one consistent, accessible system that designers and engineers can build on quickly.</p>
@@ -439,7 +462,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
         <figure class="figure rv hero-fig">
           <div class="fig-frame">
             <img src="img/93wF7jLH6RGREUb6Hgw3WqKzAeA.png" width="1600" height="1018" alt="Design system documentation, components and token tables" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Design system documentation, components and token tables"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Design system documentation, components and token tables"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>The design system: documentation, components and design tokens.</figcaption>
         </figure>
@@ -480,31 +503,31 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
         <ol class="steps rv" style="counter-reset: step 0"><li><h3>Audit what exists</h3><p>I reviewed every component across the internal apps and logged inconsistencies, duplicates and accessibility issues. I also asked developers about the technical limits they work within.</p></li></ol><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/FKKZxbYRvadq0N3SyVG1lt4Pmc.png" width="1500" height="838" alt="Audit spreadsheet logging each component with its issues and accessibility gaps" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Audit spreadsheet logging each component with its issues and accessibility gaps"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Audit spreadsheet logging each component with its issues and accessibility gaps"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>The audit: logging every component, its issues and accessibility gaps.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 1"><li><h3>Set the rules</h3><p>I defined clear rules for text, spacing and color.</p><p>I used atomic design: start with the smallest basics (colors, spacing, type), combine them into elements (buttons, inputs), then into full patterns (forms, tables). It works the way letters form words and words form sentences.</p></li></ol><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/95fPeGyuS0MFMfJ3M4xYIOaCBA4.png" width="1600" height="444" alt="Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>Atomic design: small basics build up into elements, then full patterns.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 2"><li><h3>Make it work for everyone</h3><p>I made sure components meet WCAG accessibility standards: readable color contrast, visible focus outlines, labels for screen readers, and full keyboard use. I tested the core flows with a keyboard and a screen reader.</p></li></ol><ol class="steps rv" style="counter-reset: step 3"><li><h3>Write it down</h3><p>I co-wrote guidelines explaining <em>why</em> and <em>when</em> to use each component, with accessibility notes and specs engineers can build from directly.</p></li></ol><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/1pMvnUWXBJnIgaRNw9Xiht2200.png" width="1600" height="1018" alt="Component documentation pages with usage guidelines for designers and developers" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Component documentation pages with usage guidelines for designers and developers"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Component documentation pages with usage guidelines for designers and developers"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>Usage guidelines written for designers and engineers.</figcaption>
-        </figure><ol class="steps rv" style="counter-reset: step 4"><li><h3>Coach and collaborate</h3><p>I gave ongoing feedback through design critiques, and co-ran design and engineering meetings to make sure the system was buildable and adopted.</p></li></ol><ol class="steps rv" style="counter-reset: step 5"><li><h3>Finish the job</h3><p>I took ownership of the unfinished work: the design tokens and the complete component builds.</p><p><strong>Design tokens</strong> are named settings, like "primary color" or "small spacing," defined once and used everywhere. Change a token, and every product using it updates. I finalized a token setup that keeps the whole system consistent and easy to extend.</p></li></ol><figure class="figure rv">
+        </figure><ol class="steps rv" style="counter-reset: step 4"><li><h3>Coach and collaborate</h3><p>I gave ongoing feedback through design critiques, and co-ran design and engineering meetings to make sure the system was buildable and adopted.</p></li></ol><ol class="steps rv" style="counter-reset: step 5"><li><h3>Finish the job</h3><p>I took ownership of the unfinished work: the design tokens and the complete component builds.</p><p><strong>Design tokens</strong> are named settings, like "primary color" or "small spacing," defined once and used everywhere. Change a token, and every product using it updates. I finalized a token setup that keeps the whole system consistent and easy to extend.</p><p>Later, adding dark mode to Clear 2.0 meant restructuring these tokens with a semantic layer, named by purpose instead of by color. That restructure also brought our token names much closer to PrimeNG and to what our developers use, so design and code now speak the same language. <a href="ai-design-systems.html">Read how in AI-Ready Design Systems</a>.</p></li></ol><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/GlEBb9v5sQnnkzM2lqv0JvTLZHY.png" width="1080" height="1080" alt="Design tokens in Figma: named color and spacing settings for each component" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Design tokens in Figma: named color and spacing settings for each component"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Design tokens in Figma: named color and spacing settings for each component"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>Design tokens: named color and spacing settings for each component.</figcaption>
         </figure><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/TjBv6AWGzLsV0qUqVry58TLI1s.png" width="1600" height="1600" alt="A table header component built with tokens, with its color, state and size options" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: A table header component built with tokens, with its color, state and size options"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: A table header component built with tokens, with its color, state and size options"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>A finished component built entirely with tokens, with its options for color, state and size.</figcaption>
         </figure>
@@ -529,7 +552,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
     </section>
 
     <section class="wrap next">
-      <a href="servicing-loans.html" class="rv"><div><span class="label">Next case study</span><strong>Servicing Loans Pipeline</strong><p>Finding hidden savings for customers: the product behind CMG's Tech100 award.</p></div><i aria-hidden="true">→</i></a>
+      <a href="servicing-loans.html" class="rv"><div><span class="label">Next case study</span><strong>Servicing Loans Pipeline</strong><p>Finding hidden savings for customers: the product behind CMG's Tech100 award.</p></div><i aria-hidden="true"><span class="ic ic-right" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></i></a>
     </section>
   </main>
 
@@ -540,15 +563,15 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
       <p>I'd be glad to talk about the role and walk you through my work.</p>
       <div class="btns">
         <a class="btn y" href="mailto:mehkohli@gmail.com">✉ mehkohli@gmail.com</a>
-        <a class="btn o" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn ↗</a>
-        <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé ↗</a>
+        <a class="btn o" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener"><span class="nw">LinkedIn <span class="ic ic-external" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></span></a>
+        <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener"><span class="nw">Résumé <span class="ic ic-external" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></span></a>
       </div>
-      <div class="foot"><span>© 2026 Meher Kohli</span><a href="index.html">← Back to home</a></div>
+      <div class="foot"><span>© 2026 Meher Kohli</span><a href="index.html"><span class="ic ic-left" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Back to home</a></div>
     </div>
   </footer>
 
   <dialog class="lightbox" id="lb" aria-label="Full size image">
-    <div class="lb-bar"><span class="lb-hint">Tap the image to zoom in or out</span><button type="button" class="lb-close" aria-label="Close full size image">×</button></div>
+    <div class="lb-bar"><span class="lb-hint">Tap the image to zoom in or out</span><button type="button" class="lb-close" aria-label="Close full size image"><span class="ic ic-close" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></span></button></div>
     <div class="lb-stage"><img alt=""></div>
     <p class="lb-cap"></p>
   </dialog>
