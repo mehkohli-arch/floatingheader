@@ -312,6 +312,7 @@
       setTimeout(done, 800);
     })();
   </script>
+  <!--GA-HEAD--><!-- Google Analytics: add the Measurement ID in analytics.py to turn on --><!--/GA-HEAD-->
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -682,6 +683,37 @@
   btn.addEventListener('click', function (e) { e.stopPropagation(); set(list.hidden); if (!list.hidden) { var a = list.querySelector('a'); if (a) a.focus(); } });
   document.addEventListener('click', function (e) { if (!list.hidden && !list.contains(e.target)) set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !list.hidden) { set(false); btn.focus(); } });
+})();
+
+// Analytics: record the clicks that matter (résumé, LinkedIn, email, case studies, Quick look, full-size images).
+(function () {
+  function send(name, params) { if (typeof window.gtag === 'function') window.gtag('event', name, params || {}); }
+  var page = (location.pathname.split('/').pop() || 'index.html').replace('.html', '');
+  function where(el) {
+    if (el.closest('.nav')) return 'menu';
+    if (el.closest('.hero')) return 'hero';
+    if (el.closest('.contact')) return 'contact';
+    if (el.closest('#qv')) return 'quick_look';
+    if (el.closest('.cs')) return 'card';
+    if (el.closest('.next')) return 'next_case_study';
+    return 'page';
+  }
+  var cases = ['ai-design-systems', 'design-system', 'servicing-loans', 'cmg-connect'];
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('a, button, .fig-frame img');
+    if (!el) return;
+    var href = el.getAttribute && (el.getAttribute('href') || '');
+    if (href.indexOf('drive.google.com') > -1) return send('resume_click', { location: where(el), page: page });
+    if (href.indexOf('linkedin.com') > -1) return send('linkedin_click', { location: where(el), page: page });
+    if (href.indexOf('mailto:') === 0) return send('email_click', { location: where(el), page: page });
+    var slug = href.split('#')[0].replace('.html', '');
+    if (cases.indexOf(slug) > -1) return send('case_study_open', { case_study: slug, source: el.closest('.cm-list') ? 'case_studies_menu' : where(el), page: page });
+    if (el.classList && el.classList.contains('ql')) {
+      var card = el.closest('.cs'), t = card && card.querySelector('h3');
+      return send('quick_look_open', { case_study: t ? t.textContent.trim() : '' });
+    }
+    if (el.classList && (el.classList.contains('zoom-btn') || el.tagName === 'IMG')) return send('image_full_size', { page: page });
+  }, true);
 })();
 </script>
 </body>
