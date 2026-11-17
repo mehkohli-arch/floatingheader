@@ -503,7 +503,22 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
     }
     if (m && document.activeElement !== m) { try { m.focus({ preventScroll: false }); } catch (e) { m.focus(); } }
   }
-  addEventListener('load', function () { setTimeout(function () { var m = document.getElementById('page-top'); if (m && document.activeElement === m) m.blur(); }, 500); });
+  // Guard: for the first few seconds, if anything (like a viewer restoring an old position)
+  // scrolls the top of the page out of view before the visitor has touched anything, bring it back.
+  addEventListener('load', function () {
+    var m = document.getElementById('page-top');
+    if (!m || !('IntersectionObserver' in window) || location.hash) return;
+    var until = Date.now() + 5000;
+    var io = new IntersectionObserver(function (es) {
+      if (touched || Date.now() > until) { io.disconnect(); return; }
+      if (!es[es.length - 1].isIntersecting) { m.blur(); top(); }
+    });
+    io.observe(m);
+    var poll = setInterval(function () {
+      if (touched || Date.now() > until) { clearInterval(poll); io.disconnect(); if (document.activeElement === m) m.blur(); return; }
+      io.unobserve(m); io.observe(m);
+    }, 250);
+  });
   top();
   document.addEventListener('DOMContentLoaded', top);
   addEventListener('pageshow', top);
