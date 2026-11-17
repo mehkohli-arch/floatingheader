@@ -106,7 +106,9 @@ crest    = plate_t + tooth_h;
 z_B      = plate_t + 0.3 + B_r;
 z_A      = plate_t + 0.3 + A_r;
 R_cam    = A_r + open_lift;
-tail_back= z_A + R_cam;
+rest_ang = 2;                                 // heart rests on its stop tabs ~2 deg past flat
+// tail sits exactly where the cam lobe rests when locked: no slack in the lock
+tail_back= z_A + (R_cam - 1) * cos(overcenter + rest_ang) + 1;
 cam_dir  = [-sin(overcenter), cos(overcenter)];
 r_mov    = pin_d/2 + pin_clr_mov;
 
@@ -353,7 +355,7 @@ module heart() {
             }
             for (sx = [-1, 1]) mirror([sx < 0 ? 1 : 0, 0, 0]) x_band(ear_in, ear_out) hull() {
                 translate([y_A, z_A]) circle(A_r);
-                translate([y_A - 5, heart_back]) square([8, 0.01]);
+                translate([y_A - 5, heart_back]) square([11, 0.01]);   // deep where it meets the heart: strong against yanks
             }
             // hidden stop tabs on the ears: rest on the back plate when closed
             for (sx = [-1, 1]) mirror([sx < 0 ? 1 : 0, 0, 0]) x_band(ear_in, ear_out) hull() {
@@ -362,6 +364,13 @@ module heart() {
             }
         }
         translate([0, y_A, z_A]) teardrop_x(r_mov, 100, -1);
+        // 1 mm relief on the inside face over the grip cam and wheel: the
+        // heart rests ~2 deg past flat, which tips this area towards them
+        translate([0, 0, heart_back - 0.01]) linear_extrude(height = 1.01)
+            intersection() {
+                offset(delta = -2) heart2d();
+                translate([-(wheel_x0 + wheel_t + 1), y_K - wheel_r - 2.5]) square([2 * (wheel_x0 + wheel_t + 1), wheel_r * 2 + 6]);
+            }
         // bevel on the BACK edge of the lower half: a fingertip or nail
         // catches under it to lift the heart (not visible from the front)
         for (i = [0 : 5])
@@ -431,6 +440,7 @@ else if (PART == "cam")         cam_print();
 else if (PART == "cam_asm")     cam(rho_for(d_for(GRIP)));
 else if (PART == "dial")        dial_print();
 else if (PART == "fit_test")    fit_test();
+else if (PART == "pins_asm")    { translate([0, y_A, z_A]) pin(); translate([0, y_B, z_B]) pin(); }
 else if (PART == "cam_rot")     cam(CAMROT);
 else if (PART == "dial_rot")    dial(CAMROT);
 else if (PART == "dial_asm")    dial(rho_for(d_for(GRIP)));

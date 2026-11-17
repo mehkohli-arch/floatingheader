@@ -48,25 +48,26 @@ Rough engineering estimates (not a physical test), assuming the wheel is set for
 | Hinge posts (3.5 mm, loaded across layers) | 14.5 MPa, about 2× margin |
 | Pins and ring | under 10 MPa |
 
-The parts are stronger than the grip, so a hard yank should pull the trim out of the teeth before anything breaks. For extra strength, use 3 mm steel pins (cut nails or dowel pins).
+The heart's hinge ears are deep where they meet the heart, so yanking the open heart against its stop with about 2 kg stays around 10 MPa. The parts are stronger than the grip, so a hard yank on the flowstar should pull the trim out of the teeth before anything breaks. For extra strength, use 3 mm steel pins (cut nails or dowel pins).
 
 **Grip:** the barbs on both jaws interlock and press about 0.5–1.2 mm into the trim when closed. That forces canvas into a zigzag that grips much harder than a flat squeeze, and a pull digs the barbs in further.
 
 **Untested:** none of this has been tested on a printed clip. Always give it a few firm tugs on the real trim before trusting it with the flowstar.
 
 ## What was checked in the 3D model
-At trim settings 0.3, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5 and 5 mm:
-- No part touches any other, closed or as the heart swings open.
-- The heart's motion and lock are identical.
-- The closed barbs press 0.46–1.18 mm into the trim.
-- With the heart open, the jaw opens at least 1.27 mm wider than the trim.
-- The wheel's self-locking margin is 1.9–3.3× (assuming PETG friction of 0.3).
+At trim settings 0.3, 1, 2, 3, 4 and 5 mm, with the heart at its true resting angle:
+- **Collisions:** no part touches any other except where intended: cam on blade, heart cam on jaw arm, heart stop tabs on the back plate.
+- **Clearances:** every other gap is at least 0.3 mm, enough for FDM tolerances.
+- **Lock:** the heart's cam rests firmly on the jaw arm when locked, with no slack.
+- **Grip:** the closed barbs press 0.46–1.18 mm into the trim.
+- **Opening:** with the heart open, the jaw opens at least 1.18 mm wider than the trim.
+- **Closing on open trim:** the heart closes smoothly onto a jaw held open by the trim. It pushes the jaw shut through about 1° of extra squeeze at the click, then settles locked, with no jamming at any angle.
+- **Wheel:** it self-locks with a 1.9–3.3× margin (assuming PETG friction of 0.3), and the wheel, shaft and cam turn a full 360° without touching anything.
 
 Also checked:
-- **Wheel:** the wheel, shaft and cam turn a full 360° without touching anything.
-- **Heart travel:** the heart opens to about 65° and rests on hidden stops about 2° past flat.
-- **Assembly:** every part can be put in, in the order below.
-- **Printability:** every part prints in its exported orientation without supports, and each file is a single, closed solid.
+- **Heart travel:** the heart opens to about 65° without touching the body.
+- **Assembly:** every part goes in, in the order below.
+- **Print files:** every part prints in its exported orientation without supports, and each file is a single, closed solid.
 
 ## Printing on a Creality Ender 3 V3 SE with PETG
 The model is tuned for this printer and filament:
@@ -124,8 +125,9 @@ After printing, clear any PETG strings from the holes with a 3 mm drill bit turn
    - Slide the D-shaft in from the right, through the arm and the cam.
    - Glue the cap onto its left end and the wheel onto its right end. Glue only to the shaft, so the shaft still turns in the arm.
 3. **Heart:**
-   - Slide the heart straight down from above, so its hinge goes behind the top bar of the arm.
+   - Hold the heart tilted open (about halfway) and slide it down from above, so its hinge goes in behind the top bar of the arm.
    - Push the second pin through the **upper** hinge posts.
+   - Fold the heart closed until it clicks.
 4. **Glue:** put a drop of CA glue where each pin end sits in a hinge post, so the pins can't walk out.
 
 ## Editing
