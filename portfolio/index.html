@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Meher — Senior Product Designer, Design Systems</title>
-  <meta name="description" content="Senior product designer specializing in design systems and enterprise fintech. Case studies: award-winning loan servicing pipeline, employee design system, realtor app research." />
+  <title>Meher Kohli — UX/UI Designer &amp; Design Systems SME</title>
+  <meta name="description" content="Meher Kohli, UX/UI designer and company-wide Design Systems SME at CMG Financial. Case studies: Tech100-winning loan servicing pipeline, employee design system, realtor app research." />
   <meta name="theme-color" content="#fff8f3" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +35,9 @@
     .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
     .mark { font: 400 26px/1 var(--f-sig); color: var(--rose); text-decoration: none; opacity: 0; transform: translateY(4px); transition: opacity .25s, transform .25s; }
     .top.scrolled .mark { opacity: 1; transform: none; }
+    .mark { white-space: nowrap; }
+    @media (max-width: 400px) { .mark { font-size: 21px; } .top nav a { padding: 0 10px; } }
+    @media (max-width: 359px) { .top nav a[href="#work"] { display: none; } }
     .top nav { display: flex; align-items: center; gap: 4px; }
     .top nav a { text-decoration: none; font: 500 15px var(--f-body); color: var(--muted); padding: 0 12px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 8px; }
     .top nav a:hover { color: var(--ink); }
@@ -117,13 +120,12 @@
 
   <header class="top" id="top">
     <div class="wrap">
-      <a class="mark" href="#top" aria-label="Back to top" tabindex="-1">Meher</a>
+      <a class="mark" href="#top" aria-label="Back to top" tabindex="-1">Meher Kohli</a>
       <nav aria-label="Primary">
         <a href="#work">Work</a>
         <a class="opt" href="#about">About</a>
         <a class="opt" href="#contact">Contact</a>
-        <!-- TODO: link your résumé PDF -->
-        <a class="resume" href="#" target="_blank" rel="noopener">Résumé</a>
+        <a class="resume" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
       </nav>
     </div>
   </header>
@@ -132,16 +134,14 @@
     <!-- Answers the recruiter's questions in one screen: who, what level, what specialty, proof, how to reach -->
     <section class="intro">
       <div class="wrap">
-        <p class="name">Meher</p>
-        <h1>Senior Product Designer specializing in design systems and enterprise fintech.</h1>
-        <p class="lede">I design complex mortgage and lending tools end to end, from research to shipped release, and build the design system that keeps them consistent and accessible.</p>
-        <!-- TODO: add years of experience and location / remote preference, e.g. "8 years · Remote, US" -->
-        <p class="proof"><span aria-hidden="true">🏆</span><span><b>HousingWire Tech100 winner</b> for the Servicing Loans Pipeline</span></p>
+        <p class="name">Meher Kohli</p>
+        <h1>UX/UI designer and company-wide Design Systems SME for enterprise fintech.</h1>
+        <p class="lede">At CMG Financial since 2022, I design mortgage and lending tools end to end, from research to shipped release, and lead the design system that keeps them consistent and accessible.</p>
+        <p class="proof"><span aria-hidden="true">🏆</span><span><b>HousingWire Tech100 winner, 2024</b> for the Servicing Loans Pipeline</span></p>
         <div class="actions">
           <a class="btn primary" href="#work">View case studies</a>
-          <a class="btn" href="#" target="_blank" rel="noopener">Résumé</a>
-          <!-- TODO: your LinkedIn URL -->
-          <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
+          <a class="btn" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn</a>
         </div>
       </div>
     </section>
@@ -160,7 +160,7 @@
             <div class="cs-body">
               <span class="cs-type">Product design · 4 weeks</span>
               <h3><a href="https://mehersportfolio.framer.website/cmgservicingloans">Servicing Loans Pipeline</a></h3>
-              <span class="award">🏆 Tech100 winner</span>
+              <span class="award">🏆 Tech100 winner 2024</span>
               <dl>
                 <div><dt>Problem</dt><dd>Loan officers were missing refinance and MI-reduction revenue hidden in their portfolios.</dd></div>
                 <div><dt>My role</dt><dd>Lead designer, end to end: IA, flows, UI and MVP scope</dd></div>
@@ -179,7 +179,7 @@
               <h3><a href="https://mehersportfolio.framer.website/cmgexdesignsystem">Employee Experience Design System</a></h3>
               <dl>
                 <div><dt>Problem</dt><dd>Inconsistent components and accessibility gaps across internal tools slowed design and dev.</dd></div>
-                <div><dt>My role</dt><dd>DS expert and mentor, then owner of tokens and components</dd></div>
+                <div><dt>My role</dt><dd>Design Systems SME and mentor, then owner of tokens and components</dd></div>
                 <div class="outcome"><dt>Outcome</dt><dd>30% fewer design-to-dev clarification cycles</dd></div>
               </dl>
               <span class="more" aria-hidden="true">Read case study →</span>
@@ -210,15 +210,15 @@
       <div class="wrap about">
         <div>
           <h2>About</h2>
-          <p>I'm a product designer who likes the hard parts of enterprise software: dense data, regulated workflows, and many teams shipping into the same product.</p>
-          <p>My work sits where product design and systems meet. I design features end to end, and I build the tokens, components and accessibility standards that let other designers and engineers move faster. I also mentor designers on systems thinking.</p>
-          <p>I care about making technology feel human and inclusive, especially in tools people rely on all day to do their jobs.</p>
+          <p>I'm a UX/UI designer at CMG Financial, where I'm the company-wide Subject Matter Expert for design systems. I like the hard parts of enterprise software: dense data, regulated workflows, and many teams shipping into the same product.</p>
+          <p>I design features end to end and partner closely with engineering on the component library, PrimeNG performance and accessibility compliance. My work has made employee tasks 18–25% faster, cut user errors by 12% and raised feature adoption by 15%.</p>
+          <p>I came to design from psychology (B.S., Virginia Commonwealth University), earned the Google UX Design certificate, and I'm completing a Master's in Human-Computer Interaction at Drexel University.</p>
         </div>
         <div class="skills">
           <h3>Design systems</h3>
-          <ul><li>Token architecture</li><li>Component libraries</li><li>Documentation</li><li>WCAG accessibility</li><li>Design–dev handoff</li></ul>
+          <ul><li>Token architecture</li><li>Component libraries</li><li>Atomic design</li><li>Documentation</li><li>WCAG accessibility</li><li>Developer collaboration</li></ul>
           <h3>Product design</h3>
-          <ul><li>End-to-end UX/UI</li><li>Information architecture</li><li>Complex data workflows</li><li>MVP scoping</li></ul>
+          <ul><li>End-to-end UX/UI</li><li>Information architecture</li><li>Complex data workflows</li><li>AI products</li><li>Stakeholder communication</li></ul>
           <h3>Research &amp; tools</h3>
           <ul><li>Usability testing</li><li>Prototyping</li><li>Figma</li><li>Userlytics</li><li>PrimeNG</li></ul>
         </div>
@@ -230,12 +230,11 @@
         <h2>Hiring for product design or design systems?</h2>
         <p>I'd be glad to talk about the role and walk you through my work.</p>
         <div class="actions">
-          <!-- TODO: your real email -->
-          <a class="btn primary" href="mailto:hello@example.com">Email me</a>
-          <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn" href="#" target="_blank" rel="noopener">Résumé</a>
+          <a class="btn primary" href="mailto:mehkohli@gmail.com">mehkohli@gmail.com</a>
+          <a class="btn" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
         </div>
-        <div class="foot"><span>© 2026 Meher</span><a href="#top">Back to top</a></div>
+        <div class="foot"><span>© 2026 Meher Kohli</span><a href="#top">Back to top</a></div>
       </div>
     </section>
   </main>
