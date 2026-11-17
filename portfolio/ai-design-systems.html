@@ -248,7 +248,7 @@ img { max-width: 100%; }
       <div class="wrap">
         <div class="glance-card rv">
           <dl class="facts"><div><dt>My role</dt><dd>Design systems lead</dd></div><div><dt>Scope</dt><dd>Two systems: employee apps and customer apps</dd></div><div><dt>Tools</dt><dd>Figma, Storybook, PrimeNG, Angular, React, Claude</dd></div><div><dt>Timeline</dt><dd>Customer system built in 4 months</dd></div></dl>
-          <div class="results" aria-label="Results"><div class="result"><b>&lt;1 mo</b><span>to add dark mode to Clear 2.0, our loan software</span></div><div class="result"><b>4 mo</b><span>to build the customer design system, about a year of work</span></div><div class="result"><b>Every</b><span>component in Storybook, ready to use and test</span></div></div>
+          <div class="results" aria-label="Results"><div class="result"><b>&lt;1 mo</b><span>to add dark mode to Clear 2.0, our loan software</span></div><div class="result"><b>4 mo</b><span>to build the customer design system, about a year of work</span></div><div class="result"><b>Every</b><span>component in Storybook, for designers and employees to build with</span></div></div>
         </div>
         <figure class="diagram rv" aria-label="How one design system serves designers, engineers and AI">
           <div class="map">
@@ -256,7 +256,7 @@ img { max-width: 100%; }
             <div class="arrow" aria-hidden="true">↓</div>
             <div class="outs">
               <div class="out"><span class="who">For designers</span><h3>Figma library</h3><p>Ready-to-use components, so every new screen starts on-brand and accessible.</p></div>
-              <div class="out"><span class="who">For engineers and anyone prototyping</span><h3>Storybook</h3><p>The real coded components, browsable and testable, so anyone can build with them.</p></div>
+              <div class="out"><span class="who">For designers and employees</span><h3>Storybook</h3><p>The real coded components, so designers and other employees can build their own tools and prototypes.</p></div>
               <div class="out"><span class="who">For AI tools</span><h3>Rules for Claude</h3><p>Plain-language rules that tell Claude what to use, when and why.</p></div>
             </div>
             <div class="arrow" aria-hidden="true">↓</div>
@@ -275,7 +275,7 @@ img { max-width: 100%; }
   <p>So I set out to make our design systems AI-ready: every design decision stored as a named setting, and every rule written out in plain language that explains what to use, when and why. The clearer the system, the less room for confusion, whether a person or an AI is building.</p>
   <div class="callout"><ul class="defs">
     <li><strong>Design tokens:</strong> named settings, like "page background" or "small spacing," defined once and used everywhere.</li>
-    <li><strong>Storybook:</strong> a living library of the real coded components that anyone can browse and try.</li>
+    <li><strong>Storybook:</strong> a living library of the real coded components that designers and other employees use to build their own tools and prototypes.</li>
     <li><strong>PrimeNG:</strong> the ready-made code library our engineers build with.</li>
   </ul></div></div>
       </div>
@@ -284,7 +284,7 @@ img { max-width: 100%; }
         <div class="rv"><span class="label eyebrow">Project 1 · Clear 2.0, our employee loan software</span><h2>Dark mode in under a <em>month</em></h2></div>
         <div class="read rv">
   <p class="lead">Clear 2.0 is the software CMG employees use every day to manage loans. The team wanted dark mode, but technical debt stood in the way: one-off pieces of code built outside the design system, each styled its own way.</p>
-  <p>Instead of patching screens one by one, I fixed the foundation.</p></div><ol class="steps rv" style="counter-reset: step 0"><li><h3>Add a semantic layer to the tokens</h3><p>I restructured our tokens and added a layer named by purpose, like "primary action" or "page background," instead of by color. Switching to dark mode now means changing what each purpose points to, not redesigning every screen.</p></li></ol><ol class="steps rv" style="counter-reset: step 1"><li><h3>Follow PrimeNG more closely</h3><p>I aligned the token structure with PrimeNG, the code library engineers use, so design and code speak the same language.</p></li></ol><ol class="steps rv" style="counter-reset: step 2"><li><h3>Work around the one-offs</h3><p>I planned around the older one-off code so dark mode could ship without waiting for a full rewrite.</p></li></ol><ol class="steps rv" style="counter-reset: step 3"><li><h3>Put every component in Storybook</h3><p>I built a Storybook version of every component, with both React and Angular versions, so engineers on either technology use the same tested parts.</p></li></ol><figure class="diagram rv" aria-label="Simplified example of three token layers and how dark mode switches them">
+  <p>Instead of patching screens one by one, I fixed the foundation.</p></div><ol class="steps rv" style="counter-reset: step 0"><li><h3>Add a semantic layer to the tokens</h3><p>I restructured our tokens and added a layer named by purpose, like "primary action" or "page background," instead of by color. Switching to dark mode now means changing what each purpose points to, not redesigning every screen.</p></li></ol><ol class="steps rv" style="counter-reset: step 1"><li><h3>Follow PrimeNG more closely</h3><p>I aligned the token structure with PrimeNG, the code library engineers use, so design and code speak the same language.</p></li></ol><ol class="steps rv" style="counter-reset: step 2"><li><h3>Work around the one-offs</h3><p>I planned around the older one-off code so dark mode could ship without waiting for a full rewrite.</p></li></ol><ol class="steps rv" style="counter-reset: step 3"><li><h3>Put every component in Storybook</h3><p>I built a Storybook version of every component, in both React and Angular, so designers and other employees can build their own tools and prototypes with the same parts that ship.</p></li></ol><figure class="diagram rv" aria-label="Simplified example of three token layers and how dark mode switches them">
           <div class="layers">
             <div class="layer"><span class="label">Layer 1 · Base</span><h3>The raw values</h3><code>rose-600 = #A1285A</code><p>Every color and size the brand allows.</p></div>
             <div class="arr" aria-hidden="true">→</div>
@@ -304,7 +304,7 @@ img { max-width: 100%; }
         <div class="rv"><span class="label eyebrow">Project 2 · Our customer-facing design system</span><h2>A full system in 4 <em>months</em></h2></div>
         <div class="read rv">
   <p class="lead">Next, CMG needed a design system for the products its customers use. With AI built into my workflow, I delivered it in 4 months, about a year's worth of work.</p>
-  <p>I built it in Angular only, because that's what the engineers on these products use, and followed PrimeNG closely. It has three parts:</p></div><div class="grid3 rv"><div class="box"><span class="num">Figma</span><h3>A ready-to-use component library</h3><p>Designers start every screen with on-brand, accessible components instead of building from scratch.</p></div><div class="box"><span class="num">Storybook</span><h3>Prototyping with Claude</h3><p>The real coded components, set up so Claude can prototype with them. Prototypes use the same parts engineers ship.</p></div><div class="box"><span class="num">Rules</span><h3>Guidance for Claude to follow</h3><p>Written rules that tell Claude which components and tokens to use, when and why, so AI output meets our experience design standards.</p></div></div>
+  <p>I built it in Angular only, because that's what the engineers on these products use, and followed PrimeNG closely. It has three parts:</p></div><div class="grid3 rv"><div class="box"><span class="num">Figma</span><h3>A ready-to-use component library</h3><p>Designers start every screen with on-brand, accessible components instead of building from scratch.</p></div><div class="box"><span class="num">Storybook</span><h3>Prototyping for everyone</h3><p>The real coded components, set up so designers and other employees can build their own prototypes, including with Claude, using the same parts that ship.</p></div><div class="box"><span class="num">Rules</span><h3>Guidance for Claude to follow</h3><p>Written rules that tell Claude which components and tokens to use, when and why, so AI output meets our experience design standards.</p></div></div>
       </div>
     </section><section class="c-section">
       <div class="wrap">
@@ -316,7 +316,7 @@ img { max-width: 100%; }
     </section><section class="c-section">
       <div class="wrap">
         <div class="rv"><span class="label eyebrow">Results</span><h2>What it <em>delivered</em></h2></div>
-        <div class="grid3 rv"><div class="box dark"><span class="num">&lt;1 month</span><h3>Dark mode in Clear 2.0</h3><p>Shipped by fixing the token foundation instead of redesigning screens.</p></div><div class="box dark"><span class="num">4 months</span><h3>A complete customer system</h3><p>Figma library, Storybook and rules for Claude, about a year of work.</p></div><div class="box dark"><span class="num">Every</span><h3>Component in Storybook</h3><p>Real, tested components anyone in the company can use, in React and Angular.</p></div></div>
+        <div class="grid3 rv"><div class="box dark"><span class="num">&lt;1 month</span><h3>Dark mode in Clear 2.0</h3><p>Shipped by fixing the token foundation instead of redesigning screens.</p></div><div class="box dark"><span class="num">4 months</span><h3>A complete customer system</h3><p>Figma library, Storybook and rules for Claude, about a year of work.</p></div><div class="box dark"><span class="num">Every</span><h3>Component in Storybook</h3><p>Real, tested components designers and other employees use to build their own tools and prototypes, in React and Angular.</p></div></div>
       </div>
     </section><section class="c-section">
       <div class="wrap">
