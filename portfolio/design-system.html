@@ -90,11 +90,27 @@ img { max-width: 100%; }
 
 /* Figures: real product images, shown in full, never cropped */
 .figure { margin: 40px 0; }
-.figure a { display: block; background: #fcf1f5; border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(10px, 2vw, 24px); text-decoration: none; transition: border-color .2s; }
-.figure a:hover { border-color: var(--brand); }
-.figure img { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); object-fit: contain; margin: 0 auto; border-radius: 8px; }
-.figure figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.figure figcaption .zoom { color: var(--brand); font-weight: 600; white-space: nowrap; }
+.fig-frame { position: relative; background: #fcf1f5; border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(10px, 2vw, 24px); transition: border-color .2s; }
+.fig-frame:hover { border-color: var(--brand); }
+.figure img { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); object-fit: contain; margin: 0 auto; border-radius: 8px; cursor: zoom-in; }
+.zoom-btn { position: absolute; top: 12px; right: 12px; min-height: 44px; padding: 0 16px; display: inline-flex; align-items: center; gap: 6px; border: 0; border-radius: 999px; background: rgba(42,15,28,.86); color: #fff; font: 600 14px var(--f-body); cursor: pointer; box-shadow: 0 6px 18px rgba(42,15,28,.25); transition: background .2s; }
+.zoom-btn:hover { background: var(--rose-950); }
+.zoom-btn span { font-size: 16px; line-height: 1; }
+.figure figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
+
+/* Full-size image viewer (stays on the page) */
+dialog.lightbox { width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(20,8,14,.97); color: #fff; }
+dialog.lightbox[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+dialog.lightbox::backdrop { background: rgba(20,8,14,.97); }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left)); }
+.lb-hint { font-size: 13.5px; opacity: .75; }
+.lb-close { flex: none; width: 48px; height: 48px; border-radius: 50%; border: 0; background: #fff; color: var(--rose-950); font-size: 26px; line-height: 1; cursor: pointer; }
+.lb-stage { overflow: auto; display: grid; place-items: center; padding: 8px 16px; min-height: 0; overscroll-behavior: contain; }
+.lb-stage img { display: block; width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 150px); max-height: calc(100dvh - 150px); object-fit: contain; border-radius: 8px; background: #fff; cursor: zoom-in; }
+.lb-stage.actual { place-items: start; }
+.lb-stage.actual img { max-width: none; max-height: none; cursor: zoom-out; }
+.lb-cap { margin: 0; padding: 8px 16px max(14px, env(safe-area-inset-bottom)); font-size: 14px; opacity: .85; text-align: center; }
+body:has(dialog[open]) { overflow: hidden; }
 .figure.hero-fig { margin: 48px 0 0; }
 
 /* Body sections */
@@ -312,10 +328,11 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
           <div class="results" aria-label="Results"><div class="result"><b>30%</b><span>fewer back-and-forth questions with engineers</span></div><div class="result"><b>~20%</b><span>smaller, faster design files</span></div><div class="result"><b>5+ days</b><span>of designer onboarding replaced by clear docs</span></div></div>
         </div>
         <figure class="figure rv hero-fig">
-          <a href="https://framerusercontent.com/images/93wF7jLH6RGREUb6Hgw3WqKzAeA.png" target="_blank" rel="noopener" aria-label="Open full-size image: Design system documentation, components and token tables">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/93wF7jLH6RGREUb6Hgw3WqKzAeA.png?scale-down-to=2048" width="1600" height="1018" alt="Design system documentation, components and token tables" decoding="async">
-          </a>
-          <figcaption><span>The design system: documentation, components and design tokens.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Design system documentation, components and token tables"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The design system: documentation, components and design tokens.</figcaption>
         </figure>
       </div>
     </section>
@@ -352,30 +369,35 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
       <div class="wrap">
         <div class="rv"><span class="label eyebrow">How I approached it</span><h2>Six steps from chaos to <em>system</em></h2></div>
         <ol class="steps rv" style="counter-reset: step 0"><li><h3>Audit what exists</h3><p>I reviewed every component across the internal apps and logged inconsistencies, duplicates and accessibility issues. I also asked developers about the technical limits they work within.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/FKKZxbYRvadq0N3SyVG1lt4Pmc.png" target="_blank" rel="noopener" aria-label="Open full-size image: Audit spreadsheet logging each component with its issues and accessibility gaps">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/FKKZxbYRvadq0N3SyVG1lt4Pmc.png?scale-down-to=2048" width="1500" height="838" alt="Audit spreadsheet logging each component with its issues and accessibility gaps" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>The audit: logging every component, its issues and accessibility gaps.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Audit spreadsheet logging each component with its issues and accessibility gaps"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The audit: logging every component, its issues and accessibility gaps.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 1"><li><h3>Set the rules</h3><p>I defined clear rules for text, spacing and color.</p><p>I used atomic design: start with the smallest basics (colors, spacing, type), combine them into elements (buttons, inputs), then into full patterns (forms, tables). Like letters forming words, then sentences.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/95fPeGyuS0MFMfJ3M4xYIOaCBA4.png" target="_blank" rel="noopener" aria-label="Open full-size image: Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/95fPeGyuS0MFMfJ3M4xYIOaCBA4.png?scale-down-to=2048" width="1600" height="444" alt="Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>Atomic design: small basics build up into elements, then full patterns.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Diagram of atomic design: basics like color, spacing and type grow into elements and full patterns"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>Atomic design: small basics build up into elements, then full patterns.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 2"><li><h3>Make it work for everyone</h3><p>I made sure components meet WCAG accessibility standards: readable color contrast, visible focus outlines, labels for screen readers, and full keyboard use. I tested the core flows with a keyboard and a screen reader.</p></li></ol><ol class="steps rv" style="counter-reset: step 3"><li><h3>Write it down</h3><p>I co-wrote guidelines explaining <em>why</em> and <em>when</em> to use each component, with accessibility notes and specs engineers can build from directly.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/1pMvnUWXBJnIgaRNw9Xiht2200.png" target="_blank" rel="noopener" aria-label="Open full-size image: Component documentation pages with usage guidelines for designers and developers">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/1pMvnUWXBJnIgaRNw9Xiht2200.png?scale-down-to=2048" width="1600" height="1018" alt="Component documentation pages with usage guidelines for designers and developers" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>Usage guidelines written for designers and engineers.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Component documentation pages with usage guidelines for designers and developers"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>Usage guidelines written for designers and engineers.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 4"><li><h3>Coach and collaborate</h3><p>I gave ongoing feedback through design critiques, and co-ran design and engineering meetings to make sure the system was buildable and adopted.</p></li></ol><ol class="steps rv" style="counter-reset: step 5"><li><h3>Finish the job</h3><p>I took ownership of the unfinished work: the design tokens and the complete component builds.</p><p><strong>Design tokens</strong> are named settings, like "primary color" or "small spacing," defined once and used everywhere. Change a token, and every product using it updates. I finalized a token setup that keeps the whole system consistent and easy to extend.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/GlEBb9v5sQnnkzM2lqv0JvTLZHY.png" target="_blank" rel="noopener" aria-label="Open full-size image: Design tokens in Figma: named color and spacing settings for each component">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/GlEBb9v5sQnnkzM2lqv0JvTLZHY.png?scale-down-to=2048" width="1080" height="1080" alt="Design tokens in Figma: named color and spacing settings for each component" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>Design tokens: named color and spacing settings for each component.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Design tokens in Figma: named color and spacing settings for each component"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>Design tokens: named color and spacing settings for each component.</figcaption>
         </figure><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/TjBv6AWGzLsV0qUqVry58TLI1s.png" target="_blank" rel="noopener" aria-label="Open full-size image: A table header component built with tokens, with its color, state and size options">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/TjBv6AWGzLsV0qUqVry58TLI1s.png?scale-down-to=2048" width="1600" height="1600" alt="A table header component built with tokens, with its color, state and size options" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>A finished component built entirely with tokens, with its options for color, state and size.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: A table header component built with tokens, with its color, state and size options"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>A finished component built entirely with tokens, with its options for color, state and size.</figcaption>
         </figure>
       </div>
     </section><section class="c-section">
@@ -416,31 +438,81 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
     </div>
   </footer>
 
+  <dialog class="lightbox" id="lb" aria-label="Full size image">
+    <div class="lb-bar"><span class="lb-hint">Tap the image to zoom in or out</span><button type="button" class="lb-close" aria-label="Close full size image">×</button></div>
+    <div class="lb-stage"><img alt=""></div>
+    <p class="lb-cap"></p>
+  </dialog>
+
   <script>
 // Shared behavior for case study pages
-// Arrive at a linked section instantly (no glide on page load), correct once fonts settle,
-// never override the spot the browser restores on Back, then enable smooth scrolling for in-page taps.
+
+// Open at the top. A new case study always starts at its very top, even if the page
+// (or a viewer it's embedded in) tries to restore an old scroll position while loading.
+// Stops as soon as the visitor touches, scrolls or types. Back keeps the restored spot.
 (function () {
   var root = document.documentElement;
   var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
-  function settle(first) {
-    if (nav.type === 'back_forward') return;
-    if (!location.hash) {
-      // A new page always opens at its top, even when it's shown inside another page's frame.
-      if (first) { scrollTo(0, 0); try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {} }
+  if (nav.type === 'back_forward') { addEventListener('load', function () { root.classList.add('smooth'); }); return; }
+  var touched = false;
+  ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) {
+    addEventListener(ev, function () { touched = true; }, { passive: true, capture: true });
+  });
+  function top() {
+    if (touched) return;
+    if (location.hash) {
+      var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
       return;
     }
-    var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-    if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
+    scrollTo(0, 0);
+    try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {}
+    // Safari won't let a framed page scroll its host, but every browser scrolls a focused element into view.
+    var m = document.getElementById('page-top');
+    if (!m && document.body) {
+      m = document.createElement('div');
+      m.id = 'page-top'; m.tabIndex = -1; m.setAttribute('aria-hidden', 'true');
+      m.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;outline:none;pointer-events:none';
+      document.body.insertBefore(m, document.body.firstChild);
+    }
+    if (m && document.activeElement !== m) { try { m.focus({ preventScroll: false }); } catch (e) { m.focus(); } }
   }
-  settle(true);
+  addEventListener('load', function () { setTimeout(function () { var m = document.getElementById('page-top'); if (m && document.activeElement === m) m.blur(); }, 500); });
+  top();
+  document.addEventListener('DOMContentLoaded', top);
+  addEventListener('pageshow', top);
   addEventListener('load', function () {
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
-      settle();
-      requestAnimationFrame(function () { root.classList.add('smooth'); });
-    });
+    top();
+    requestAnimationFrame(top);
+    setTimeout(top, 150);
+    setTimeout(function () { top(); root.classList.add('smooth'); }, 400);
   });
 })();
+
+// Full-size image viewer: stays on the page instead of opening a new tab.
+(function () {
+  var dlg = document.getElementById('lb');
+  if (!dlg || !dlg.showModal) return;
+  var img = dlg.querySelector('img'), cap = dlg.querySelector('.lb-cap'), stage = dlg.querySelector('.lb-stage'), opener = null;
+  function open(src, alt, caption, from) {
+    stage.classList.remove('actual');
+    img.src = src; img.alt = alt; cap.textContent = caption; opener = from;
+    dlg.showModal();
+    dlg.querySelector('.lb-close').focus();
+  }
+  document.querySelectorAll('.fig-frame').forEach(function (frame) {
+    var im = frame.querySelector('img'), btn = frame.querySelector('.zoom-btn');
+    var fc = frame.parentNode.querySelector('figcaption');
+    var go = function () { open(im.currentSrc || im.src, im.alt, fc ? fc.textContent : '', btn); };
+    btn.addEventListener('click', go);
+    im.addEventListener('click', go);
+  });
+  dlg.querySelector('.lb-close').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  img.addEventListener('click', function () { stage.classList.toggle('actual'); });
+  dlg.addEventListener('close', function () { img.removeAttribute('src'); if (opener) opener.focus(); });
+})();
+
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

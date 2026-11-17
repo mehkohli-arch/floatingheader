@@ -90,11 +90,27 @@ img { max-width: 100%; }
 
 /* Figures: real product images, shown in full, never cropped */
 .figure { margin: 40px 0; }
-.figure a { display: block; background: #fcf1f5; border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(10px, 2vw, 24px); text-decoration: none; transition: border-color .2s; }
-.figure a:hover { border-color: var(--brand); }
-.figure img { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); object-fit: contain; margin: 0 auto; border-radius: 8px; }
-.figure figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.figure figcaption .zoom { color: var(--brand); font-weight: 600; white-space: nowrap; }
+.fig-frame { position: relative; background: #fcf1f5; border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(10px, 2vw, 24px); transition: border-color .2s; }
+.fig-frame:hover { border-color: var(--brand); }
+.figure img { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); object-fit: contain; margin: 0 auto; border-radius: 8px; cursor: zoom-in; }
+.zoom-btn { position: absolute; top: 12px; right: 12px; min-height: 44px; padding: 0 16px; display: inline-flex; align-items: center; gap: 6px; border: 0; border-radius: 999px; background: rgba(42,15,28,.86); color: #fff; font: 600 14px var(--f-body); cursor: pointer; box-shadow: 0 6px 18px rgba(42,15,28,.25); transition: background .2s; }
+.zoom-btn:hover { background: var(--rose-950); }
+.zoom-btn span { font-size: 16px; line-height: 1; }
+.figure figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
+
+/* Full-size image viewer (stays on the page) */
+dialog.lightbox { width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(20,8,14,.97); color: #fff; }
+dialog.lightbox[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+dialog.lightbox::backdrop { background: rgba(20,8,14,.97); }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left)); }
+.lb-hint { font-size: 13.5px; opacity: .75; }
+.lb-close { flex: none; width: 48px; height: 48px; border-radius: 50%; border: 0; background: #fff; color: var(--rose-950); font-size: 26px; line-height: 1; cursor: pointer; }
+.lb-stage { overflow: auto; display: grid; place-items: center; padding: 8px 16px; min-height: 0; overscroll-behavior: contain; }
+.lb-stage img { display: block; width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 150px); max-height: calc(100dvh - 150px); object-fit: contain; border-radius: 8px; background: #fff; cursor: zoom-in; }
+.lb-stage.actual { place-items: start; }
+.lb-stage.actual img { max-width: none; max-height: none; cursor: zoom-out; }
+.lb-cap { margin: 0; padding: 8px 16px max(14px, env(safe-area-inset-bottom)); font-size: 14px; opacity: .85; text-align: center; }
+body:has(dialog[open]) { overflow: hidden; }
 .figure.hero-fig { margin: 48px 0 0; }
 
 /* Body sections */
@@ -312,10 +328,11 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
           <div class="results" aria-label="Results"><div class="result"><b>&lt;10 min</b><span>to sign up and invite a first client</span></div><div class="result"><b>60%+</b><span>got stuck on navigation and labels, now being fixed</span></div><div class="result"><b>~30%</b><span>projected drop in support and training</span></div></div>
         </div>
         <figure class="figure rv hero-fig">
-          <a href="https://framerusercontent.com/images/QgEevPuS6KxoSRoMHhXK3juJyo.png" target="_blank" rel="noopener" aria-label="Open full-size image: The CMG Connect app on two phones, showing a list of loans and a loan's details">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/QgEevPuS6KxoSRoMHhXK3juJyo.png?scale-down-to=2048" width="1600" height="1018" alt="The CMG Connect app on two phones, showing a list of loans and a loan's details" decoding="async">
-          </a>
-          <figcaption><span>CMG Connect on mobile: the loans list and a loan's details.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: The CMG Connect app on two phones, showing a list of loans and a loan's details"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>CMG Connect on mobile: the loans list and a loan's details.</figcaption>
         </figure>
       </div>
     </section>
@@ -346,20 +363,23 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
       <div class="wrap">
         <div class="rv"><span class="label eyebrow">How I approached it</span><h2>Real tasks, real <em>people</em></h2></div>
         <ol class="steps rv" style="counter-reset: step 0"><li><h3>Turn real work into test tasks</h3><p>I mapped the full journey: signing up, inviting clients, tracking loans, uploading documents and sending invites. Then I broke it into scenarios that match how an agent strings tasks together in a real day.</p><p>Each scenario was scripted to guide people while still leaving room to explore naturally.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/HatL5iK4bM2jVr4SEDNMnk1uV6s.png" target="_blank" rel="noopener" aria-label="Open full-size image: Test flow diagram connecting the app screens agents moved through, from sign-up to tracking a loan">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/HatL5iK4bM2jVr4SEDNMnk1uV6s.png?scale-down-to=2048" width="782" height="1600" alt="Test flow diagram connecting the app screens agents moved through, from sign-up to tracking a loan" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>The test flow: the series of tasks agents completed.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Test flow diagram connecting the app screens agents moved through, from sign-up to tracking a loan"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The test flow: the series of tasks agents completed.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 1"><li><h3>Build a clickable prototype</h3><p>I built an interactive prototype focused on how the app is organized and how people move through it, not final visual polish.</p><p>I made sure every key action worked (uploading, switching between leads and loans, sending invites) so gaps wouldn't skew the results.</p></li></ol><ol class="steps rv" style="counter-reset: step 2"><li><h3>Run two kinds of tests</h3><p>Between January 4 and 16, 2024, I ran <strong>live sessions</strong> to observe closely and ask follow-up questions, and <strong>self-guided sessions</strong> to see how agents use it on their own. Participants were real estate agents across the US, ages 26 to 64, recruited through the testing platform Userlytics.</p><p>For the self-guided tests, the prototype and instructions had to stand on their own, so I built the task prompts right into the test.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/x2dklygjqrpBtoPerTRXFV0t0Sc.png" target="_blank" rel="noopener" aria-label="Open full-size image: The CMG Connect prototype on a phone as a tester saw it during a self-guided session">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/x2dklygjqrpBtoPerTRXFV0t0Sc.png?scale-down-to=2048" width="774" height="1600" alt="The CMG Connect prototype on a phone as a tester saw it during a self-guided session" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>The prototype as testers saw it during a self-guided session.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: The CMG Connect prototype on a phone as a tester saw it during a self-guided session"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The prototype as testers saw it during a self-guided session.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 3"><li><h3>Measure and find patterns</h3><p>I tracked success or failure at every step to see exactly where people dropped off.</p><p>Then I grouped everything people said and did into themes (called affinity mapping) to spot patterns across testers.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/LJ5fKMoOxF0sSBN9VFk9j9iz5c.png" target="_blank" rel="noopener" aria-label="Open full-size image: Affinity map of sticky notes grouping tester feedback into themes">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/LJ5fKMoOxF0sSBN9VFk9j9iz5c.png?scale-down-to=2048" width="870" height="1600" alt="Affinity map of sticky notes grouping tester feedback into themes" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>Affinity mapping: grouping feedback into themes.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Affinity map of sticky notes grouping tester feedback into themes"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>Affinity mapping: grouping feedback into themes.</figcaption>
         </figure>
       </div>
     </section><section class="c-section">
@@ -405,31 +425,81 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
     </div>
   </footer>
 
+  <dialog class="lightbox" id="lb" aria-label="Full size image">
+    <div class="lb-bar"><span class="lb-hint">Tap the image to zoom in or out</span><button type="button" class="lb-close" aria-label="Close full size image">×</button></div>
+    <div class="lb-stage"><img alt=""></div>
+    <p class="lb-cap"></p>
+  </dialog>
+
   <script>
 // Shared behavior for case study pages
-// Arrive at a linked section instantly (no glide on page load), correct once fonts settle,
-// never override the spot the browser restores on Back, then enable smooth scrolling for in-page taps.
+
+// Open at the top. A new case study always starts at its very top, even if the page
+// (or a viewer it's embedded in) tries to restore an old scroll position while loading.
+// Stops as soon as the visitor touches, scrolls or types. Back keeps the restored spot.
 (function () {
   var root = document.documentElement;
   var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
-  function settle(first) {
-    if (nav.type === 'back_forward') return;
-    if (!location.hash) {
-      // A new page always opens at its top, even when it's shown inside another page's frame.
-      if (first) { scrollTo(0, 0); try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {} }
+  if (nav.type === 'back_forward') { addEventListener('load', function () { root.classList.add('smooth'); }); return; }
+  var touched = false;
+  ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) {
+    addEventListener(ev, function () { touched = true; }, { passive: true, capture: true });
+  });
+  function top() {
+    if (touched) return;
+    if (location.hash) {
+      var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
       return;
     }
-    var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-    if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
+    scrollTo(0, 0);
+    try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {}
+    // Safari won't let a framed page scroll its host, but every browser scrolls a focused element into view.
+    var m = document.getElementById('page-top');
+    if (!m && document.body) {
+      m = document.createElement('div');
+      m.id = 'page-top'; m.tabIndex = -1; m.setAttribute('aria-hidden', 'true');
+      m.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;outline:none;pointer-events:none';
+      document.body.insertBefore(m, document.body.firstChild);
+    }
+    if (m && document.activeElement !== m) { try { m.focus({ preventScroll: false }); } catch (e) { m.focus(); } }
   }
-  settle(true);
+  addEventListener('load', function () { setTimeout(function () { var m = document.getElementById('page-top'); if (m && document.activeElement === m) m.blur(); }, 500); });
+  top();
+  document.addEventListener('DOMContentLoaded', top);
+  addEventListener('pageshow', top);
   addEventListener('load', function () {
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
-      settle();
-      requestAnimationFrame(function () { root.classList.add('smooth'); });
-    });
+    top();
+    requestAnimationFrame(top);
+    setTimeout(top, 150);
+    setTimeout(function () { top(); root.classList.add('smooth'); }, 400);
   });
 })();
+
+// Full-size image viewer: stays on the page instead of opening a new tab.
+(function () {
+  var dlg = document.getElementById('lb');
+  if (!dlg || !dlg.showModal) return;
+  var img = dlg.querySelector('img'), cap = dlg.querySelector('.lb-cap'), stage = dlg.querySelector('.lb-stage'), opener = null;
+  function open(src, alt, caption, from) {
+    stage.classList.remove('actual');
+    img.src = src; img.alt = alt; cap.textContent = caption; opener = from;
+    dlg.showModal();
+    dlg.querySelector('.lb-close').focus();
+  }
+  document.querySelectorAll('.fig-frame').forEach(function (frame) {
+    var im = frame.querySelector('img'), btn = frame.querySelector('.zoom-btn');
+    var fc = frame.parentNode.querySelector('figcaption');
+    var go = function () { open(im.currentSrc || im.src, im.alt, fc ? fc.textContent : '', btn); };
+    btn.addEventListener('click', go);
+    im.addEventListener('click', go);
+  });
+  dlg.querySelector('.lb-close').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  img.addEventListener('click', function () { stage.classList.toggle('actual'); });
+  dlg.addEventListener('close', function () { img.removeAttribute('src'); if (opener) opener.focus(); });
+})();
+
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

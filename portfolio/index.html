@@ -480,27 +480,45 @@
   <script>
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Arrive at a linked section instantly (no glide on page load), correct once fonts settle,
-    // never override the spot the browser restores on Back, then enable smooth scrolling for in-page taps.
+    // Open at the top. A newly opened page always starts at its very top, even if the page
+    // (or a viewer it's embedded in) tries to restore an old scroll position while loading.
+    // Stops as soon as the visitor touches, scrolls or types. Back keeps the restored spot.
     (function () {
       var root = document.documentElement;
       var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
-      function settle(first) {
-        if (nav.type === 'back_forward') return;
-        if (!location.hash) {
-          // A new page always opens at its top, even when it's shown inside another page's frame.
-          if (first) { scrollTo(0, 0); try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {} }
+      if (nav.type === 'back_forward') { addEventListener('load', function () { root.classList.add('smooth'); }); return; }
+      var touched = false;
+      ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) {
+        addEventListener(ev, function () { touched = true; }, { passive: true, capture: true });
+      });
+      function top() {
+        if (touched) return;
+        if (location.hash) {
+          var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+          if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
           return;
         }
-        var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-        if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
+        scrollTo(0, 0);
+        try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {}
+        // Safari won't let a framed page scroll its host, but every browser scrolls a focused element into view.
+        var m = document.getElementById('page-top');
+        if (!m && document.body) {
+          m = document.createElement('div');
+          m.id = 'page-top'; m.tabIndex = -1; m.setAttribute('aria-hidden', 'true');
+          m.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;outline:none;pointer-events:none';
+          document.body.insertBefore(m, document.body.firstChild);
+        }
+        if (m && document.activeElement !== m) { try { m.focus({ preventScroll: false }); } catch (e) { m.focus(); } }
       }
-      settle(true);
+      addEventListener('load', function () { setTimeout(function () { var m = document.getElementById('page-top'); if (m && document.activeElement === m) m.blur(); }, 500); });
+      top();
+      document.addEventListener('DOMContentLoaded', top);
+      addEventListener('pageshow', top);
       addEventListener('load', function () {
-        (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
-          settle();
-          requestAnimationFrame(function () { root.classList.add('smooth'); });
-        });
+        top();
+        requestAnimationFrame(top);
+        setTimeout(top, 150);
+        setTimeout(function () { top(); root.classList.add('smooth'); }, 400);
       });
     })();
 

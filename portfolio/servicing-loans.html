@@ -90,11 +90,27 @@ img { max-width: 100%; }
 
 /* Figures: real product images, shown in full, never cropped */
 .figure { margin: 40px 0; }
-.figure a { display: block; background: #fcf1f5; border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(10px, 2vw, 24px); text-decoration: none; transition: border-color .2s; }
-.figure a:hover { border-color: var(--brand); }
-.figure img { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); object-fit: contain; margin: 0 auto; border-radius: 8px; }
-.figure figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.figure figcaption .zoom { color: var(--brand); font-weight: 600; white-space: nowrap; }
+.fig-frame { position: relative; background: #fcf1f5; border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(10px, 2vw, 24px); transition: border-color .2s; }
+.fig-frame:hover { border-color: var(--brand); }
+.figure img { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); object-fit: contain; margin: 0 auto; border-radius: 8px; cursor: zoom-in; }
+.zoom-btn { position: absolute; top: 12px; right: 12px; min-height: 44px; padding: 0 16px; display: inline-flex; align-items: center; gap: 6px; border: 0; border-radius: 999px; background: rgba(42,15,28,.86); color: #fff; font: 600 14px var(--f-body); cursor: pointer; box-shadow: 0 6px 18px rgba(42,15,28,.25); transition: background .2s; }
+.zoom-btn:hover { background: var(--rose-950); }
+.zoom-btn span { font-size: 16px; line-height: 1; }
+.figure figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
+
+/* Full-size image viewer (stays on the page) */
+dialog.lightbox { width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(20,8,14,.97); color: #fff; }
+dialog.lightbox[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+dialog.lightbox::backdrop { background: rgba(20,8,14,.97); }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left)); }
+.lb-hint { font-size: 13.5px; opacity: .75; }
+.lb-close { flex: none; width: 48px; height: 48px; border-radius: 50%; border: 0; background: #fff; color: var(--rose-950); font-size: 26px; line-height: 1; cursor: pointer; }
+.lb-stage { overflow: auto; display: grid; place-items: center; padding: 8px 16px; min-height: 0; overscroll-behavior: contain; }
+.lb-stage img { display: block; width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 150px); max-height: calc(100dvh - 150px); object-fit: contain; border-radius: 8px; background: #fff; cursor: zoom-in; }
+.lb-stage.actual { place-items: start; }
+.lb-stage.actual img { max-width: none; max-height: none; cursor: zoom-out; }
+.lb-cap { margin: 0; padding: 8px 16px max(14px, env(safe-area-inset-bottom)); font-size: 14px; opacity: .85; text-align: center; }
+body:has(dialog[open]) { overflow: hidden; }
 .figure.hero-fig { margin: 48px 0 0; }
 
 /* Body sections */
@@ -312,10 +328,11 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
           <div class="results" aria-label="Results"><div class="result"><b>80%+</b><span>faster to find a customer who could benefit</span></div><div class="result"><b>15–20%</b><span>estimated income kept or gained for sales staff</span></div><div class="result"><b>Tech100</b><span>innovation award, 2024</span></div></div>
         </div>
         <figure class="figure rv hero-fig">
-          <a href="https://framerusercontent.com/images/Ki5eeqHvlQgDVSTycpmvDDHDdjA.png" target="_blank" rel="noopener" aria-label="Open full-size image: The finished customer list with the details panel and savings comparison">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/Ki5eeqHvlQgDVSTycpmvDDHDdjA.png?scale-down-to=2048" width="1600" height="897" alt="The finished customer list with the details panel and savings comparison" decoding="async">
-          </a>
-          <figcaption><span>The finished design: a list of customers who could save, with a details panel.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: The finished customer list with the details panel and savings comparison"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The finished design: a list of customers who could save, with a details panel.</figcaption>
         </figure>
       </div>
     </section>
@@ -346,30 +363,35 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
       <div class="wrap">
         <div class="rv"><span class="label eyebrow">How I approached it</span><h2>Speed without losing <em>clarity</em></h2></div>
         <ol class="steps rv" style="counter-reset: step 0"><li><h3>Work within the constraint</h3><p>With no time for full research, I focused on one thing: showing the right information in the right place.</p></li></ol><ol class="steps rv" style="counter-reset: step 1"><li><h3>Map the whole journey</h3><p>An officer opens the list, sorts and filters by opportunity, picks a customer, and reviews their details and possible savings.</p><p>I grouped information the way officers make decisions: the customer's data, quick rate options, and a savings comparison.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/PTMUpJLtCVsqO1NEuvWd30fopk.png" target="_blank" rel="noopener" aria-label="Open full-size image: Early wireframes planning what information each screen shows">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/PTMUpJLtCVsqO1NEuvWd30fopk.png?scale-down-to=2048" width="1600" height="1200" alt="Early wireframes planning what information each screen shows" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>Early wireframes: deciding what information officers need, and where it goes.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Early wireframes planning what information each screen shows"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>Early wireframes: deciding what information officers need, and where it goes.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 2"><li><h3>Design fast with existing building blocks</h3><p>Reusing the design system's ready-made parts let me move straight to detailed, realistic designs and refine from there.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/1ZGELDmcHJTzhPLUsKziI7fpM.png" target="_blank" rel="noopener" aria-label="Open full-size image: A wireframe and the final design of the quick rates and savings panel, side by side">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/1ZGELDmcHJTzhPLUsKziI7fpM.png?scale-down-to=2048" width="1600" height="1135" alt="A wireframe and the final design of the quick rates and savings panel, side by side" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>From wireframe to final design: the quick rates and savings panel.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: A wireframe and the final design of the quick rates and savings panel, side by side"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>From wireframe to final design: the quick rates and savings panel.</figcaption>
         </figure><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/WBqOw1f6Po9Hlt2RGoztBbLMtOc.png" target="_blank" rel="noopener" aria-label="Open full-size image: Wireframe and final design of the savings comparison, side by side">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/WBqOw1f6Po9Hlt2RGoztBbLMtOc.png?scale-down-to=2048" width="1507" height="1240" alt="Wireframe and final design of the savings comparison, side by side" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>The savings comparison, from rough layout to finished design.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Wireframe and final design of the savings comparison, side by side"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The savings comparison, from rough layout to finished design.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 3"><li><h3>Review quickly, hand off cleanly</h3><p>I checked designs with stakeholders in fast review rounds, then delivered production-ready designs and a fully working prototype straight to engineering.</p></li></ol><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/Xl8eYoF6wH3aS79wjDYfzFSZyjQ.png" target="_blank" rel="noopener" aria-label="Open full-size image: Bird's-eye view of all screens and flows delivered to engineering">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/Xl8eYoF6wH3aS79wjDYfzFSZyjQ.png?scale-down-to=2048" width="1600" height="870" alt="Bird's-eye view of all screens and flows delivered to engineering" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>A bird's-eye view of everything I handed to engineering.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Bird's-eye view of all screens and flows delivered to engineering"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>A bird's-eye view of everything I handed to engineering.</figcaption>
         </figure><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/oa5uXQ2hgENkZeYy2VjL1RCU6wI.png" target="_blank" rel="noopener" aria-label="Open full-size image: Second bird's-eye view of the delivered screens and flows">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/oa5uXQ2hgENkZeYy2VjL1RCU6wI.png?scale-down-to=2048" width="1600" height="905" alt="Second bird's-eye view of the delivered screens and flows" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>The full set of screens and flows, delivered alongside a working prototype.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Second bird's-eye view of the delivered screens and flows"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The full set of screens and flows, delivered alongside a working prototype.</figcaption>
         </figure>
       </div>
     </section><section class="c-section">
@@ -383,10 +405,11 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
   <p>Clicking a customer slides out a panel with three parts:</p>
   <ul><li><strong>Customer data:</strong> loan balance, credit and home value, which used to live in several systems.</li><li><strong>Quick rates:</strong> instant "what if" refinance options for that customer.</li><li><strong>Savings comparison:</strong> current loan and new loan side by side, showing the change in monthly payment, savings and total cost.</li></ul>
   <p>Officers no longer calculate options by hand or ask experts for one-off numbers. They can see a customer's options in seconds.</p></div><figure class="figure rv">
-          <a href="https://framerusercontent.com/images/lhl1ornF2D2Qx9QXMy845kD9EsA.png" target="_blank" rel="noopener" aria-label="Open full-size image: The final design: the customer list with the details panel open, showing customer data, quick rates and savings">
+          <div class="fig-frame">
             <img src="https://framerusercontent.com/images/lhl1ornF2D2Qx9QXMy845kD9EsA.png?scale-down-to=2048" width="1600" height="1100" alt="The final design: the customer list with the details panel open, showing customer data, quick rates and savings" loading="lazy" decoding="async">
-          </a>
-          <figcaption><span>The final design: the customer list with the details panel open.</span><span class="zoom" aria-hidden="true">Open full size ↗</span></figcaption>
+            <button type="button" class="zoom-btn" aria-label="Open full size: The final design: the customer list with the details panel open, showing customer data, quick rates and savings"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The final design: the customer list with the details panel open.</figcaption>
         </figure><div class="read rv"><h3>How it works in practice</h3>
   <ol class="flow"><li>Open the customer list.</li><li>Filter for opportunities, such as customers who can take cash out.</li><li>Pick a customer and review their details in the side panel.</li><li>Compare options and find real savings.</li><li>Turn that option into a new loan application with one click.</li></ol>
   <div class="callout"><p>This created a direct path from existing customers to new loans, something the business didn't have before.</p></div></div>
@@ -441,31 +464,81 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
     </div>
   </footer>
 
+  <dialog class="lightbox" id="lb" aria-label="Full size image">
+    <div class="lb-bar"><span class="lb-hint">Tap the image to zoom in or out</span><button type="button" class="lb-close" aria-label="Close full size image">×</button></div>
+    <div class="lb-stage"><img alt=""></div>
+    <p class="lb-cap"></p>
+  </dialog>
+
   <script>
 // Shared behavior for case study pages
-// Arrive at a linked section instantly (no glide on page load), correct once fonts settle,
-// never override the spot the browser restores on Back, then enable smooth scrolling for in-page taps.
+
+// Open at the top. A new case study always starts at its very top, even if the page
+// (or a viewer it's embedded in) tries to restore an old scroll position while loading.
+// Stops as soon as the visitor touches, scrolls or types. Back keeps the restored spot.
 (function () {
   var root = document.documentElement;
   var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
-  function settle(first) {
-    if (nav.type === 'back_forward') return;
-    if (!location.hash) {
-      // A new page always opens at its top, even when it's shown inside another page's frame.
-      if (first) { scrollTo(0, 0); try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {} }
+  if (nav.type === 'back_forward') { addEventListener('load', function () { root.classList.add('smooth'); }); return; }
+  var touched = false;
+  ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) {
+    addEventListener(ev, function () { touched = true; }, { passive: true, capture: true });
+  });
+  function top() {
+    if (touched) return;
+    if (location.hash) {
+      var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
       return;
     }
-    var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-    if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
+    scrollTo(0, 0);
+    try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {}
+    // Safari won't let a framed page scroll its host, but every browser scrolls a focused element into view.
+    var m = document.getElementById('page-top');
+    if (!m && document.body) {
+      m = document.createElement('div');
+      m.id = 'page-top'; m.tabIndex = -1; m.setAttribute('aria-hidden', 'true');
+      m.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;outline:none;pointer-events:none';
+      document.body.insertBefore(m, document.body.firstChild);
+    }
+    if (m && document.activeElement !== m) { try { m.focus({ preventScroll: false }); } catch (e) { m.focus(); } }
   }
-  settle(true);
+  addEventListener('load', function () { setTimeout(function () { var m = document.getElementById('page-top'); if (m && document.activeElement === m) m.blur(); }, 500); });
+  top();
+  document.addEventListener('DOMContentLoaded', top);
+  addEventListener('pageshow', top);
   addEventListener('load', function () {
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
-      settle();
-      requestAnimationFrame(function () { root.classList.add('smooth'); });
-    });
+    top();
+    requestAnimationFrame(top);
+    setTimeout(top, 150);
+    setTimeout(function () { top(); root.classList.add('smooth'); }, 400);
   });
 })();
+
+// Full-size image viewer: stays on the page instead of opening a new tab.
+(function () {
+  var dlg = document.getElementById('lb');
+  if (!dlg || !dlg.showModal) return;
+  var img = dlg.querySelector('img'), cap = dlg.querySelector('.lb-cap'), stage = dlg.querySelector('.lb-stage'), opener = null;
+  function open(src, alt, caption, from) {
+    stage.classList.remove('actual');
+    img.src = src; img.alt = alt; cap.textContent = caption; opener = from;
+    dlg.showModal();
+    dlg.querySelector('.lb-close').focus();
+  }
+  document.querySelectorAll('.fig-frame').forEach(function (frame) {
+    var im = frame.querySelector('img'), btn = frame.querySelector('.zoom-btn');
+    var fc = frame.parentNode.querySelector('figcaption');
+    var go = function () { open(im.currentSrc || im.src, im.alt, fc ? fc.textContent : '', btn); };
+    btn.addEventListener('click', go);
+    im.addEventListener('click', go);
+  });
+  dlg.querySelector('.lb-close').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  img.addEventListener('click', function () { stage.classList.toggle('actual'); });
+  dlg.addEventListener('close', function () { img.removeAttribute('src'); if (opener) opener.focus(); });
+})();
+
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
