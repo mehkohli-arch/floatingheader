@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#A1285A" />
-  <title>Meher Kohli — UX/UI Designer &amp; Design Systems SME</title>
-  <meta name="description" content="Meher Kohli, UX/UI designer and company-wide Design Systems SME at CMG Financial. Case studies: Tech100-winning loan servicing pipeline, employee design system, realtor app research." />
+  <title>Meher Kohli — Senior UX/UI Designer &amp; Design Systems Expert</title>
+  <meta name="description" content="Meher Kohli is a senior UX/UI designer and design systems expert in enterprise fintech, using AI to deliver a year of design system work in 4 months. Tech100 award winner." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lemon&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -244,6 +244,22 @@
       .qv-nav button span { display: none; }
     }
 
+    /* ═════════ Systems expertise ═════════ */
+    .expertise { padding: 130px 0 40px; }
+    .expertise .sec-head h2 { color: var(--ink); }
+    .expertise .sec-head h2 em { color: var(--brand); }
+    .expertise .sec-head p { color: var(--muted); }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card { border-radius: var(--r-xl); padding: 32px 28px 30px; min-height: 340px; display: flex; flex-direction: column; justify-content: flex-start; gap: 32px; }
+    .card .big { font: 400 clamp(44px, 4.6vw, 60px)/1 var(--f-sig); white-space: nowrap; }
+    .card .big small { display: block; font: 500 13px var(--f-body); letter-spacing: 0; margin-top: 10px; opacity: .8; white-space: normal; }
+    .card h3 { font: 800 26px/1.1 var(--f-head); letter-spacing: -.02em; margin: 0 0 10px; }
+    .card p { margin: 0; font-size: 15.5px; line-height: 1.55; }
+    .c1 { background: var(--rose-950); color: var(--cream); } .c1 p { color: rgba(255,248,243,.82); } .c1 .big { color: var(--butter-400); }
+    .c2 { background: var(--brand); color: var(--cream); } .c2 p { color: rgba(255,248,243,.85); } .c2 .big { color: var(--butter-200); }
+    .c3 { background: var(--butter-400); color: var(--rose-950); } .c3 .big { color: var(--brand); }
+    @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } .card { min-height: 0; padding: 28px 22px; } .expertise { padding: 88px 0 24px; } }
+
     /* ═════════ About ═════════ */
     .about-sec { padding: 130px 0 120px; }
     .about-sec .sec-head h2 { color: var(--ink); }
@@ -323,8 +339,8 @@
       <div class="hero-inner">
         <div class="hello">Hi, I'm</div>
         <h1>Meher Kohli<span class="dot">.</span></h1>
-        <p class="role">UX/UI designer &amp; company-wide <span>Design Systems</span> SME</p>
-        <p class="sub">At CMG Financial since 2022, I design mortgage and lending tools end to end, from research to shipped release, and lead the design system that keeps them consistent and accessible.</p>
+        <p class="role">Senior UX/UI designer &amp; <span>Design Systems</span> expert</p>
+        <p class="sub">I lead design systems and complex mortgage products at CMG Financial, and use AI to ship faster without lowering the bar: a year of design system work in 4 months.</p>
         <p class="proof"><span aria-hidden="true">🏆</span><span><b>HousingWire Tech100 winner, 2024</b><span class="proj"> · Servicing Loans Pipeline</span></span></p>
         <div class="hero-cta">
           <a class="hbtn y" href="#work">See case studies ↓</a>
@@ -339,9 +355,9 @@
       <div class="wrap">
         <h2 class="label rv" id="impactTitle">Impact at CMG Financial</h2>
         <div class="stats">
+          <div class="stat rv"><b>12 → 4 mo</b><span>a year of design system work, delivered in 4 months with AI</span></div>
           <div class="stat rv"><b data-count="80" data-suffix="%+">80%+</b><span>faster for loan officers to find refinance opportunities</span></div>
-          <div class="stat rv"><b>18–25%</b><span>faster employee task completion</span></div>
-          <div class="stat rv"><b data-count="30" data-suffix="%">30%</b><span>fewer design-to-dev clarification cycles</span></div>
+          <div class="stat rv"><b>18–25%</b><span>faster employee task completion across internal tools</span></div>
           <div class="stat dark rv"><b>Tech100</b><span>HousingWire award, 2024 🏆</span></div>
         </div>
       </div>
@@ -372,7 +388,7 @@
               <div class="cs-meta"><span class="kind">Product design</span><span>4 weeks</span></div>
               <span class="tag gold award">🏆 HousingWire Tech100 winner, 2024</span>
               <h3><a href="https://mehersportfolio.framer.website/cmgservicingloans">Servicing Loans Pipeline</a></h3>
-              <dl class="facts"><div><dt>Problem</dt><dd>Loan officers were missing refinance and MI-reduction revenue hidden in their portfolios.</dd></div><div><dt>My role</dt><dd>Lead designer, end to end: IA, flows, UI and MVP scope</dd></div></dl>
+              <dl class="facts"><div><dt>Problem</dt><dd>Loan officers were missing refinance and MI-reduction revenue hidden in their portfolios.</dd></div><div><dt>My role</dt><dd>Lead designer, end to end: strategy, IA, flows, UI and MVP scope</dd></div></dl>
               <div class="impact"><b>80%+</b><span>faster to find a refinance opportunity</span></div>
               <div class="cs-actions"><button type="button" class="ql" data-case="0" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
@@ -385,7 +401,7 @@
             <div class="cs-body">
               <div class="cs-meta"><span class="kind">Design systems</span><span>5 months</span></div>
               <h3><a href="https://mehersportfolio.framer.website/cmgexdesignsystem">Employee Experience Design System</a></h3>
-              <dl class="facts"><div><dt>Problem</dt><dd>Inconsistent components and accessibility gaps across internal tools slowed design and dev.</dd></div><div><dt>My role</dt><dd>Design Systems SME and mentor, then owner of tokens and components</dd></div></dl>
+              <dl class="facts"><div><dt>Problem</dt><dd>Inconsistent components and accessibility gaps across internal tools slowed design and dev.</dd></div><div><dt>My role</dt><dd>Design systems lead: expert, mentor, then owner of tokens and components</dd></div></dl>
               <div class="impact"><b>30%</b><span>fewer design-to-dev clarification cycles</span></div>
               <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
@@ -428,6 +444,30 @@
       </div>
     </dialog>
 
+    <!-- ═════════ SYSTEMS EXPERTISE ═════════ -->
+    <section class="expertise" id="systems">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <h2>Systems, <em>faster</em></h2>
+          <p>How I lead design systems: AI built into the workflow, token architecture that scales, and standards teams actually adopt.</p>
+        </div>
+        <div class="cards">
+          <div class="card c1 rv">
+            <div class="big">12 → 4<small>months to deliver a year of design system work</small></div>
+            <div><h3>AI-enabled design systems</h3><p>I build AI into my design system workflow, which let me deliver roughly a year of planned design system work in 4 months while keeping quality and accessibility standards.</p></div>
+          </div>
+          <div class="card c2 rv">
+            <div class="big">&lt;1 month<small>to add dark mode across products</small></div>
+            <div><h3>Token architecture that scales</h3><p>I built a scalable token architecture, so theming became a change of values instead of a rebuild. Adding dark mode took less than a month.</p></div>
+          </div>
+          <div class="card c3 rv">
+            <div class="big">30%<small>fewer design-to-dev clarification cycles</small></div>
+            <div><h3>Standards teams adopt</h3><p>As the company-wide design systems expert, I align components with PrimeNG, document usage and mentor designers, so engineers build it right the first time.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ═════════ ABOUT ═════════ -->
     <section class="about-sec" id="about">
       <div class="wrap">
@@ -436,8 +476,9 @@
         </div>
         <div class="about">
           <div class="rv">
-            <p>I'm a UX/UI designer at CMG Financial, where I'm the company-wide Subject Matter Expert for design systems. I like the hard parts of enterprise software: dense data, regulated workflows, and many teams shipping into the same product.</p>
-            <p>I design features end to end and partner closely with engineering on the component library, PrimeNG performance and accessibility compliance. My work has made employee tasks 18–25% faster, cut user errors by 12% and raised feature adoption by 15%.</p>
+            <p>I'm a senior UX/UI designer and the company-wide design systems expert at CMG Financial. I own the hard parts of enterprise software: dense data, regulated workflows, and many teams shipping into the same product.</p>
+            <p>I lead products end to end and partner closely with engineering on the component library, PrimeNG performance and accessibility compliance. My work has made employee tasks 18–25% faster, cut user errors by 12% and raised feature adoption by 15%.</p>
+            <p>I'm AI-enabled by default. Building AI into my design system workflow let me deliver a year of design system work in 4 months, and I also design AI product experiences.</p>
             <p>I came to design from psychology, which still shapes how I research and design for people.</p>
             <ul class="edu">
               <li><b>M.S. Human-Computer Interaction</b><span>Drexel University · 2024–present</span></li>
@@ -447,9 +488,11 @@
           </div>
           <div class="skills rv">
             <h3>Design systems</h3>
-            <ul><li>Token architecture</li><li>Component libraries</li><li>Atomic design</li><li>Documentation</li><li>WCAG accessibility</li><li>Developer collaboration</li></ul>
+            <ul><li>Token architecture</li><li>Theming &amp; dark mode</li><li>Component libraries</li><li>Atomic design</li><li>Documentation</li><li>WCAG accessibility</li><li>Developer collaboration</li></ul>
+            <h3>AI</h3>
+            <ul><li>AI-enabled design workflows</li><li>AI product design</li></ul>
             <h3>Product design</h3>
-            <ul><li>End-to-end UX/UI</li><li>Information architecture</li><li>Complex data workflows</li><li>AI products</li><li>Stakeholder communication</li></ul>
+            <ul><li>End-to-end UX/UI</li><li>Product strategy</li><li>Information architecture</li><li>Complex data workflows</li><li>Stakeholder communication</li></ul>
             <h3>Research &amp; tools</h3>
             <ul><li>Usability testing</li><li>Prototyping</li><li>Figma</li><li>Userlytics</li><li>PrimeNG</li></ul>
           </div>
@@ -460,7 +503,7 @@
     <!-- ═════════ CONTACT ═════════ -->
     <section class="contact" id="contact">
       <div class="wrap">
-        <div class="label">Hiring for product design or design systems?</div>
+        <div class="label">Hiring a senior product designer or design systems lead?</div>
         <h2>Let's talk<span>.</span></h2>
         <p>I'd be glad to talk about the role and walk you through my work.</p>
         <div class="btns">
@@ -522,7 +565,7 @@
           metrics: [['80%+', 'faster to identify a refinance opportunity'], ['15–20%', 'estimated revenue retained or gained'], ['Tech100', 'HousingWire award 2024, shown in a live demo']] },
         { kind: 'Design systems', time: '5 months · ongoing', title: 'Employee Experience Design System', v: 'v-butter',
           url: 'https://mehersportfolio.framer.website/cmgexdesignsystem',
-          facts: [['Role', 'Design Systems SME and mentor, then owner'], ['Team', 'Lead designer, engineering'], ['Platform', 'Internal tools · PrimeNG']],
+          facts: [['Role', 'Design systems lead: expert, mentor, then owner'], ['Team', 'Lead designer, engineering'], ['Platform', 'Internal tools · PrimeNG']],
           problem: 'Employee products had inconsistent components, ad-hoc styling and accessibility gaps. Developer handoffs needed repeated clarification, Figma files were bloated, and onboarding a designer took 5+ days.',
           did: ['Audited PrimeNG component usage across internal tools with developers', 'Set typography, spacing and color rules and a scalable token architecture', 'Built WCAG contrast, focus, ARIA and keyboard support into every component', 'Mentored the lead designer, then took ownership and finished the token and component builds'],
           metrics: [['30%', 'fewer design-to-dev clarification cycles'], ['~20%', 'smaller Figma files'], ['5+ days', 'of onboarding replaced by documented components']] },
