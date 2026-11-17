@@ -81,7 +81,7 @@
     @media (max-width: 480px) { .hero-cta { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; } .hbtn { padding: 0 12px; font-size: 15px; } }
     .proof { display: inline-flex; align-items: center; gap: 8px; margin: 22px 0 0; padding: 9px 16px; border-radius: 999px; background: rgba(42,15,28,.35); border: 1px solid rgba(255,255,255,.18); font: 500 14.5px var(--f-body); color: var(--cream); }
     .proof b { color: var(--butter-200); font-weight: 600; }
-    .scroll-hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; opacity: .7; z-index: 5; }
+    .scroll-hint { position: absolute; bottom: 64px; left: 50%; transform: translateX(-50%); font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; opacity: .7; z-index: 5; }
 
     /* floating system objects */
     .floaty { position: absolute; z-index: 3; will-change: transform; pointer-events: none; }
@@ -135,7 +135,7 @@
     .hero:hover .sp, .hero.sparkle .sp { animation: sparkle 2.2s ease-in-out infinite; }
 
     /* ═════════ Work ═════════ */
-    .work { background: var(--rose-950); color: var(--cream); padding: 130px 0 140px; border-radius: var(--r-xl) var(--r-xl) 0 0; }
+    .work { position: relative; z-index: 1; margin-top: calc(var(--r-xl) * -1); background: var(--rose-950); color: var(--cream); padding: 130px 0 140px; border-radius: var(--r-xl) var(--r-xl) 0 0; }
     .sec-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 72px; }
     .sec-head h2 { font: 800 clamp(48px, 8vw, 112px)/.9 var(--f-head); letter-spacing: -.04em; margin: 0; }
     .sec-head h2 em { font: 400 1em var(--f-sig); font-style: normal; color: var(--butter-400); letter-spacing: -.02em; }
@@ -341,25 +341,11 @@
     <section class="work" id="work">
       <div class="wrap">
         <div class="sec-head rv">
-          <h2>Selected <em>work</em></h2>
+          <h2>Case <em>studies</em></h2>
           <p>Four projects from CMG Financial, a US mortgage lender. Each card shows the problem, my role and the result.</p>
         </div>
 
         <ul class="cases">
-          <li class="cs rv" style="--c:#F6C35B">
-            <div class="thumb">
-              <img src="img/HiIGvdk1R77FB9GSV2OZiGMt3B4.png" width="530" height="643" alt="Loan software screens: a list of customers who could save by refinancing, with panels comparing their options" loading="lazy" decoding="async">
-            </div>
-            <div class="cs-body">
-              <div class="cs-meta"><span class="kind">Product design</span><span>4 weeks</span></div>
-              <span class="tag gold award">🏆 HousingWire Tech100 winner, 2024</span>
-              <h3><a href="servicing-loans.html">Servicing Loans Pipeline</a></h3>
-              <dl class="facts"><div><dt>Problem</dt><dd>Sales staff had no easy way to see which existing customers could save money by refinancing their mortgage, so those opportunities went unnoticed.</dd></div><div><dt>My role</dt><dd>Lead designer from start to finish, delivered in 4 weeks</dd></div></dl>
-              <div class="impact"><b>80%+</b><span>faster to find a customer who could benefit</span></div>
-              <div class="cs-actions"><button type="button" class="ql" data-case="0" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
-            </div>
-          </li>
-
           <li class="cs rv" style="--c:#f2a6c6">
             <div class="thumb" aria-hidden="true">
               <div class="ai-vis">
@@ -375,7 +361,7 @@
               <h3><a href="ai-design-systems.html">AI-Ready Design Systems</a></h3>
               <dl class="facts"><div><dt>Problem</dt><dd>As teams start designing with AI, unclear rules lead to inconsistent products and AI mistakes. Older one-off code also made dark mode hard to add.</dd></div><div><dt>My role</dt><dd>Design systems lead: rebuilt the tokens, and built the Figma, Storybook and Claude toolkit</dd></div></dl>
               <div class="impact"><b>4 mo</b><span>to build a full customer design system, about a year of work</span></div>
-              <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="0" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
           </li>
 
@@ -388,6 +374,20 @@
               <h3><a href="design-system.html">Employee Experience Design System</a></h3>
               <dl class="facts"><div><dt>Problem</dt><dd>The company's internal apps all looked and worked differently, weren't fully accessible, and engineers kept having to ask designers what to build.</dd></div><div><dt>My role</dt><dd>Design systems lead: set the standards, coached the designer, then took ownership</dd></div></dl>
               <div class="impact"><b>30%</b><span>fewer back-and-forth questions between design and engineering</span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+            </div>
+          </li>
+
+          <li class="cs rv" style="--c:#F6C35B">
+            <div class="thumb">
+              <img src="img/HiIGvdk1R77FB9GSV2OZiGMt3B4.png" width="530" height="643" alt="Loan software screens: a list of customers who could save by refinancing, with panels comparing their options" loading="lazy" decoding="async">
+            </div>
+            <div class="cs-body">
+              <div class="cs-meta"><span class="kind">Product design</span><span>4 weeks</span></div>
+              <span class="tag gold award">🏆 HousingWire Tech100 winner, 2024</span>
+              <h3><a href="servicing-loans.html">Servicing Loans Pipeline</a></h3>
+              <dl class="facts"><div><dt>Problem</dt><dd>Sales staff had no easy way to see which existing customers could save money by refinancing their mortgage, so those opportunities went unnoticed.</dd></div><div><dt>My role</dt><dd>Lead designer from start to finish, delivered in 4 weeks</dd></div></dl>
+              <div class="impact"><b>80%+</b><span>faster to find a customer who could benefit</span></div>
               <div class="cs-actions"><button type="button" class="ql" data-case="2" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
           </li>
@@ -425,7 +425,7 @@
           <button type="button" id="qvPrev" aria-label="Previous case study">← <span>Previous</span></button>
           <button type="button" id="qvNext" aria-label="Next case study"><span>Next</span> →</button>
         </div>
-        <a class="qv-cta" id="qvLink" href="servicing-loans.html">Read full case study →</a>
+        <a class="qv-cta" id="qvLink" href="ai-design-systems.html">Read full case study →</a>
       </div>
     </dialog>
 
@@ -576,12 +576,6 @@
     // Case study quick look
     (function () {
       var C = [
-        { kind: 'Product design', time: '4 weeks · Tech100 award 2024', title: 'Servicing Loans Pipeline', v: 'v-rose',
-          url: 'servicing-loans.html',
-          facts: [['My role', 'Lead designer, start to finish'], ['Team', 'Product managers, business analysts, mortgage experts, engineers'], ['Product', 'Internal sales software for loan officers (web)']],
-          problem: 'Loan officers (the company\'s mortgage sales staff) earn commission on new loans, and in a slow market they were losing income. Customers who could save money by refinancing were buried across several disconnected systems, so officers rarely found them.',
-          did: ['Worked with business analysts and mortgage experts to understand the work, since there was no time for direct user interviews', 'Designed one list of existing customers that highlights who could save money, with filters and sorting', 'Added a side panel that shows each customer\'s options and savings side by side', 'Let officers turn a savings scenario into a new loan application in one click', 'Scoped what could ship in 4 weeks for a live demo at an industry conference'],
-          metrics: [['80%+', 'faster to find a customer who could benefit'], ['15–20%', 'estimated income kept or gained for loan officers'], ['Tech100', 'HousingWire innovation award, 2024']] },
         { kind: 'Design systems + AI', time: '4 months · 2 design systems', title: 'AI-Ready Design Systems', v: 'v-plum',
           url: 'ai-design-systems.html',
           facts: [['My role', 'Design systems lead'], ['Scope', 'Employee apps (Clear 2.0) and customer apps'], ['Tools', 'Figma, Storybook, PrimeNG, Angular, React, Claude']],
@@ -594,6 +588,12 @@
           problem: 'Every internal app looked and behaved a little differently. Some weren\'t accessible to people using screen readers or keyboards, engineers kept asking designers what to build, and new designers needed 5+ days to get up to speed.',
           did: ['Reviewed every app with engineers to see which building blocks were actually in use', 'Set shared rules for color, spacing and text so every screen feels like one product', 'Built accessibility into every component: color contrast, keyboard use and screen-reader support', 'Coached the lead designer, then took ownership and finished the system when they left'],
           metrics: [['30%', 'fewer back-and-forth questions between design and engineering'], ['~20%', 'smaller, faster design files'], ['5+ days', 'of onboarding replaced by clear documentation']] },
+        { kind: 'Product design', time: '4 weeks · Tech100 award 2024', title: 'Servicing Loans Pipeline', v: 'v-rose',
+          url: 'servicing-loans.html',
+          facts: [['My role', 'Lead designer, start to finish'], ['Team', 'Product managers, business analysts, mortgage experts, engineers'], ['Product', 'Internal sales software for loan officers (web)']],
+          problem: 'Loan officers (the company\'s mortgage sales staff) earn commission on new loans, and in a slow market they were losing income. Customers who could save money by refinancing were buried across several disconnected systems, so officers rarely found them.',
+          did: ['Worked with business analysts and mortgage experts to understand the work, since there was no time for direct user interviews', 'Designed one list of existing customers that highlights who could save money, with filters and sorting', 'Added a side panel that shows each customer\'s options and savings side by side', 'Let officers turn a savings scenario into a new loan application in one click', 'Scoped what could ship in 4 weeks for a live demo at an industry conference'],
+          metrics: [['80%+', 'faster to find a customer who could benefit'], ['15–20%', 'estimated income kept or gained for loan officers'], ['Tech100', 'HousingWire innovation award, 2024']] },
         { kind: 'UX research', time: '2 months', title: 'CMG Connect: Realtor App', v: 'v-blush',
           url: 'cmg-connect.html',
           facts: [['My role', 'Research lead'], ['Who we tested with', 'Real estate agents across the US, ages 26–64'], ['How', 'Live and self-guided usability tests']],
