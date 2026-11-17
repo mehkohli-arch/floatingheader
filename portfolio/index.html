@@ -303,7 +303,7 @@
 /* ═════════ Design tokens + components (single source of truth) ═════════ */
 :root {
   /* Type scale */
-  --t-display: clamp(64px, 11vw, 156px); /* Lemon: name, "Let's talk" */
+  --t-display: clamp(64px, 11vw, 156px); /* Lemon: your name only */
   --t-h1: clamp(40px, 6vw, 80px);        /* page and section titles */
   --t-h2: clamp(26px, 3.6vw, 44px);      /* section headings, modal titles */
   --t-h3: 22px;                          /* card, step and box titles */
@@ -329,7 +329,8 @@
 
 /* Type */
 strong { font-weight: 600; }
-.hero h1, .contact h2 { font: 400 var(--t-display)/.92 var(--f-sig); letter-spacing: -.02em; }
+.hero h1 { font: 400 var(--t-display)/.92 var(--f-sig); letter-spacing: -.02em; }
+.contact h2 { font: 400 var(--t-h1)/1 var(--f-sig); letter-spacing: -.02em; }
 .c-hero h1, .sec-head h2 { font: 800 var(--t-h1)/1 var(--f-head); letter-spacing: -.03em; }
 .sec-head h2 em, .c-section h2 em { font-family: var(--f-sig); font-weight: 400; font-size: 1em; font-style: normal; letter-spacing: -.01em; }
 .c-section h2, .hero .role, dialog.qv .qv-head h2, .next strong { font: 800 var(--t-h2)/1.1 var(--f-head); letter-spacing: -.02em; }
@@ -372,12 +373,34 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
 /* Icons inside text and buttons */
 .cm-caret, .zoom-btn span, .award span[aria-hidden], .tag[aria-hidden] { font-size: var(--icon-sm); line-height: 1; }
 
+/* Case study cards: number and description line up the same way on every card */
+.cs .impact { display: grid; grid-template-columns: 108px minmax(0, 1fr); align-items: center; gap: 14px; }
+.cs .impact b { white-space: nowrap; }
+.cs .thumb { position: relative; }
+.cs .thumb .flag { position: absolute; top: 14px; left: 14px; z-index: 1; margin: 0; }
+.tag, .award { display: inline-flex; align-items: center; gap: 6px; }
+/* Footer: both items on one line, icon spaced from text */
+.foot { align-items: center; }
+.foot a { display: inline-flex; align-items: center; gap: 6px; min-height: var(--btn-md); }
+/* Education: date always in the right-hand column */
+.about .edu li { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 2px; align-items: baseline; }
+.about .edu li b { grid-column: 1; grid-row: 1; }
+.about .edu .yr { grid-column: 2; grid-row: 1; text-align: right; white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
+.about .edu .sch { grid-column: 1; grid-row: 2; color: var(--muted); }
+
 @media (max-width: 640px) {
   .nav > a, .cm-btn { min-height: var(--btn-md); padding: 0 10px; }
 }
 @media (max-width: 374px) {
   .nav > a, .cm-btn { padding: 0 7px; font-size: 13px; }
 }
+
+/* Icons: one drawn set, centered with text */
+.nw { white-space: nowrap; }
+.ic { display: inline-flex; width: var(--icon-sm); height: var(--icon-sm); flex: none; vertical-align: -0.125em; }
+.ic svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+.go i .ic, .next i .ic, .qv-x .ic, .lb-close .ic { width: var(--icon-md); height: var(--icon-md); vertical-align: 0; }
+.btn .ic, .hbtn .ic, .back .ic, .ex-link .ic, .ql .ic, .qv-cta .ic, .zoom-btn .ic, .qv-nav .ic, .cm-btn .ic { vertical-align: 0; }
 /*/COMPONENTS*/
   </style>
   <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
@@ -407,7 +430,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
   <nav class="nav" aria-label="Primary">
     <a class="sig" href="#top" aria-label="Meher Kohli, back to top">M.</a>
     <a href="#top" aria-current="page">Home</a>
-    <div class="cm"><button type="button" class="cm-btn" aria-expanded="false" aria-controls="cm-list">Case studies <span class="cm-caret" aria-hidden="true">▾</span></button><ul class="cm-list" id="cm-list" hidden><li><a href="ai-design-systems.html"><span class="cm-kind">Design systems + AI</span>AI-Ready Design Systems</a></li><li><a href="design-system.html"><span class="cm-kind">Design systems</span>Employee Experience Design System</a></li><li><a href="servicing-loans.html"><span class="cm-kind">Product design</span>Servicing Loans Pipeline</a></li><li><a href="cmg-connect.html"><span class="cm-kind">UX research</span>CMG Connect: Realtor App</a></li></ul></div>
+    <div class="cm"><button type="button" class="cm-btn" aria-expanded="false" aria-controls="cm-list">Case studies <span class="cm-caret" aria-hidden="true"><span class="ic ic-caret" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9l6 6 6-6"/></svg></span></span></button><ul class="cm-list" id="cm-list" hidden><li><a href="ai-design-systems.html"><span class="cm-kind">Design systems + AI</span>AI-Ready Design Systems</a></li><li><a href="design-system.html"><span class="cm-kind">Design systems</span>Employee Experience Design System</a></li><li><a href="servicing-loans.html"><span class="cm-kind">Product design</span>Servicing Loans Pipeline</a></li><li><a href="cmg-connect.html"><span class="cm-kind">UX research</span>CMG Connect: Realtor App</a></li></ul></div>
     <a href="#about">About</a>
     <a class="cta" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
   </nav>
@@ -440,7 +463,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
         <p class="role">Senior UX/UI designer &amp; <span>Design Systems</span> expert</p>
         <p class="sub">I make complex financial software simple to use, and I lead the design systems that let designers, employees and AI tools build it consistently.</p>
         <div class="hero-cta">
-          <a class="hbtn y" href="#work">See case studies ↓</a>
+          <a class="hbtn y" href="#work">See case studies <span class="ic ic-down" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span></a>
           <a class="hbtn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
         </div>
       </div>
@@ -471,7 +494,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
               <h3><a href="ai-design-systems.html">AI-Ready Design Systems</a></h3>
               <dl class="facts"><div><dt>Problem</dt><dd>As teams start designing with AI, unclear rules lead to inconsistent products and AI mistakes. Older one-off code also made dark mode hard to add.</dd></div><div><dt>My role</dt><dd>Design systems lead: rebuilt the tokens, and built the Figma, Storybook and Claude toolkit</dd></div></dl>
               <div class="impact"><b>4 mo</b><span>to build a full customer design system, about a year of work</span></div>
-              <div class="cs-actions"><button type="button" class="ql" data-case="0" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="0" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true"><i><span class="ic ic-right" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></i></span></div>
             </div>
           </li>
 
@@ -484,21 +507,21 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
               <h3><a href="design-system.html">Employee Experience Design System</a></h3>
               <dl class="facts"><div><dt>Problem</dt><dd>The company's internal apps all looked and worked differently, weren't fully accessible, and engineers kept having to ask designers what to build.</dd></div><div><dt>My role</dt><dd>Design systems lead: set the standards, coached the designer, then took ownership</dd></div></dl>
               <div class="impact"><b>30%</b><span>fewer back-and-forth questions between design and engineering</span></div>
-              <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true"><i><span class="ic ic-right" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></i></span></div>
             </div>
           </li>
 
           <li class="cs rv" style="--c:#F6C35B">
             <div class="thumb">
+              <span class="tag gold award flag">🏆 Earned CMG a 2024 Tech100 award</span>
               <img src="img/HiIGvdk1R77FB9GSV2OZiGMt3B4.png" width="530" height="643" alt="Loan software screens: a list of customers who could save by refinancing, with panels comparing their options" loading="lazy" decoding="async">
             </div>
             <div class="cs-body">
               <div class="cs-meta"><span class="kind">Product design</span><span>4 weeks</span></div>
-              <span class="tag gold award">🏆 Earned CMG a 2024 Tech100 award</span>
               <h3><a href="servicing-loans.html">Servicing Loans Pipeline</a></h3>
               <dl class="facts"><div><dt>Problem</dt><dd>Sales staff had no easy way to see which existing customers could save money by refinancing their mortgage, so those opportunities went unnoticed.</dd></div><div><dt>My role</dt><dd>Lead designer from start to finish, delivered in 4 weeks</dd></div></dl>
               <div class="impact"><b>80%+</b><span>faster to find a customer who could benefit</span></div>
-              <div class="cs-actions"><button type="button" class="ql" data-case="2" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="2" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true"><i><span class="ic ic-right" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></i></span></div>
             </div>
           </li>
 
@@ -511,7 +534,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
               <h3><a href="cmg-connect.html">CMG Connect: Realtor App</a></h3>
               <dl class="facts"><div><dt>Problem</dt><dd>A new app for real estate agents had to be easy to use from day one, or agents would stick with the tool they already had.</dd></div><div><dt>My role</dt><dd>Led the user research: planned and ran tests with real agents</dd></div></dl>
               <div class="impact"><b>60%+</b><span>of agents got stuck on certain screens. I found them and redesigned them before launch.</span></div>
-              <div class="cs-actions"><button type="button" class="ql" data-case="3" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="3" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true"><i><span class="ic ic-right" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></i></span></div>
             </div>
           </li>
         </ul>
@@ -522,7 +545,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
       <div class="qv-head" id="qvHead">
         <div class="cs-meta"><span class="kind" id="qvKind"></span><span id="qvTime"></span></div>
         <h2 id="qvTitle"></h2>
-        <button type="button" class="qv-x" id="qvClose" aria-label="Close quick look">×</button>
+        <button type="button" class="qv-x" id="qvClose" aria-label="Close quick look"><span class="ic ic-close" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></span></button>
       </div>
       <div class="qv-body">
         <dl class="qv-facts" id="qvFacts"></dl>
@@ -532,10 +555,10 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
       </div>
       <div class="qv-foot">
         <div class="qv-nav">
-          <button type="button" id="qvPrev" aria-label="Previous case study">← <span>Previous</span></button>
-          <button type="button" id="qvNext" aria-label="Next case study"><span>Next</span> →</button>
+          <button type="button" id="qvPrev" aria-label="Previous case study"><span class="ic ic-left" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> <span>Previous</span></button>
+          <button type="button" id="qvNext" aria-label="Next case study"><span>Next</span> <span class="ic ic-right" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
         </div>
-        <a class="qv-cta" id="qvLink" href="ai-design-systems.html">Read full case study →</a>
+        <a class="qv-cta" id="qvLink" href="ai-design-systems.html">Read full case study <span class="ic ic-right" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
       </div>
     </dialog>
 
@@ -552,9 +575,9 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
             <p>I'm an AI-enabled designer. I use AI throughout my work, from building design systems to prototyping, and I also design AI-powered products.</p>
             <p>I came to design from psychology, and understanding how people think still shapes how I design.</p>
             <ul class="edu">
-              <li><b>M.S. Human-Computer Interaction</b><span>Drexel University · 2024–present</span></li>
-              <li><b>Google UX Design Certificate</b><span>2022</span></li>
-              <li><b>B.S. Psychology, minor in Chemistry</b><span>Virginia Commonwealth University · 2021</span></li>
+              <li><b>M.S. Human-Computer Interaction</b><span class="yr">2024–present</span><span class="sch">Drexel University</span></li>
+              <li><b>Google UX Design Certificate</b><span class="yr">2022</span><span class="sch">Google</span></li>
+              <li><b>B.S. Psychology, minor in Chemistry</b><span class="yr">2021</span><span class="sch">Virginia Commonwealth University</span></li>
             </ul>
           </div>
           <div class="skills rv">
@@ -578,11 +601,10 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
         <h2>Let's talk<span>.</span></h2>
         <p>I'd be glad to talk about the role and walk you through my work.</p>
         <div class="btns">
-          <a class="btn y" href="mailto:mehkohli@gmail.com">✉ mehkohli@gmail.com</a>
-          <a class="btn o" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn ↗</a>
-          <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé ↗</a>
+          <a class="btn y" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn <span class="ic ic-external" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
+          <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé <span class="ic ic-external" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>
         </div>
-        <div class="foot"><span>© 2026 Meher Kohli</span><a href="#top">Back to top ↑</a></div>
+        <div class="foot"><span>© 2026 Meher Kohli</span><a href="#top">Back to top <span class="ic ic-up" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span></a></div>
       </div>
     </section>
   </main>

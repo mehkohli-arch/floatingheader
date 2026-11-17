@@ -309,7 +309,7 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 /* ═════════ Design tokens + components (single source of truth) ═════════ */
 :root {
   /* Type scale */
-  --t-display: clamp(64px, 11vw, 156px); /* Lemon: name, "Let's talk" */
+  --t-display: clamp(64px, 11vw, 156px); /* Lemon: your name only */
   --t-h1: clamp(40px, 6vw, 80px);        /* page and section titles */
   --t-h2: clamp(26px, 3.6vw, 44px);      /* section headings, modal titles */
   --t-h3: 22px;                          /* card, step and box titles */
@@ -335,7 +335,8 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 
 /* Type */
 strong { font-weight: 600; }
-.hero h1, .contact h2 { font: 400 var(--t-display)/.92 var(--f-sig); letter-spacing: -.02em; }
+.hero h1 { font: 400 var(--t-display)/.92 var(--f-sig); letter-spacing: -.02em; }
+.contact h2 { font: 400 var(--t-h1)/1 var(--f-sig); letter-spacing: -.02em; }
 .c-hero h1, .sec-head h2 { font: 800 var(--t-h1)/1 var(--f-head); letter-spacing: -.03em; }
 .sec-head h2 em, .c-section h2 em { font-family: var(--f-sig); font-weight: 400; font-size: 1em; font-style: normal; letter-spacing: -.01em; }
 .c-section h2, .hero .role, dialog.qv .qv-head h2, .next strong { font: 800 var(--t-h2)/1.1 var(--f-head); letter-spacing: -.02em; }
@@ -378,12 +379,34 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
 /* Icons inside text and buttons */
 .cm-caret, .zoom-btn span, .award span[aria-hidden], .tag[aria-hidden] { font-size: var(--icon-sm); line-height: 1; }
 
+/* Case study cards: number and description line up the same way on every card */
+.cs .impact { display: grid; grid-template-columns: 108px minmax(0, 1fr); align-items: center; gap: 14px; }
+.cs .impact b { white-space: nowrap; }
+.cs .thumb { position: relative; }
+.cs .thumb .flag { position: absolute; top: 14px; left: 14px; z-index: 1; margin: 0; }
+.tag, .award { display: inline-flex; align-items: center; gap: 6px; }
+/* Footer: both items on one line, icon spaced from text */
+.foot { align-items: center; }
+.foot a { display: inline-flex; align-items: center; gap: 6px; min-height: var(--btn-md); }
+/* Education: date always in the right-hand column */
+.about .edu li { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 2px; align-items: baseline; }
+.about .edu li b { grid-column: 1; grid-row: 1; }
+.about .edu .yr { grid-column: 2; grid-row: 1; text-align: right; white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
+.about .edu .sch { grid-column: 1; grid-row: 2; color: var(--muted); }
+
 @media (max-width: 640px) {
   .nav > a, .cm-btn { min-height: var(--btn-md); padding: 0 10px; }
 }
 @media (max-width: 374px) {
   .nav > a, .cm-btn { padding: 0 7px; font-size: 13px; }
 }
+
+/* Icons: one drawn set, centered with text */
+.nw { white-space: nowrap; }
+.ic { display: inline-flex; width: var(--icon-sm); height: var(--icon-sm); flex: none; vertical-align: -0.125em; }
+.ic svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+.go i .ic, .next i .ic, .qv-x .ic, .lb-close .ic { width: var(--icon-md); height: var(--icon-md); vertical-align: 0; }
+.btn .ic, .hbtn .ic, .back .ic, .ex-link .ic, .ql .ic, .qv-cta .ic, .zoom-btn .ic, .qv-nav .ic, .cm-btn .ic { vertical-align: 0; }
 
   </style>
   <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
@@ -414,14 +437,14 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
   <nav class="nav" aria-label="Primary">
     <a class="sig" href="index.html" aria-label="Meher Kohli, home">M.</a>
     <a href="index.html">Home</a>
-    <div class="cm"><button type="button" class="cm-btn" aria-expanded="false" aria-controls="cm-list">Case studies <span class="cm-caret" aria-hidden="true">▾</span></button><ul class="cm-list" id="cm-list" hidden><li><a href="ai-design-systems.html"><span class="cm-kind">Design systems + AI</span>AI-Ready Design Systems</a></li><li><a href="design-system.html"><span class="cm-kind">Design systems</span>Employee Experience Design System</a></li><li><a href="servicing-loans.html" aria-current="page"><span class="cm-kind">Product design</span>Servicing Loans Pipeline</a></li><li><a href="cmg-connect.html"><span class="cm-kind">UX research</span>CMG Connect: Realtor App</a></li></ul></div>
+    <div class="cm"><button type="button" class="cm-btn" aria-expanded="false" aria-controls="cm-list">Case studies <span class="cm-caret" aria-hidden="true"><span class="ic ic-caret" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9l6 6 6-6"/></svg></span></span></button><ul class="cm-list" id="cm-list" hidden><li><a href="ai-design-systems.html"><span class="cm-kind">Design systems + AI</span>AI-Ready Design Systems</a></li><li><a href="design-system.html"><span class="cm-kind">Design systems</span>Employee Experience Design System</a></li><li><a href="servicing-loans.html" aria-current="page"><span class="cm-kind">Product design</span>Servicing Loans Pipeline</a></li><li><a href="cmg-connect.html"><span class="cm-kind">UX research</span>CMG Connect: Realtor App</a></li></ul></div>
     <a href="index.html#about">About</a>
     <a class="cta" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
   </nav>
 
   <header class="c-hero rose">
     <div class="wrap">
-      <a class="back" href="index.html">← Home</a>
+      <a class="back" href="index.html"><span class="ic ic-left" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Home</a>
       <span class="kind label">Case study 03 · Product design</span>
       <h1>Servicing Loans Pipeline</h1>
       <p class="summary">Helping sales staff find existing customers who could save money, turning a slow market into new business. Designed in 4 weeks for a live industry demo.</p>
@@ -439,7 +462,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
         <figure class="figure rv hero-fig">
           <div class="fig-frame">
             <img src="img/Ki5eeqHvlQgDVSTycpmvDDHDdjA.png" width="1600" height="897" alt="The finished customer list with the details panel and savings comparison" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: The finished customer list with the details panel and savings comparison"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: The finished customer list with the details panel and savings comparison"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>The finished design: a list of customers who could save, with a details panel.</figcaption>
         </figure>
@@ -474,31 +497,31 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
         <ol class="steps rv" style="counter-reset: step 0"><li><h3>Work within the constraint</h3><p>With no time for full research, I focused on one thing: showing the right information in the right place.</p></li></ol><ol class="steps rv" style="counter-reset: step 1"><li><h3>Map the workflow</h3><p>An officer opens the list, sorts and filters by opportunity, picks a customer, and reviews their details and possible savings.</p><p>I grouped information the way officers make decisions: the customer's data, quick rate options, and a savings comparison.</p></li></ol><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/PTMUpJLtCVsqO1NEuvWd30fopk.png" width="1600" height="1200" alt="Early wireframes planning what information each screen shows" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Early wireframes planning what information each screen shows"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Early wireframes planning what information each screen shows"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>Early wireframes: deciding what information officers need, and where it goes.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 2"><li><h3>Design fast with existing building blocks</h3><p>Reusing the design system's ready-made parts let me move straight to detailed, realistic designs and refine from there.</p></li></ol><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/1ZGELDmcHJTzhPLUsKziI7fpM.png" width="1600" height="1135" alt="A wireframe and the final design of the quick rates and savings panel, side by side" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: A wireframe and the final design of the quick rates and savings panel, side by side"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: A wireframe and the final design of the quick rates and savings panel, side by side"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>From wireframe to final design: the quick rates and savings panel.</figcaption>
         </figure><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/WBqOw1f6Po9Hlt2RGoztBbLMtOc.png" width="1507" height="1240" alt="Wireframe and final design of the savings comparison, side by side" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Wireframe and final design of the savings comparison, side by side"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Wireframe and final design of the savings comparison, side by side"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>The savings comparison, from rough layout to finished design.</figcaption>
         </figure><ol class="steps rv" style="counter-reset: step 3"><li><h3>Review quickly, hand off cleanly</h3><p>I checked designs with stakeholders in fast review rounds, then delivered production-ready designs and a fully working prototype straight to engineering.</p></li></ol><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/Xl8eYoF6wH3aS79wjDYfzFSZyjQ.png" width="1600" height="870" alt="Bird's-eye view of all screens and flows delivered to engineering" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Bird's-eye view of all screens and flows delivered to engineering"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Bird's-eye view of all screens and flows delivered to engineering"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>A bird's-eye view of everything I handed to engineering.</figcaption>
         </figure><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/oa5uXQ2hgENkZeYy2VjL1RCU6wI.png" width="1600" height="905" alt="Second bird's-eye view of the delivered screens and flows" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: Second bird's-eye view of the delivered screens and flows"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: Second bird's-eye view of the delivered screens and flows"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>The full set of screens and flows, delivered alongside a working prototype.</figcaption>
         </figure>
@@ -516,7 +539,7 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
   <p>Officers no longer calculate options by hand or ask experts for one-off numbers. They can see a customer's options in seconds.</p></div><figure class="figure rv">
           <div class="fig-frame">
             <img src="img/lhl1ornF2D2Qx9QXMy845kD9EsA.png" width="1600" height="1100" alt="The final design: the customer list with the details panel open, showing customer data, quick rates and savings" loading="lazy" decoding="async">
-            <button type="button" class="zoom-btn" aria-label="Open full size: The final design: the customer list with the details panel open, showing customer data, quick rates and savings"><span aria-hidden="true">⤢</span> Full size</button>
+            <button type="button" class="zoom-btn" aria-label="Open full size: The final design: the customer list with the details panel open, showing customer data, quick rates and savings"><span aria-hidden="true"><span class="ic ic-expand" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></span> Full size</button>
           </div>
           <figcaption>The final design: the customer list with the details panel open.</figcaption>
         </figure><div class="read rv"><h3>How it works in practice</h3>
@@ -546,16 +569,16 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
         <div class="read rv"><span class="label eyebrow">Recognition</span><h2>A Tech100 award for <em>CMG</em></h2></div>
         <div class="read rv">
   <p>CMG received HousingWire's <strong>2024 Tech100 award</strong> for this pipeline, the product I designed. HousingWire is a leading housing industry publication, and the award recognizes the most innovative and impactful companies in mortgage and real estate technology.</p>
-  <p><a href="https://www.cmgfi.com/news/cmg-financial-honored-as-a-tech100-mortgage-and-real-estate-winner-2025-02-20" target="_blank" rel="noopener"><strong>Read about the award on CMG's site ↗</strong></a></p>
+  <p><a href="https://www.cmgfi.com/news/cmg-financial-honored-as-a-tech100-mortgage-and-real-estate-winner-2025-02-20" target="_blank" rel="noopener"><strong>Read about the award on CMG's <span class="nw">site <span class="ic ic-external" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></span></strong></a></p>
   <h3 style="margin-top:32px">Watch the live demo</h3>
   <p>The design presented live at the Digital Mortgage Conference.</p>
   <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/xRxG3WqlKDA?rel=0&amp;modestbranding=1&amp;playsinline=1" title="Live demo of the Servicing Loans Pipeline at the Digital Mortgage Conference" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
-  <p style="margin-top:12px"><a href="https://www.youtube.com/watch?v=xRxG3WqlKDA" target="_blank" rel="noopener"><strong>Watch on YouTube ↗</strong></a></p></div>
+  <p style="margin-top:12px"><a href="https://www.youtube.com/watch?v=xRxG3WqlKDA" target="_blank" rel="noopener"><strong>Watch on <span class="nw">YouTube <span class="ic ic-external" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></span></strong></a></p></div>
       </div>
     </section>
 
     <section class="wrap next">
-      <a href="cmg-connect.html" class="rv"><div><span class="label">Next case study</span><strong>CMG Connect: Realtor App</strong><p>Testing a new app with real estate agents before launch.</p></div><i aria-hidden="true">→</i></a>
+      <a href="cmg-connect.html" class="rv"><div><span class="label">Next case study</span><strong>CMG Connect: Realtor App</strong><p>Testing a new app with real estate agents before launch.</p></div><i aria-hidden="true"><span class="ic ic-right" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></i></a>
     </section>
   </main>
 
@@ -566,15 +589,15 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
       <p>I'd be glad to talk about the role and walk you through my work.</p>
       <div class="btns">
         <a class="btn y" href="mailto:mehkohli@gmail.com">✉ mehkohli@gmail.com</a>
-        <a class="btn o" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn ↗</a>
-        <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé ↗</a>
+        <a class="btn o" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener"><span class="nw">LinkedIn <span class="ic ic-external" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></span></a>
+        <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener"><span class="nw">Résumé <span class="ic ic-external" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></span></span></a>
       </div>
-      <div class="foot"><span>© 2026 Meher Kohli</span><a href="index.html">← Back to home</a></div>
+      <div class="foot"><span>© 2026 Meher Kohli</span><a href="index.html"><span class="ic ic-left" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Back to home</a></div>
     </div>
   </footer>
 
   <dialog class="lightbox" id="lb" aria-label="Full size image">
-    <div class="lb-bar"><span class="lb-hint">Tap the image to zoom in or out</span><button type="button" class="lb-close" aria-label="Close full size image">×</button></div>
+    <div class="lb-bar"><span class="lb-hint">Tap the image to zoom in or out</span><button type="button" class="lb-close" aria-label="Close full size image"><span class="ic ic-close" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></span></button></div>
     <div class="lb-stage"><img alt=""></div>
     <p class="lb-cap"></p>
   </dialog>
