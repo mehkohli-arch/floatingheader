@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#2a0f1c" />
   <title>AI-Ready Design Systems — Meher Kohli</title>
-  <meta name="description" content="Case study: how Meher Kohli rebuilt CMG Financial's design systems for working with AI: dark mode in under a month, and a full customer design system with Figma, Storybook and rules for Claude in 4 months." />
+  <meta name="description" content="Case study and point of view by Meher Kohli: where AI is taking design systems, backed by research, and how she built CMG Financial's design systems as scaffolding for growth: dark mode in under a month, and a full customer system with Figma, Storybook and rules for Claude in 4 months." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lemon&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -219,6 +219,38 @@ img { max-width: 100%; }
 .defs { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
 .defs li { padding-left: 0; }
 
+/* Citations, comparison table, sources (essay sections) */
+.cite { font: 600 11px/1 var(--f-body); vertical-align: super; margin-left: 2px; }
+.cite a { color: var(--brand); text-decoration: none; padding: 2px 4px; border-radius: 4px; background: var(--brand-soft); }
+.cite a:hover { text-decoration: underline; }
+blockquote.pull { margin: 24px 0; padding: 4px 0 4px 20px; border-left: 4px solid var(--butter-400); font: 600 clamp(19px, 2vw, 22px)/1.45 var(--f-head); color: var(--ink); }
+blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); margin-top: 8px; }
+.shift { padding-top: 8px; }
+.shift + .shift { margin-top: 36px; }
+.shift .kicker { color: var(--brand); display: block; margin-bottom: 6px; }
+.table-wrap { overflow-x: auto; margin-top: 24px; border: 1px solid var(--border); border-radius: var(--r-lg); background: #fff; }
+.grow { width: 100%; border-collapse: collapse; font-size: 15.5px; min-width: 620px; }
+.grow th, .grow td { text-align: left; vertical-align: top; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+.grow thead th { font: 500 11.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+.grow tbody tr:last-child td { border-bottom: 0; }
+.grow td:first-child { font-weight: 600; width: 26%; }
+.grow td:nth-child(2) { color: var(--muted); }
+.sources { margin: 0; padding-left: 22px; display: grid; gap: 12px; font-size: 15px; }
+.sources li { padding-left: 4px; }
+.sources a { color: var(--brand); font-weight: 600; overflow-wrap: anywhere; }
+.sources span { color: var(--muted); }
+.sources li:target { background: var(--butter-200); border-radius: 8px; }
+@media (max-width: 640px) {
+  .table-wrap { overflow: visible; border: 0; background: transparent; }
+  .grow { min-width: 0; }
+  .grow thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .grow, .grow tbody, .grow tr, .grow td { display: block; width: 100%; }
+  .grow tr { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 6px 0; margin-bottom: 12px; }
+  .grow td { border: 0; padding: 8px 18px; }
+  .grow td:first-child { width: 100%; font: 700 18px/1.3 var(--f-head); }
+  .grow td[data-label]::before { content: attr(data-label); display: block; font: 500 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+}
+
   </style>
 </head>
 <body>
@@ -238,7 +270,7 @@ img { max-width: 100%; }
       <a class="back" href="index.html#work">← All case studies</a>
       <span class="kind label">Case study 02 · Design systems + AI</span>
       <h1>AI-Ready Design Systems</h1>
-      <p class="summary">Rebuilding CMG's design systems so designers, engineers and AI tools can all build with them correctly. Dark mode for our loan software in under a month, and a complete customer-facing system in 4 months.</p>
+      <p class="summary">Design systems now have a second reader: AI. Here's where that's heading, and how I built CMG's systems as scaffolding for future platforms and use cases.</p>
       
     </div>
   </header>
@@ -269,15 +301,37 @@ img { max-width: 100%; }
 
     <section class="c-section">
       <div class="wrap">
-        <div class="read rv"><span class="label eyebrow">Why this matters</span><h2>AI needs clear <em>rules</em></h2></div>
+        <div class="read rv"><span class="label eyebrow">Why this matters</span><h2>Design systems now have a second <em>reader</em></h2></div>
         <div class="read rv">
-  <p class="lead">More design work now happens with AI tools. AI is fast, but it only follows the rules it's given. If the same color is called "pink-3" in one place and "brand" in another, people get confused and AI makes mistakes.</p>
-  <p>So I set out to make our design systems AI-ready: every design decision stored as a named setting, and every rule written out in plain language that explains what to use, when and why. The clearer the system, the less room for confusion, whether a person or an AI is building.</p>
+  <p class="lead">For years, a design system had one audience: the people who design and build products. Now it has a second one. AI tools read the system too, and they build with it.</p>
+  <p>That changes what a design system is for. My goal isn't only to make today's screens consistent. It's to give CMG the scaffolding to grow: new products, new platforms, new themes and new ways of working, including ones we haven't thought of yet. A system built that way works just as well for a new designer, an employee prototyping an idea, or an AI tool.</p>
   <div class="callout"><ul class="defs">
     <li><strong>Design tokens:</strong> named settings, like "page background" or "small spacing," defined once and used everywhere.</li>
     <li><strong>Storybook:</strong> a living library of the real coded components that designers and other employees use to build their own tools and prototypes.</li>
     <li><strong>PrimeNG:</strong> the ready-made code library our engineers build with.</li>
+    <li><strong>MCP:</strong> a standard way for AI tools to plug into other software and read its information.</li>
   </ul></div></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">Where things are heading</span><h2>Four shifts in how design systems <em>work</em></h2></div>
+        <div class="read rv"><div class="shift"><span class="label kicker">Shift 1</span><h3>From a library people browse to a system AI can read</h3><p>Design system experts saw this coming early. In 2024, Brad Frost wrote that an AI trained on a design system's code and documentation becomes "a component boilerplate generator on steroids."<sup class="cite"><a href="#src-1" aria-label="Source 1">1</a></sup></p><p>The tools have caught up. Storybook now connects directly to AI agents, giving them the real components, examples, documentation and tests so they build "production grade UI instead of hallucinating their way through it."<sup class="cite"><a href="#src-2" aria-label="Source 2">2</a></sup> Figma's MCP server pulls a team's variables and components straight into AI coding tools, and can generate "design system rules aligned to your codebase."<sup class="cite"><a href="#src-3" aria-label="Source 3">3</a></sup> The design system is turning into the source AI tools check before they build anything.</p></div><div class="shift"><span class="label kicker">Shift 2</span><h3>Tokens are becoming a shared language</h3><p>In October 2025, the W3C Design Tokens Community Group released the first stable, vendor-neutral standard for design tokens, built with contributors from Adobe, Google, Microsoft, Salesforce, Shopify and others.<sup class="cite"><a href="#src-4" aria-label="Source 4">4</a></sup> It lets one set of tokens handle light and dark modes, accessibility variants and brand themes "without file duplication," and generate code for web, iOS and Android from a single file.<sup class="cite"><a href="#src-4" aria-label="Source 4">4</a></sup></p><p>That's exactly the scaffolding growing platforms need. A token named by purpose can be reused by any product, theme or tool, today and later, without anyone redesigning screens.</p></div><div class="shift"><span class="label kicker">Shift 3</span><h3>Written rules matter as much as components</h3><p>AI tools follow instructions, so the rules have to be written down. Anthropic recommends giving Claude a project file with "coding conventions, and team norms," and scoping more specific rules to the parts of a project they apply to.<sup class="cite"><a href="#src-5" aria-label="Source 5">5</a></sup> Vercel describes its component registry as "a distribution specification designed to pass context from your design system to AI models," so its AI tool can generate prototypes that match a team's design system "without manual overrides."<sup class="cite"><a href="#src-6" aria-label="Source 6">6</a></sup></p><p>Prose is part of the system now. Explaining <em>why</em> and <em>when</em> to use a component is what keeps an AI from guessing.</p></div><div class="shift"><span class="label kicker">Shift 4</span><h3>Everyone can build, so the system has to hold the line</h3><p>AI is already everywhere in design system work: in zeroheight's 2026 survey of design system practitioners, 82% of teams use AI in some form.<sup class="cite"><a href="#src-7" aria-label="Source 7">7</a></sup> But the same research shows the risk. 59% report UI being built that bypasses their design system, and 50% say other teams' AI use is creating real problems. Teams are happiest using AI for documentation, and least happy with AI-generated designs.<sup class="cite"><a href="#src-7" aria-label="Source 7">7</a></sup></p><blockquote class="pull">AI multiplies whatever system it's given. A clear system multiplies consistency. A vague one multiplies mistakes.</blockquote><p>The gap is readiness. Only 17% of teams rate their documentation "very AI-ready."<sup class="cite"><a href="#src-7" aria-label="Source 7">7</a></sup> That's the gap I set out to close at CMG.</p></div></div><div class="grid3 rv"><div class="box dark"><span class="num">82%</span><h3>Teams use AI</h3><p>of design system teams use AI in some form.<sup class="cite"><a href="#src-7" aria-label="Source 7">7</a></sup></p></div><div class="box dark"><span class="num">59%</span><h3>See UI bypassing the system</h3><p>report UI being built outside their design system.<sup class="cite"><a href="#src-7" aria-label="Source 7">7</a></sup></p></div><div class="box dark"><span class="num">17%</span><h3>Feel truly AI-ready</h3><p>rate their documentation "very AI-ready."<sup class="cite"><a href="#src-7" aria-label="Source 7">7</a></sup></p></div></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">The goal</span><h2>Scaffolding for what comes <em>next</em></h2></div>
+        <div class="read rv">
+  <p class="lead">I treat the design system as scaffolding: a structure strong enough to support whatever CMG builds next. Each decision below was made for today's needs and for growth.</p></div>
+  <div class="table-wrap rv"><table class="grow">
+    <thead><tr><th scope="col">What I built</th><th scope="col">What it does today</th><th scope="col">What it makes possible later</th></tr></thead>
+    <tbody>
+      <tr><td>A semantic token layer</td><td data-label="Today">Gave Clear 2.0 dark mode in under a month</td><td data-label="Later">New themes, brands and accessibility modes as a change of values, not a redesign</td></tr>
+      <tr><td>Tokens aligned with PrimeNG</td><td data-label="Today">Design and code use the same names</td><td data-label="Later">New products start on the same foundation engineers already know</td></tr>
+      <tr><td>Storybook in React and Angular</td><td data-label="Today">Designers and employees build their own tools and prototypes with real parts</td><td data-label="Later">Room for new frameworks and teams without forking the system</td></tr>
+      <tr><td>A ready-to-use Figma library</td><td data-label="Today">Designers start every screen on-brand and accessible</td><td data-label="Later">Faster design for new platforms and use cases</td></tr>
+      <tr><td>Written rules for Claude</td><td data-label="Today">AI output follows our experience design standards</td><td data-label="Later">As AI tools change, the rules travel with the system</td></tr>
+    </tbody>
+  </table></div>
       </div>
     </section><section class="c-section">
       <div class="wrap">
@@ -304,14 +358,7 @@ img { max-width: 100%; }
         <div class="rv"><span class="label eyebrow">Project 2 · Our customer-facing design system</span><h2>A full system in 4 <em>months</em></h2></div>
         <div class="read rv">
   <p class="lead">Next, CMG needed a design system for the products its customers use. With AI built into my workflow, I delivered it in 4 months, about a year's worth of work.</p>
-  <p>I built it in Angular only, because that's what the engineers on these products use, and followed PrimeNG closely. It has three parts:</p></div><div class="grid3 rv"><div class="box"><span class="num">Figma</span><h3>A ready-to-use component library</h3><p>Designers start every screen with on-brand, accessible components instead of building from scratch.</p></div><div class="box"><span class="num">Storybook</span><h3>Prototyping for everyone</h3><p>The real coded components, set up so designers and other employees can build their own prototypes, including with Claude, using the same parts that ship.</p></div><div class="box"><span class="num">Rules</span><h3>Guidance for Claude to follow</h3><p>Written rules that tell Claude which components and tokens to use, when and why, so AI output meets our experience design standards.</p></div></div>
-      </div>
-    </section><section class="c-section">
-      <div class="wrap">
-        <div class="read rv"><span class="label eyebrow">The bigger idea</span><h2>Empowering the whole <em>company</em></h2></div>
-        <div class="read rv">
-  <p class="lead">With everything in Storybook, people across the company, not just designers, can explore, prototype and build on their own, while staying aligned with our experience design standards.</p>
-  <p>Design systems used to be documentation for designers and engineers. Now they're also instructions for AI. That makes complete tokens and clear, plain-language rules more important than ever.</p></div>
+  <p>I built it in Angular only, because that's what the engineers on these products use, and followed PrimeNG closely. It has three parts, one for each kind of builder:</p></div><div class="grid3 rv"><div class="box"><span class="num">Figma</span><h3>A ready-to-use component library</h3><p>Designers start every screen with on-brand, accessible components instead of building from scratch.</p></div><div class="box"><span class="num">Storybook</span><h3>Prototyping for everyone</h3><p>The real coded components, set up so designers and other employees can build their own prototypes, including with Claude, using the same parts that ship.</p></div><div class="box"><span class="num">Rules</span><h3>Guidance for Claude to follow</h3><p>Written rules that tell Claude which components and tokens to use, when and why, so AI output meets our experience design standards.</p></div></div><div class="read rv"><p style="margin-top:24px">With everything in Storybook, people across the company, not just designers, can explore, prototype and build on their own, while staying aligned with our experience design standards. That's the answer to the "UI bypassing the system" problem: make the right way the easiest way.</p></div>
       </div>
     </section><section class="c-section">
       <div class="wrap">
@@ -320,11 +367,22 @@ img { max-width: 100%; }
       </div>
     </section><section class="c-section">
       <div class="wrap">
+        <div class="read rv"><span class="label eyebrow">What's next</span><h2>Where I'm taking it <em>next</em></h2></div>
+        <div class="read rv"><p>The scaffolding is in place. These are the natural next steps the research points to:</p><ul><li><strong>Adopt the new token standard.</strong> Moving our tokens to the W3C format<sup class="cite"><a href="#src-4" aria-label="Source 4">4</a></sup> would let any compatible design tool or code pipeline read them, so the system keeps up as tools change.</li><li><strong>Connect Storybook to AI agents.</strong> Storybook's MCP connection<sup class="cite"><a href="#src-2" aria-label="Source 2">2</a></sup> would let AI tools find our real components and test their own work for accessibility before anyone reviews it.</li><li><strong>Measure AI output quality, not just usage.</strong> Most teams already use AI.<sup class="cite"><a href="#src-7" aria-label="Source 7">7</a></sup> The better question is how often AI-made screens follow our standards, and where the rules need to be clearer.</li></ul></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
         <div class="read rv"><span class="label eyebrow">What I learned</span><h2>Clarity scales, for people and <em>AI</em></h2></div>
         <div class="read rv">
   <ul><li><strong>Fix the foundation first.</strong> A semantic token layer turned dark mode from a redesign into a switch.</li>
   <li><strong>Write for two readers.</strong> Rules clear enough for a new designer are clear enough for an AI tool.</li>
-  <li><strong>Meet engineers where they are.</strong> Matching PrimeNG and their technology makes the system easy to adopt.</li></ul></div>
+  <li><strong>Meet people where they are.</strong> Matching PrimeNG and engineers' frameworks makes the system easy to adopt, and Storybook makes it easy for everyone else to build with.</li>
+  <li><strong>Build for the platform you'll have, not just the one you have.</strong> Good scaffolding makes the next product, theme or tool cheaper to add.</li></ul></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="read rv"><span class="label eyebrow">Sources</span><h2>Research <em>cited</em></h2></div>
+        <div class="read rv"><ol class="sources"><li id="src-1"><a href="https://bradfrost.com/blog/post/ai-and-design-systems/" target="_blank" rel="noopener">Brad Frost, "AI and Design Systems" ↗</a><br><span>bradfrost.com, February 2024</span></li><li id="src-2"><a href="https://storybook.js.org/blog/storybook-10-3/" target="_blank" rel="noopener">Storybook, "Storybook 10.3": Storybook MCP for React ↗</a><br><span>storybook.js.org, 2026</span></li><li id="src-3"><a href="https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Dev-Mode-MCP-Server" target="_blank" rel="noopener">Figma, "Guide to the Figma MCP server" ↗</a><br><span>Figma Help Center</span></li><li id="src-4"><a href="https://w3.org/community/design-tokens/2025/10/28/design-tokens-specification-reaches-first-stable-version/" target="_blank" rel="noopener">W3C Design Tokens Community Group, "Design Tokens specification reaches first stable version" ↗</a><br><span>w3.org, October 28, 2025</span></li><li id="src-5"><a href="https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more" target="_blank" rel="noopener">Anthropic, "Steering Claude Code: CLAUDE.md files, skills, hooks, rules, subagents and more" ↗</a><br><span>claude.com, 2026</span></li><li id="src-6"><a href="https://v0.app/docs/design-systems" target="_blank" rel="noopener">Vercel, "Design systems" (v0 documentation) ↗</a><br><span>v0.app</span></li><li id="src-7"><a href="https://zeroheight.com/resources/state-of-ai-in-design-systems/" target="_blank" rel="noopener">zeroheight, "The State of AI in Design Systems" (survey of 123 practitioners) ↗</a><br><span>zeroheight.com, 2026</span></li></ol></div>
       </div>
     </section>
 
