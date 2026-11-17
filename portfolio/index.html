@@ -156,14 +156,20 @@
     .tag.gold { background: var(--butter-400); border-color: var(--butter-400); color: var(--rose-950); }
     .v-rose { background: linear-gradient(140deg, var(--brand), var(--rose-700)); }
     .v-butter { background: linear-gradient(140deg, var(--butter-400), #f19a6b); }
+    .v-plum { background: linear-gradient(140deg, var(--rose-950), #4a1a33); }
+    .ai-vis { width: 100%; max-width: 340px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .ai-vis .core { grid-column: 1 / -1; background: var(--rose-950); color: var(--butter-200); border-radius: 14px; padding: 16px; text-align: center; font: 700 17px var(--f-head); }
+    .ai-vis .core small { display: block; font: 500 11.5px var(--f-mono); color: rgba(255,248,243,.7); margin-top: 4px; letter-spacing: .04em; }
+    .ai-vis .arrows { grid-column: 1 / -1; display: flex; justify-content: space-around; color: var(--brand); font-size: 18px; line-height: 1; }
+    .ai-vis .leaf { background: #fff; border-radius: 12px; padding: 14px 6px; text-align: center; font: 600 13.5px var(--f-body); color: var(--rose-950); box-shadow: 0 8px 20px rgba(161,40,90,.12); }
+    .ai-vis .leaf i { display: block; font-style: normal; font-size: 11px; font-weight: 500; color: var(--muted); margin-top: 2px; }
     .v-blush { background: linear-gradient(140deg, var(--rose-200), #f7d9c4); }
 
     /* Case study overview grid */
     .work-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: -36px 0 28px; font-size: 14px; color: rgba(255,248,243,.7); }
     .work-bar .legend { display: flex; gap: 16px; flex-wrap: wrap; }
     .work-bar .legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 8px; vertical-align: 1px; }
-    .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; list-style: none; margin: 0; padding: 0; }
-    @media (max-width: 1040px) { .cases { grid-template-columns: repeat(2, 1fr); } }
+    .cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; list-style: none; margin: 0; padding: 0; }
     @media (max-width: 680px) { .cases { grid-template-columns: 1fr; } }
     .cs { position: relative; display: flex; flex-direction: column; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-lg); overflow: hidden; transition: transform .35s var(--ease), border-color .25s, background .25s; }
     .cs:hover { transform: translateY(-4px); border-color: rgba(246,195,91,.55); background: rgba(255,255,255,.07); }
@@ -259,6 +265,9 @@
     .c2 { background: var(--brand); color: var(--cream); } .c2 p { color: rgba(255,248,243,.85); } .c2 .big { color: var(--butter-200); }
     .c3 { background: var(--butter-400); color: var(--rose-950); } .c3 .big { color: var(--brand); }
     @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } .card { min-height: 0; padding: 28px 22px; } .expertise { padding: 88px 0 24px; } }
+
+    .sys-link { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: var(--rose-950); color: var(--butter-200); font: 600 16px var(--f-body); text-decoration: none; transition: transform .2s var(--ease); }
+    .sys-link:hover { transform: translateY(-2px); }
 
     /* ═════════ About ═════════ */
     .about-sec { padding: 130px 0 120px; }
@@ -371,7 +380,7 @@
           <p>Three projects from CMG Financial, a US mortgage lender. Each card shows the problem, my role and the result. Open a quick look for more, or read the full story.</p>
         </div>
         <div class="work-bar rv">
-          <span>3 case studies · 2024–2025</span>
+          <span>4 case studies · 2024–2026</span>
           <div class="legend" aria-label="Case study types">
             <span style="--c:#F6C35B">Product design</span>
             <span style="--c:#f2a6c6">Design systems</span>
@@ -395,6 +404,25 @@
           </li>
 
           <li class="cs rv" style="--c:#f2a6c6">
+            <div class="thumb" aria-hidden="true">
+              <div class="ai-vis">
+                <div class="core">Tokens + rules<small>one source of truth</small></div>
+                <div class="arrows"><span>↓</span><span>↓</span><span>↓</span></div>
+                <div class="leaf">Figma<i>designers</i></div>
+                <div class="leaf">Storybook<i>engineers</i></div>
+                <div class="leaf">Claude<i>AI tools</i></div>
+              </div>
+            </div>
+            <div class="cs-body">
+              <div class="cs-meta"><span class="kind">Design systems + AI</span><span>4 months</span></div>
+              <h3><a href="ai-design-systems.html">AI-Ready Design Systems</a></h3>
+              <dl class="facts"><div><dt>Problem</dt><dd>As teams start designing with AI, unclear rules lead to inconsistent products and AI mistakes. Older one-off code also made dark mode hard to add.</dd></div><div><dt>My role</dt><dd>Design systems lead: rebuilt the tokens, and built the Figma, Storybook and Claude toolkit</dd></div></dl>
+              <div class="impact"><b>4 mo</b><span>to build a full customer design system, about a year of work</span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+            </div>
+          </li>
+
+          <li class="cs rv" style="--c:#f2a6c6">
             <div class="thumb">
               <img src="https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=512 512w, https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=1024 1024w" sizes="(max-width: 680px) 100vw, (max-width: 1040px) 50vw, 380px" alt="Design system documentation: guidelines, reusable table and filter components, and color and spacing settings" loading="lazy" decoding="async">
             </div>
@@ -403,7 +431,7 @@
               <h3><a href="design-system.html">Employee Experience Design System</a></h3>
               <dl class="facts"><div><dt>Problem</dt><dd>The company's internal apps all looked and worked differently, weren't fully accessible, and engineers kept having to ask designers what to build.</dd></div><div><dt>My role</dt><dd>Design systems lead: set the standards, coached the designer, then took ownership</dd></div></dl>
               <div class="impact"><b>30%</b><span>fewer back-and-forth questions between design and engineering</span></div>
-              <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="2" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
           </li>
 
@@ -416,7 +444,7 @@
               <h3><a href="cmg-connect.html">CMG Connect: Realtor App</a></h3>
               <dl class="facts"><div><dt>Problem</dt><dd>A new app for real estate agents had to be easy to use from day one, or agents would stick with the tool they already had.</dd></div><div><dt>My role</dt><dd>Led the user research: planned and ran tests with real agents</dd></div></dl>
               <div class="impact"><b>60%+</b><span>of agents got stuck on certain screens. I found them and redesigned them before launch.</span></div>
-              <div class="cs-actions"><button type="button" class="ql" data-case="2" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="3" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
           </li>
         </ul>
@@ -454,17 +482,18 @@
         <div class="cards">
           <div class="card c1 rv">
             <div class="big">12 → 4<small>months to finish a year of planned work</small></div>
-            <div><h3>Faster with AI</h3><p>I use AI throughout my design system work. It let me finish about a year of planned work in 4 months, without cutting corners on quality or accessibility.</p></div>
+            <div><h3>Faster with AI</h3><p>With AI built into my workflow, I delivered our customer design system in 4 months: a Figma library, a Storybook for prototyping with Claude, and rules for Claude to follow.</p></div>
           </div>
           <div class="card c2 rv">
-            <div class="big">&lt;1 month<small>to add dark mode to every product</small></div>
-            <div><h3>Built to change easily</h3><p>I set up colors, spacing and text as shared settings defined in one place (called design tokens). So adding dark mode took under a month, instead of redesigning every screen.</p></div>
+            <div class="big">&lt;1 month<small>to add dark mode to our loan software</small></div>
+            <div><h3>Built to change easily</h3><p>I restructured our design tokens (shared settings like "page background") with a layer named by purpose. So adding dark mode took under a month, instead of redesigning every screen.</p></div>
           </div>
           <div class="card c3 rv">
             <div class="big">30%<small>fewer back-and-forth questions with engineers</small></div>
             <div><h3>Standards people use</h3><p>As the company's go-to design systems expert, I match designs to the code engineers already use, write clear guidelines and coach designers, so products get built right the first time.</p></div>
           </div>
         </div>
+  <p class="rv" style="margin:28px 0 0"><a class="sys-link" href="ai-design-systems.html">Read the full story: AI-Ready Design Systems →</a></p>
       </div>
     </section>
 
@@ -563,6 +592,12 @@
           problem: 'Loan officers (the company\'s mortgage sales staff) earn commission on new loans, and in a slow market they were losing income. Customers who could save money by refinancing were buried across several disconnected systems, so officers rarely found them.',
           did: ['Worked with business analysts and mortgage experts to understand the work, since there was no time for direct user interviews', 'Designed one list of existing customers that highlights who could save money, with filters and sorting', 'Added a side panel that shows each customer\'s options and savings side by side', 'Let officers turn a savings scenario into a new loan application in one click', 'Scoped what could ship in 4 weeks for a live demo at an industry conference'],
           metrics: [['80%+', 'faster to find a customer who could benefit'], ['15–20%', 'estimated income kept or gained for loan officers'], ['Tech100', 'HousingWire innovation award, 2024']] },
+        { kind: 'Design systems + AI', time: '4 months · 2 design systems', title: 'AI-Ready Design Systems', v: 'v-plum',
+          url: 'ai-design-systems.html',
+          facts: [['My role', 'Design systems lead'], ['Scope', 'Employee apps (Clear 2.0) and customer apps'], ['Tools', 'Figma, Storybook, PrimeNG, Angular, React, Claude']],
+          problem: 'More design work now happens with AI tools, and AI only follows the rules it\'s given. Clear 2.0, our employee loan software, also needed dark mode, but older one-off code made that hard.',
+          did: ['Added a semantic token layer to Clear 2.0 (settings named by purpose) and aligned it with PrimeNG, so dark mode became a switch', 'Built a Storybook version of every component, in React and Angular', 'Built the customer design system in Angular in 4 months: a Figma library, a Storybook for prototyping with Claude, and rules for Claude to follow', 'Made the system usable across the company, while keeping everyone aligned with experience design standards'],
+          metrics: [['<1 mo', 'to add dark mode to Clear 2.0'], ['4 mo', 'to build the customer design system'], ['Every', 'component in Storybook']] },
         { kind: 'Design systems', time: '5 months · ongoing', title: 'Employee Experience Design System', v: 'v-butter',
           url: 'design-system.html',
           facts: [['My role', 'Design systems lead: expert, coach, then owner'], ['Team', 'Lead designer and engineering'], ['Product', 'The company\'s internal employee apps (web)']],

@@ -181,6 +181,44 @@ img { max-width: 100%; }
 .read h3:first-child { margin-top: 0; }
 .tag-idea { display: inline-block; font: 600 12px var(--f-body); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; background: var(--butter-200); color: #6b4500; }
 
+/* Diagrams (AI-ready design systems page) */
+.diagram { margin: 40px 0 0; background: #fff; border: 1px solid var(--border); border-radius: var(--r-xl); padding: clamp(18px, 3vw, 32px); }
+.diagram .cap { font-size: 14.5px; color: var(--muted); margin: 16px 0 0; }
+.map { display: grid; gap: 12px; }
+.map .src { background: var(--rose-950); color: var(--cream); border-radius: var(--r-lg); padding: 18px 22px; text-align: center; }
+.map .src strong { display: block; font: 800 22px/1.2 var(--f-head); color: var(--butter-200); }
+.map .src span { font-size: 15px; opacity: .85; }
+.map .outs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.map .out { background: var(--brand-soft); border-radius: var(--r-lg); padding: 18px; min-width: 0; }
+.map .out .who { display: block; font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--brand); margin-bottom: 6px; }
+.map .out h3 { font: 700 19px/1.25 var(--f-head); margin: 0 0 6px; }
+.map .out p { margin: 0; font-size: 15px; color: var(--muted); }
+.map .arrow { text-align: center; color: var(--brand); font-size: 22px; line-height: 1; }
+.map .end { background: var(--butter-400); color: var(--rose-950); border-radius: var(--r-lg); padding: 16px 20px; text-align: center; font-weight: 600; }
+@media (max-width: 760px) { .map .outs { grid-template-columns: 1fr; } }
+.layers { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: stretch; }
+.layer { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.layer.new { border: 2px solid var(--brand); background: #fff; }
+.layer .label { color: var(--muted); }
+.layer h3 { font: 700 18px/1.25 var(--f-head); margin: 0; }
+.layer p { margin: 0; font-size: 14.5px; color: var(--muted); }
+.layer code { font: 500 13px/1.4 var(--f-mono); background: #fff; border: 1px solid var(--border); padding: 6px 8px; border-radius: 8px; overflow-wrap: anywhere; }
+.layers .arr { align-self: center; justify-self: center; color: var(--brand); font-size: 22px; }
+.badge-new { align-self: flex-start; font: 600 11.5px var(--f-body); background: var(--brand); color: #fff; padding: 3px 9px; border-radius: 999px; }
+@media (max-width: 860px) { .layers { grid-template-columns: 1fr; } .layers .arr { transform: rotate(90deg); } }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.mode { border-radius: var(--r-lg); padding: 18px; border: 1px solid var(--border); }
+.mode.light { background: #ffffff; color: #1a1216; }
+.mode.dark { background: #1f1a1c; color: #f6f0f2; border-color: #1f1a1c; }
+.mode .t { font-weight: 600; }
+.mode .btnx { display: inline-block; margin-top: 10px; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 14px; }
+.mode.light .btnx { background: #A1285A; color: #fff; }
+.mode.dark .btnx { background: #f2a6c6; color: #4a1029; }
+.mode code { font: 500 12.5px/1.6 var(--f-mono); opacity: .8; display: block; margin-top: 10px; }
+@media (max-width: 560px) { .modes { grid-template-columns: 1fr; } }
+.defs { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.defs li { padding-left: 0; }
+
   </style>
 </head>
 <body>
@@ -198,7 +236,7 @@ img { max-width: 100%; }
   <header class="c-hero plum">
     <div class="wrap">
       <a class="back" href="index.html#work">← All case studies</a>
-      <span class="kind label">Case study 02 · Design systems</span>
+      <span class="kind label">Case study 03 · Design systems</span>
       <h1>Employee Experience Design System</h1>
       <p class="summary">Turning a patchwork of internal apps into one consistent, accessible system that designers and engineers can build on quickly.</p>
       

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2a0f1c" />
+  <title>AI-Ready Design Systems — Meher Kohli</title>
+  <meta name="description" content="Case study: how Meher Kohli rebuilt CMG Financial's design systems for working with AI: dark mode in under a month, and a full customer design system with Figma, Storybook and rules for Claude in 4 months." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lemon&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+/* Shared styles for case study pages. Tokens match index.html. */
+:root {
+  --rose-950:#2a0f1c; --rose-900:#4a1029; --rose-700:#7d1d45; --rose-600:#A1285A; --rose-400:#d0679a; --rose-200:#f2c4d8; --rose-100:#fbe7ef;
+  --butter-400:#F6C35B; --butter-200:#fde7b4;
+  --cream:#fff8f3; --ink:#1a1216; --ink-muted:#5f5258; --line:#ecdfe3;
+  --bg: var(--cream); --text: var(--ink); --muted: var(--ink-muted); --border: var(--line);
+  --brand: var(--rose-600); --brand-soft: var(--rose-100);
+  --f-sig: 'Lemon', 'Bricolage Grotesque', cursive;
+  --f-head: 'Bricolage Grotesque', system-ui, sans-serif;
+  --f-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --r-md:14px; --r-lg:24px; --r-xl:36px;
+  --max:1200px; --read: 720px;
+  --ease: cubic-bezier(.2,.8,.2,1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 17px/1.65 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+img { max-width: 100%; }
+:focus-visible { outline: 3px solid var(--butter-400); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+.read { max-width: var(--read); }
+@media (max-width: 600px) { .wrap { padding: 0 18px; } }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 16px; top: 16px; background: #fff; color: var(--ink); padding: 8px 12px; z-index: 200; }
+.label { font: 500 12px/1.2 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; }
+
+/* Nav (same as home) */
+.nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; background: rgba(42,15,28,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 10px 30px rgba(42,15,28,.25); }
+.nav a { color: #fff; text-decoration: none; font: 500 14px var(--f-body); padding: 9px 16px; border-radius: 999px; transition: background .2s; white-space: nowrap; }
+.nav a:hover { background: rgba(255,255,255,.12); }
+.nav .sig { font: 400 18px var(--f-sig); color: var(--butter-200); padding: 6px 14px; }
+.nav .cta { background: var(--butter-400); color: var(--rose-950); }
+.nav .cta:hover { background: var(--butter-200); }
+@media (max-width: 640px) {
+  .nav { top: auto; bottom: calc(12px + env(safe-area-inset-bottom)); width: calc(100% - 24px); max-width: 420px; justify-content: space-between; }
+  .nav a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 12px; }
+  .nav .sig { display: none; }
+  body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
+
+/* Reading progress */
+.progress { position: fixed; top: 0; left: 0; height: 4px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: var(--butter-400); z-index: 150; }
+
+/* Case hero */
+.c-hero { color: var(--cream); padding: 112px 0 64px; position: relative; overflow: hidden; }
+.c-hero.rose { background: linear-gradient(140deg, var(--rose-600), var(--rose-700)); }
+.c-hero.plum { background: linear-gradient(140deg, var(--rose-950), #4a1a33); }
+.c-hero.butter { background: linear-gradient(140deg, var(--butter-400), #f19a6b); color: var(--rose-950); }
+.back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; font: 600 15px var(--f-body); opacity: .9; margin-bottom: 18px; }
+.back:hover { opacity: 1; text-decoration: underline; }
+.c-hero .kind { display: block; margin-bottom: 14px; opacity: .85; }
+.c-hero h1 { font: 800 clamp(38px, 6.4vw, 80px)/1.0 var(--f-head); letter-spacing: -.03em; margin: 0; max-width: 18ch; }
+.c-hero .summary { font-size: clamp(18px, 2vw, 22px); line-height: 1.5; margin: 20px 0 0; max-width: 46ch; opacity: .92; }
+.award { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 8px 14px; border-radius: 999px; background: var(--butter-400); color: var(--rose-950); font: 600 14px var(--f-body); }
+@media (max-width: 600px) { .c-hero { padding: 40px 0 48px; } }
+
+/* At a glance */
+.glance { margin-top: -28px; position: relative; z-index: 2; }
+.glance-card { background: #fff; border: 1px solid var(--border); border-radius: var(--r-xl); padding: 28px; box-shadow: 0 20px 50px rgba(42,15,28,.08); display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px; }
+.facts { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; align-content: start; }
+.facts dt { font: 500 11.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.facts dd { margin: 0; font-size: 15.5px; line-height: 1.45; }
+.results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.result { background: var(--rose-950); color: var(--cream); border-radius: var(--r-lg); padding: 18px 16px; }
+.result b { display: block; font: 800 clamp(28px, 3vw, 38px)/1 var(--f-head); letter-spacing: -.02em; color: var(--butter-400); white-space: nowrap; }
+.result span { display: block; margin-top: 8px; font-size: 14px; line-height: 1.4; color: rgba(255,248,243,.85); }
+@media (max-width: 900px) { .glance-card { grid-template-columns: 1fr; padding: 22px 18px; gap: 24px; border-radius: 28px; } }
+@media (max-width: 600px) {
+  .facts { grid-template-columns: 1fr; }
+  .results { grid-template-columns: 1fr; }
+  .result { display: flex; align-items: baseline; gap: 14px; }
+  .result b { min-width: 104px; }
+  .result span { margin: 0; }
+}
+
+/* Figures: real product images, shown in full, never cropped */
+.figure { margin: 40px 0; }
+.figure a { display: block; background: #fcf1f5; border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(10px, 2vw, 24px); text-decoration: none; transition: border-color .2s; }
+.figure a:hover { border-color: var(--brand); }
+.figure img { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); object-fit: contain; margin: 0 auto; border-radius: 8px; }
+.figure figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.figure figcaption .zoom { color: var(--brand); font-weight: 600; white-space: nowrap; }
+.figure.hero-fig { margin: 48px 0 0; }
+
+/* Body sections */
+.c-section { padding: 72px 0 0; }
+.c-section:last-of-type { padding-bottom: 24px; }
+.c-section h2 { font: 800 clamp(30px, 4vw, 46px)/1.08 var(--f-head); letter-spacing: -.02em; margin: 10px 0 18px; }
+.c-section h2 em { font: 400 1em var(--f-sig); font-style: normal; color: var(--brand); }
+.c-section .eyebrow { color: var(--brand); }
+.c-section p { margin: 0 0 16px; }
+.c-section ul { margin: 0 0 16px; padding-left: 22px; display: grid; gap: 8px; }
+.lead { font-size: 19px; line-height: 1.6; }
+.callout { background: var(--brand-soft); border-left: 4px solid var(--brand); border-radius: 0 var(--r-md) var(--r-md) 0; padding: 16px 20px; margin: 24px 0; }
+.callout p:last-child { margin: 0; }
+@media (max-width: 600px) { .c-section { padding-top: 56px; } .lead { font-size: 18px; } }
+
+/* Numbered steps */
+.steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; counter-reset: step; }
+.steps > li { counter-increment: step; background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 22px 22px 22px 76px; position: relative; }
+.steps > li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 22px; top: 20px; font: 400 26px/1 var(--f-sig); color: var(--brand); }
+.steps h3 { font: 700 19px/1.3 var(--f-head); margin: 0 0 6px; }
+.steps p { margin: 0; color: var(--muted); }
+.steps p + p { margin-top: 8px; }
+@media (max-width: 600px) { .steps > li { padding: 56px 18px 18px; } .steps > li::before { left: 18px; top: 18px; } }
+
+/* Grid of cards (roles, challenges, findings) */
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 24px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+.box { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 22px; }
+.box h3 { font: 700 18px/1.3 var(--f-head); margin: 0 0 6px; }
+.box p { margin: 0; color: var(--muted); font-size: 15.5px; }
+.box.dark { background: var(--rose-950); border-color: var(--rose-950); color: var(--cream); }
+.box.dark p { color: rgba(255,248,243,.82); }
+.box .num { font: 800 32px/1 var(--f-head); color: var(--brand); display: block; margin-bottom: 8px; letter-spacing: -.02em; }
+.box.dark .num { color: var(--butter-400); }
+.tag-good, .tag-bad { display: inline-block; font: 600 12px var(--f-body); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+.tag-good { background: #e3f4ea; color: #1e6b45; }
+.tag-bad { background: #fde3e3; color: #8a1f1f; }
+@media (max-width: 900px) { .grid3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* Flow */
+.flow { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 10px; counter-reset: f; }
+.flow li { counter-increment: f; display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 16px; }
+.flow li::before { content: counter(f); width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font: 700 16px var(--f-head); }
+
+/* Video */
+.video { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-lg); overflow: hidden; background: var(--rose-950); margin-top: 24px; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* Next case + contact */
+.next { margin-top: 96px; }
+.next a { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 20px; text-decoration: none; background: var(--rose-950); color: var(--cream); border-radius: var(--r-xl); padding: 32px; transition: transform .3s var(--ease); }
+.next a:hover { transform: translateY(-3px); }
+.next .label { color: var(--butter-200); display: block; margin-bottom: 8px; }
+.next strong { font: 800 clamp(26px, 3.4vw, 40px)/1.1 var(--f-head); letter-spacing: -.02em; display: block; }
+.next p { margin: 8px 0 0; color: rgba(255,248,243,.78); }
+.next i { font-style: normal; width: 56px; height: 56px; border-radius: 50%; background: var(--butter-400); color: var(--rose-950); display: grid; place-items: center; font-size: 22px; }
+@media (max-width: 600px) { .next a { padding: 24px 20px; } .next i { width: 48px; height: 48px; } }
+
+.contact { background: var(--brand); color: var(--cream); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 88px 0 40px; margin-top: 96px; text-align: center; }
+.contact .label { color: var(--butter-200); }
+.contact h2 { font: 400 clamp(52px, 10vw, 120px)/.95 var(--f-sig); margin: 16px 0 14px; }
+.contact h2 span { color: var(--butter-400); }
+.contact p { max-width: 46ch; margin: 0 auto 30px; color: rgba(255,248,243,.85); }
+.btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 24px; border-radius: 999px; font: 600 16px var(--f-body); text-decoration: none; transition: transform .2s var(--ease); }
+.btn:hover { transform: translateY(-2px); }
+.btn.y { background: var(--butter-400); color: var(--rose-950); }
+.btn.o { border: 1.5px solid rgba(255,248,243,.55); color: var(--cream); }
+.foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 72px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.2); font-size: 13px; color: rgba(255,248,243,.75); text-align: left; }
+.foot a { text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+@media (max-width: 600px) { .contact { padding: 72px 0 32px; } .btns { flex-direction: column; align-items: stretch; max-width: 340px; margin: 0 auto; } }
+
+/* Reveal */
+.rv { transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.rv.pre { opacity: 0; transform: translateY(24px); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv.pre { opacity: 1; transform: none; }
+}
+
+/* Sub-headings inside reading column, idea tag */
+.read h3 { font: 700 21px/1.3 var(--f-head); margin: 28px 0 8px; }
+.read h3:first-child { margin-top: 0; }
+.tag-idea { display: inline-block; font: 600 12px var(--f-body); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; background: var(--butter-200); color: #6b4500; }
+
+/* Diagrams (AI-ready design systems page) */
+.diagram { margin: 40px 0 0; background: #fff; border: 1px solid var(--border); border-radius: var(--r-xl); padding: clamp(18px, 3vw, 32px); }
+.diagram .cap { font-size: 14.5px; color: var(--muted); margin: 16px 0 0; }
+.map { display: grid; gap: 12px; }
+.map .src { background: var(--rose-950); color: var(--cream); border-radius: var(--r-lg); padding: 18px 22px; text-align: center; }
+.map .src strong { display: block; font: 800 22px/1.2 var(--f-head); color: var(--butter-200); }
+.map .src span { font-size: 15px; opacity: .85; }
+.map .outs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.map .out { background: var(--brand-soft); border-radius: var(--r-lg); padding: 18px; min-width: 0; }
+.map .out .who { display: block; font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--brand); margin-bottom: 6px; }
+.map .out h3 { font: 700 19px/1.25 var(--f-head); margin: 0 0 6px; }
+.map .out p { margin: 0; font-size: 15px; color: var(--muted); }
+.map .arrow { text-align: center; color: var(--brand); font-size: 22px; line-height: 1; }
+.map .end { background: var(--butter-400); color: var(--rose-950); border-radius: var(--r-lg); padding: 16px 20px; text-align: center; font-weight: 600; }
+@media (max-width: 760px) { .map .outs { grid-template-columns: 1fr; } }
+.layers { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: stretch; }
+.layer { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.layer.new { border: 2px solid var(--brand); background: #fff; }
+.layer .label { color: var(--muted); }
+.layer h3 { font: 700 18px/1.25 var(--f-head); margin: 0; }
+.layer p { margin: 0; font-size: 14.5px; color: var(--muted); }
+.layer code { font: 500 13px/1.4 var(--f-mono); background: #fff; border: 1px solid var(--border); padding: 6px 8px; border-radius: 8px; overflow-wrap: anywhere; }
+.layers .arr { align-self: center; justify-self: center; color: var(--brand); font-size: 22px; }
+.badge-new { align-self: flex-start; font: 600 11.5px var(--f-body); background: var(--brand); color: #fff; padding: 3px 9px; border-radius: 999px; }
+@media (max-width: 860px) { .layers { grid-template-columns: 1fr; } .layers .arr { transform: rotate(90deg); } }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.mode { border-radius: var(--r-lg); padding: 18px; border: 1px solid var(--border); }
+.mode.light { background: #ffffff; color: #1a1216; }
+.mode.dark { background: #1f1a1c; color: #f6f0f2; border-color: #1f1a1c; }
+.mode .t { font-weight: 600; }
+.mode .btnx { display: inline-block; margin-top: 10px; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 14px; }
+.mode.light .btnx { background: #A1285A; color: #fff; }
+.mode.dark .btnx { background: #f2a6c6; color: #4a1029; }
+.mode code { font: 500 12.5px/1.6 var(--f-mono); opacity: .8; display: block; margin-top: 10px; }
+@media (max-width: 560px) { .modes { grid-template-columns: 1fr; } }
+.defs { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.defs li { padding-left: 0; }
+
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"></div>
+
+  <nav class="nav" aria-label="Primary">
+    <a class="sig" href="index.html" aria-label="Meher Kohli, home">M.</a>
+    <a href="index.html#work">Work</a>
+    <a href="index.html#about">About</a>
+    <a href="#contact">Contact</a>
+    <a class="cta" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
+  </nav>
+
+  <header class="c-hero plum">
+    <div class="wrap">
+      <a class="back" href="index.html#work">← All case studies</a>
+      <span class="kind label">Case study 02 · Design systems + AI</span>
+      <h1>AI-Ready Design Systems</h1>
+      <p class="summary">Rebuilding CMG's design systems so designers, engineers and AI tools can all build with them correctly. Dark mode for our loan software in under a month, and a complete customer-facing system in 4 months.</p>
+      
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="glance" aria-label="At a glance">
+      <div class="wrap">
+        <div class="glance-card rv">
+          <dl class="facts"><div><dt>My role</dt><dd>Design systems lead</dd></div><div><dt>Scope</dt><dd>Two systems: employee apps and customer apps</dd></div><div><dt>Tools</dt><dd>Figma, Storybook, PrimeNG, Angular, React, Claude</dd></div><div><dt>Timeline</dt><dd>Customer system built in 4 months</dd></div></dl>
+          <div class="results" aria-label="Results"><div class="result"><b>&lt;1 mo</b><span>to add dark mode to Clear 2.0, our loan software</span></div><div class="result"><b>4 mo</b><span>to build the customer design system, about a year of work</span></div><div class="result"><b>Every</b><span>component in Storybook, ready to use and test</span></div></div>
+        </div>
+        <figure class="diagram rv" aria-label="How one design system serves designers, engineers and AI">
+          <div class="map">
+            <div class="src"><strong>One source of truth</strong><span>Design tokens, components and written rules</span></div>
+            <div class="arrow" aria-hidden="true">↓</div>
+            <div class="outs">
+              <div class="out"><span class="who">For designers</span><h3>Figma library</h3><p>Ready-to-use components, so every new screen starts on-brand and accessible.</p></div>
+              <div class="out"><span class="who">For engineers and anyone prototyping</span><h3>Storybook</h3><p>The real coded components, browsable and testable, so anyone can build with them.</p></div>
+              <div class="out"><span class="who">For AI tools</span><h3>Rules for Claude</h3><p>Plain-language rules that tell Claude what to use, when and why.</p></div>
+            </div>
+            <div class="arrow" aria-hidden="true">↓</div>
+            <div class="end">Consistent, accessible products, no matter who builds them</div>
+          </div>
+          <figcaption class="cap">How one system serves designers, engineers and AI.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="c-section">
+      <div class="wrap">
+        <div class="read rv"><span class="label eyebrow">Why this matters</span><h2>AI needs clear <em>rules</em></h2></div>
+        <div class="read rv">
+  <p class="lead">More design work now happens with AI tools. AI is fast, but it only follows the rules it's given. If the same color is called "pink-3" in one place and "brand" in another, people get confused and AI makes mistakes.</p>
+  <p>So I set out to make our design systems AI-ready: every design decision stored as a named setting, and every rule written out in plain language that explains what to use, when and why. The clearer the system, the less room for confusion, whether a person or an AI is building.</p>
+  <div class="callout"><ul class="defs">
+    <li><strong>Design tokens:</strong> named settings, like "page background" or "small spacing," defined once and used everywhere.</li>
+    <li><strong>Storybook:</strong> a living library of the real coded components that anyone can browse and try.</li>
+    <li><strong>PrimeNG:</strong> the ready-made code library our engineers build with.</li>
+  </ul></div></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">Project 1 · Clear 2.0, our employee loan software</span><h2>Dark mode in under a <em>month</em></h2></div>
+        <div class="read rv">
+  <p class="lead">Clear 2.0 is the software CMG employees use every day to manage loans. The team wanted dark mode, but technical debt stood in the way: one-off pieces of code built outside the design system, each styled its own way.</p>
+  <p>Instead of patching screens one by one, I fixed the foundation.</p></div><ol class="steps rv" style="counter-reset: step 0"><li><h3>Add a semantic layer to the tokens</h3><p>I restructured our tokens and added a layer named by purpose, like "primary action" or "page background," instead of by color. Switching to dark mode now means changing what each purpose points to, not redesigning every screen.</p></li></ol><ol class="steps rv" style="counter-reset: step 1"><li><h3>Follow PrimeNG more closely</h3><p>I aligned the token structure with PrimeNG, the code library engineers use, so design and code speak the same language.</p></li></ol><ol class="steps rv" style="counter-reset: step 2"><li><h3>Work around the one-offs</h3><p>I planned around the older one-off code so dark mode could ship without waiting for a full rewrite.</p></li></ol><ol class="steps rv" style="counter-reset: step 3"><li><h3>Put every component in Storybook</h3><p>I built a Storybook version of every component, with both React and Angular versions, so engineers on either technology use the same tested parts.</p></li></ol><figure class="diagram rv" aria-label="Simplified example of three token layers and how dark mode switches them">
+          <div class="layers">
+            <div class="layer"><span class="label">Layer 1 · Base</span><h3>The raw values</h3><code>rose-600 = #A1285A</code><p>Every color and size the brand allows.</p></div>
+            <div class="arr" aria-hidden="true">→</div>
+            <div class="layer new"><span class="badge-new">Added</span><span class="label">Layer 2 · Semantic</span><h3>Named by purpose</h3><code>primary-action → rose-600</code><p>What a value is for, not what it looks like.</p></div>
+            <div class="arr" aria-hidden="true">→</div>
+            <div class="layer"><span class="label">Layer 3 · Component</span><h3>Used by each part</h3><code>button-background → primary-action</code><p>Each component points to a purpose.</p></div>
+          </div>
+          <div class="modes">
+            <div class="mode light"><span class="t">Light mode</span><br><span class="btnx">Create scenario</span><code>primary-action → rose-600</code></div>
+            <div class="mode dark"><span class="t">Dark mode</span><br><span class="btnx">Create scenario</span><code>primary-action → rose-300</code></div>
+          </div>
+          <figcaption class="cap">Simplified example. With a semantic layer, dark mode only changes what each purpose points to. Every component follows automatically.</figcaption>
+        </figure>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">Project 2 · Our customer-facing design system</span><h2>A full system in 4 <em>months</em></h2></div>
+        <div class="read rv">
+  <p class="lead">Next, CMG needed a design system for the products its customers use. With AI built into my workflow, I delivered it in 4 months, about a year's worth of work.</p>
+  <p>I built it in Angular only, because that's what the engineers on these products use, and followed PrimeNG closely. It has three parts:</p></div><div class="grid3 rv"><div class="box"><span class="num">Figma</span><h3>A ready-to-use component library</h3><p>Designers start every screen with on-brand, accessible components instead of building from scratch.</p></div><div class="box"><span class="num">Storybook</span><h3>Prototyping with Claude</h3><p>The real coded components, set up so Claude can prototype with them. Prototypes use the same parts engineers ship.</p></div><div class="box"><span class="num">Rules</span><h3>Guidance for Claude to follow</h3><p>Written rules that tell Claude which components and tokens to use, when and why, so AI output meets our experience design standards.</p></div></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="read rv"><span class="label eyebrow">The bigger idea</span><h2>Empowering the whole <em>company</em></h2></div>
+        <div class="read rv">
+  <p class="lead">With everything in Storybook, people across the company, not just designers, can explore, prototype and build on their own, while staying aligned with our experience design standards.</p>
+  <p>Design systems used to be documentation for designers and engineers. Now they're also instructions for AI. That makes complete tokens and clear, plain-language rules more important than ever.</p></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">Results</span><h2>What it <em>delivered</em></h2></div>
+        <div class="grid3 rv"><div class="box dark"><span class="num">&lt;1 month</span><h3>Dark mode in Clear 2.0</h3><p>Shipped by fixing the token foundation instead of redesigning screens.</p></div><div class="box dark"><span class="num">4 months</span><h3>A complete customer system</h3><p>Figma library, Storybook and rules for Claude, about a year of work.</p></div><div class="box dark"><span class="num">Every</span><h3>Component in Storybook</h3><p>Real, tested components anyone in the company can use, in React and Angular.</p></div></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="read rv"><span class="label eyebrow">What I learned</span><h2>Clarity scales, for people and <em>AI</em></h2></div>
+        <div class="read rv">
+  <ul><li><strong>Fix the foundation first.</strong> A semantic token layer turned dark mode from a redesign into a switch.</li>
+  <li><strong>Write for two readers.</strong> Rules clear enough for a new designer are clear enough for an AI tool.</li>
+  <li><strong>Meet engineers where they are.</strong> Matching PrimeNG and their technology makes the system easy to adopt.</li></ul></div>
+      </div>
+    </section>
+
+    <section class="wrap next">
+      <a href="design-system.html" class="rv"><div><span class="label">Next case study</span><strong>Employee Experience Design System</strong><p>How I set the standards and coached the team.</p></div><i aria-hidden="true">→</i></a>
+    </section>
+  </main>
+
+  <footer class="contact" id="contact">
+    <div class="wrap">
+      <div class="label">Hiring a senior product designer or design systems lead?</div>
+      <h2>Let's talk<span>.</span></h2>
+      <p>I'd be glad to talk about the role and walk you through my work.</p>
+      <div class="btns">
+        <a class="btn y" href="mailto:mehkohli@gmail.com">✉ mehkohli@gmail.com</a>
+        <a class="btn o" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé ↗</a>
+      </div>
+      <div class="foot"><span>© 2026 Meher Kohli</span><a href="index.html">← Back to home</a></div>
+    </div>
+  </footer>
+
+  <script>
+// Shared behavior for case study pages
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Reading progress bar
+  var bar = document.querySelector('.progress');
+  if (bar) {
+    var onScroll = function () {
+      var h = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(scrollY / h, 1) : 0) + ')';
+    };
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  }
+
+  // Fade sections in as they scroll into view
+  var els = document.querySelectorAll('.rv');
+  if (reduce || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.remove('pre'); io.unobserve(en.target); } });
+  }, { threshold: .12 });
+  els.forEach(function (e) { if (e.getBoundingClientRect().top > innerHeight * .9) { e.classList.add('pre'); io.observe(e); } });
+})();
+
+  </script>
+</body>
+</html>
