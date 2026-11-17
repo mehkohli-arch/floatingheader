@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2a0f1c" />
+  <title>CMG Connect: Realtor App — Meher Kohli</title>
+  <meta name="description" content="Case study: how Meher Kohli usability-tested a new app for real estate agents, finding where 60%+ of testers got stuck before launch." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lemon&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+/* Shared styles for case study pages. Tokens match index.html. */
+:root {
+  --rose-950:#2a0f1c; --rose-900:#4a1029; --rose-700:#7d1d45; --rose-600:#A1285A; --rose-400:#d0679a; --rose-200:#f2c4d8; --rose-100:#fbe7ef;
+  --butter-400:#F6C35B; --butter-200:#fde7b4;
+  --cream:#fff8f3; --ink:#1a1216; --ink-muted:#5f5258; --line:#ecdfe3;
+  --bg: var(--cream); --text: var(--ink); --muted: var(--ink-muted); --border: var(--line);
+  --brand: var(--rose-600); --brand-soft: var(--rose-100);
+  --f-sig: 'Lemon', 'Bricolage Grotesque', cursive;
+  --f-head: 'Bricolage Grotesque', system-ui, sans-serif;
+  --f-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --r-md:14px; --r-lg:24px; --r-xl:36px;
+  --max:1200px; --read: 720px;
+  --ease: cubic-bezier(.2,.8,.2,1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 24px; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html.smooth { scroll-behavior: smooth; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 17px/1.65 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+a { color: inherit; }
+img { max-width: 100%; }
+:focus-visible { outline: 3px solid var(--butter-400); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+.read { max-width: var(--read); }
+@media (max-width: 600px) { .wrap { padding: 0 18px; } }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 16px; top: 16px; background: #fff; color: var(--ink); padding: 8px 12px; z-index: 200; }
+.label { font: 500 12px/1.2 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; }
+
+/* Nav (same as home) */
+.nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; background: rgba(42,15,28,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 10px 30px rgba(42,15,28,.25); }
+.nav a { color: #fff; text-decoration: none; font: 500 14px var(--f-body); padding: 9px 16px; border-radius: 999px; transition: background .2s; white-space: nowrap; }
+.nav a:hover { background: rgba(255,255,255,.12); }
+.nav .sig { font: 400 18px var(--f-sig); color: var(--butter-200); padding: 6px 14px; }
+.nav .cta { background: var(--butter-400); color: var(--rose-950); }
+.nav .cta:hover { background: var(--butter-200); }
+@media (max-width: 640px) {
+  .nav { top: auto; bottom: calc(12px + env(safe-area-inset-bottom)); width: calc(100% - 24px); max-width: 420px; justify-content: space-between; }
+  .nav a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 12px; }
+  .nav .sig { display: none; }
+  body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
+
+/* Reading progress */
+.progress { position: fixed; top: 0; left: 0; height: 4px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: var(--butter-400); z-index: 150; }
+
+/* Case hero */
+.c-hero { color: var(--cream); padding: 112px 0 64px; position: relative; overflow: hidden; }
+.c-hero.rose { background: linear-gradient(140deg, var(--rose-600), var(--rose-700)); }
+.c-hero.plum { background: linear-gradient(140deg, var(--rose-950), #4a1a33); }
+.c-hero.butter { background: linear-gradient(140deg, var(--butter-400), #f19a6b); color: var(--rose-950); }
+.back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; font: 600 15px var(--f-body); opacity: .9; margin-bottom: 18px; }
+.back:hover { opacity: 1; text-decoration: underline; }
+.c-hero .kind { display: block; margin-bottom: 14px; opacity: .85; }
+.c-hero h1 { font: 800 clamp(38px, 6.4vw, 80px)/1.0 var(--f-head); letter-spacing: -.03em; margin: 0; max-width: 18ch; }
+.c-hero .summary { font-size: clamp(18px, 2vw, 22px); line-height: 1.5; margin: 20px 0 0; max-width: 46ch; opacity: .92; }
+.award { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 8px 14px; border-radius: 999px; background: var(--butter-400); color: var(--rose-950); font: 600 14px var(--f-body); }
+@media (max-width: 600px) { .c-hero { padding: 40px 0 48px; } }
+
+/* At a glance */
+.glance { margin-top: -28px; position: relative; z-index: 2; }
+.glance-card { background: #fff; border: 1px solid var(--border); border-radius: var(--r-xl); padding: 28px; box-shadow: 0 20px 50px rgba(42,15,28,.08); display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px; }
+.facts { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; align-content: start; }
+.facts dt { font: 500 11.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.facts dd { margin: 0; font-size: 15.5px; line-height: 1.45; }
+.results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.result { background: var(--rose-950); color: var(--cream); border-radius: var(--r-lg); padding: 18px 16px; }
+.result b { display: block; font: 800 clamp(28px, 3vw, 38px)/1 var(--f-head); letter-spacing: -.02em; color: var(--butter-400); white-space: nowrap; }
+.result span { display: block; margin-top: 8px; font-size: 14px; line-height: 1.4; color: rgba(255,248,243,.85); }
+@media (max-width: 900px) { .glance-card { grid-template-columns: 1fr; padding: 22px 18px; gap: 24px; border-radius: 28px; } }
+@media (max-width: 600px) {
+  .facts { grid-template-columns: 1fr; }
+  .results { grid-template-columns: 1fr; }
+  .result { display: flex; align-items: baseline; gap: 14px; }
+  .result b { min-width: 104px; }
+  .result span { margin: 0; }
+}
+
+/* Figures: real product images, shown in full, never cropped */
+.figure { margin: 40px 0; }
+.fig-frame { position: relative; background: #fcf1f5; border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(10px, 2vw, 24px); transition: border-color .2s; }
+.fig-frame:hover { border-color: var(--brand); }
+.figure img { display: block; width: 100%; height: auto; max-height: min(78vh, 720px); object-fit: contain; margin: 0 auto; border-radius: 8px; cursor: zoom-in; }
+.zoom-btn { position: absolute; top: 12px; right: 12px; min-height: 44px; padding: 0 16px; display: inline-flex; align-items: center; gap: 6px; border: 0; border-radius: 999px; background: rgba(42,15,28,.86); color: #fff; font: 600 14px var(--f-body); cursor: pointer; box-shadow: 0 6px 18px rgba(42,15,28,.25); transition: background .2s; }
+.zoom-btn:hover { background: var(--rose-950); }
+.zoom-btn span { font-size: 16px; line-height: 1; }
+.figure figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
+
+/* Full-size image viewer (stays on the page) */
+dialog.lightbox { width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(20,8,14,.97); color: #fff; }
+dialog.lightbox[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+dialog.lightbox::backdrop { background: rgba(20,8,14,.97); }
+.lb-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left)); }
+.lb-hint { font-size: 13.5px; opacity: .75; }
+.lb-close { flex: none; width: 48px; height: 48px; border-radius: 50%; border: 0; background: #fff; color: var(--rose-950); font-size: 26px; line-height: 1; cursor: pointer; }
+.lb-stage { overflow: auto; display: grid; place-items: center; padding: 8px 16px; min-height: 0; overscroll-behavior: contain; }
+.lb-stage img { display: block; width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 150px); max-height: calc(100dvh - 150px); object-fit: contain; border-radius: 8px; background: #fff; cursor: zoom-in; }
+.lb-stage.actual { place-items: start; }
+.lb-stage.actual img { max-width: none; max-height: none; cursor: zoom-out; }
+.lb-cap { margin: 0; padding: 8px 16px max(14px, env(safe-area-inset-bottom)); font-size: 14px; opacity: .85; text-align: center; }
+body:has(dialog[open]) { overflow: hidden; }
+.figure.hero-fig { margin: 48px 0 0; }
+
+/* Body sections */
+.c-section { padding: 72px 0 0; }
+.c-section:last-of-type { padding-bottom: 24px; }
+.c-section h2 { font: 800 clamp(30px, 4vw, 46px)/1.08 var(--f-head); letter-spacing: -.02em; margin: 10px 0 18px; }
+.c-section h2 em { font: 400 1em var(--f-sig); font-style: normal; color: var(--brand); }
+.c-section .eyebrow { color: var(--brand); }
+.c-section p { margin: 0 0 16px; }
+.c-section ul { margin: 0 0 16px; padding-left: 22px; display: grid; gap: 8px; }
+.lead { font-size: 19px; line-height: 1.6; }
+.callout { background: var(--brand-soft); border-left: 4px solid var(--brand); border-radius: 0 var(--r-md) var(--r-md) 0; padding: 16px 20px; margin: 24px 0; }
+.callout p:last-child { margin: 0; }
+@media (max-width: 600px) { .c-section { padding-top: 56px; } .lead { font-size: 18px; } }
+
+/* Numbered steps */
+.steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; counter-reset: step; }
+.steps > li { counter-increment: step; background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 22px 22px 22px 76px; position: relative; }
+.steps > li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 22px; top: 20px; font: 400 26px/1 var(--f-sig); color: var(--brand); }
+.steps h3 { font: 700 19px/1.3 var(--f-head); margin: 0 0 6px; }
+.steps p { margin: 0; color: var(--muted); }
+.steps p + p { margin-top: 8px; }
+@media (max-width: 600px) { .steps > li { padding: 56px 18px 18px; } .steps > li::before { left: 18px; top: 18px; } }
+
+/* Grid of cards (roles, challenges, findings) */
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 24px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+.box { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 22px; }
+.box h3 { font: 700 18px/1.3 var(--f-head); margin: 0 0 6px; }
+.box p { margin: 0; color: var(--muted); font-size: 15.5px; }
+.box.dark { background: var(--rose-950); border-color: var(--rose-950); color: var(--cream); }
+.box.dark p { color: rgba(255,248,243,.82); }
+.box .num { font: 800 32px/1 var(--f-head); color: var(--brand); display: block; margin-bottom: 8px; letter-spacing: -.02em; }
+.box.dark .num { color: var(--butter-400); }
+.tag-good, .tag-bad { display: inline-block; font: 600 12px var(--f-body); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+.tag-good { background: #e3f4ea; color: #1e6b45; }
+.tag-bad { background: #fde3e3; color: #8a1f1f; }
+@media (max-width: 900px) { .grid3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+/* Flow */
+.flow { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 10px; counter-reset: f; }
+.flow li { counter-increment: f; display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 16px; }
+.flow li::before { content: counter(f); width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font: 700 16px var(--f-head); }
+
+/* Video */
+.video { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-lg); overflow: hidden; background: var(--rose-950); margin-top: 24px; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* Next case + contact */
+.next { margin-top: 96px; }
+.next a { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 20px; text-decoration: none; background: var(--rose-950); color: var(--cream); border-radius: var(--r-xl); padding: 32px; transition: transform .3s var(--ease); }
+.next a:hover { transform: translateY(-3px); }
+.next .label { color: var(--butter-200); display: block; margin-bottom: 8px; }
+.next strong { font: 800 clamp(26px, 3.4vw, 40px)/1.1 var(--f-head); letter-spacing: -.02em; display: block; }
+.next p { margin: 8px 0 0; color: rgba(255,248,243,.78); }
+.next i { font-style: normal; width: 56px; height: 56px; border-radius: 50%; background: var(--butter-400); color: var(--rose-950); display: grid; place-items: center; font-size: 22px; }
+@media (max-width: 600px) { .next a { padding: 24px 20px; } .next i { width: 48px; height: 48px; } }
+
+.contact { background: var(--brand); color: var(--cream); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 88px 0 40px; margin-top: 96px; text-align: center; }
+.contact .label { color: var(--butter-200); }
+.contact h2 { font: 400 clamp(52px, 10vw, 120px)/.95 var(--f-sig); margin: 16px 0 14px; }
+.contact h2 span { color: var(--butter-400); }
+.contact p { max-width: 46ch; margin: 0 auto 30px; color: rgba(255,248,243,.85); }
+.btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 24px; border-radius: 999px; font: 600 16px var(--f-body); text-decoration: none; transition: transform .2s var(--ease); }
+.btn:hover { transform: translateY(-2px); }
+.btn.y { background: var(--butter-400); color: var(--rose-950); }
+.btn.o { border: 1.5px solid rgba(255,248,243,.55); color: var(--cream); }
+.foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 72px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.2); font-size: 13px; color: rgba(255,248,243,.75); text-align: left; }
+.foot a { text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+@media (max-width: 600px) { .contact { padding: 72px 0 32px; } .btns { flex-direction: column; align-items: stretch; max-width: 340px; margin: 0 auto; } }
+
+/* Reveal */
+.rv { transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.rv.pre { opacity: 0; transform: translateY(24px); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv.pre { opacity: 1; transform: none; }
+}
+
+/* Sub-headings inside reading column, idea tag */
+.read h3 { font: 700 21px/1.3 var(--f-head); margin: 28px 0 8px; }
+.read h3:first-child { margin-top: 0; }
+.tag-idea { display: inline-block; font: 600 12px var(--f-body); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; background: var(--butter-200); color: #6b4500; }
+
+/* Diagrams (AI-ready design systems page) */
+.diagram { margin: 40px 0 0; background: #fff; border: 1px solid var(--border); border-radius: var(--r-xl); padding: clamp(18px, 3vw, 32px); }
+.diagram .cap { font-size: 14.5px; color: var(--muted); margin: 16px 0 0; }
+.map { display: grid; gap: 12px; }
+.map .src { background: var(--rose-950); color: var(--cream); border-radius: var(--r-lg); padding: 18px 22px; text-align: center; }
+.map .src strong { display: block; font: 800 22px/1.2 var(--f-head); color: var(--butter-200); }
+.map .src span { font-size: 15px; opacity: .85; }
+.map .outs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.map .out { background: var(--brand-soft); border-radius: var(--r-lg); padding: 18px; min-width: 0; }
+.map .out .who { display: block; font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--brand); margin-bottom: 6px; }
+.map .out h3 { font: 700 19px/1.25 var(--f-head); margin: 0 0 6px; }
+.map .out p { margin: 0; font-size: 15px; color: var(--muted); }
+.map .arrow { text-align: center; color: var(--brand); font-size: 22px; line-height: 1; }
+.map .end { background: var(--butter-400); color: var(--rose-950); border-radius: var(--r-lg); padding: 16px 20px; text-align: center; font-weight: 600; }
+@media (max-width: 760px) { .map .outs { grid-template-columns: 1fr; } }
+.layers { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: stretch; }
+.layer { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.layer.new { border: 2px solid var(--brand); background: #fff; }
+.layer .label { color: var(--muted); }
+.layer h3 { font: 700 18px/1.25 var(--f-head); margin: 0; }
+.layer p { margin: 0; font-size: 14.5px; color: var(--muted); }
+.layer code { font: 500 13px/1.4 var(--f-mono); background: #fff; border: 1px solid var(--border); padding: 6px 8px; border-radius: 8px; overflow-wrap: anywhere; }
+.layers .arr { align-self: center; justify-self: center; color: var(--brand); font-size: 22px; }
+.badge-new { align-self: flex-start; font: 600 11.5px var(--f-body); background: var(--brand); color: #fff; padding: 3px 9px; border-radius: 999px; }
+@media (max-width: 860px) { .layers { grid-template-columns: 1fr; } .layers .arr { transform: rotate(90deg); } }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.mode { border-radius: var(--r-lg); padding: 18px; border: 1px solid var(--border); }
+.mode.light { background: #ffffff; color: #1a1216; }
+.mode.dark { background: #1f1a1c; color: #f6f0f2; border-color: #1f1a1c; }
+.mode .t { font-weight: 600; }
+.mode .btnx { display: inline-block; margin-top: 10px; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 14px; }
+.mode.light .btnx { background: #A1285A; color: #fff; }
+.mode.dark .btnx { background: #f2a6c6; color: #4a1029; }
+.mode code { font: 500 12.5px/1.6 var(--f-mono); opacity: .8; display: block; margin-top: 10px; }
+@media (max-width: 560px) { .modes { grid-template-columns: 1fr; } }
+.defs { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.defs li { padding-left: 0; }
+
+/* Citations, comparison table, sources (essay sections) */
+.cite { font: 600 11px/1 var(--f-body); vertical-align: super; margin-left: 2px; }
+.cite a { color: var(--brand); text-decoration: none; padding: 2px 4px; border-radius: 4px; background: var(--brand-soft); }
+.cite a:hover { text-decoration: underline; }
+blockquote.pull { margin: 24px 0; padding: 4px 0 4px 20px; border-left: 4px solid var(--butter-400); font: 600 clamp(19px, 2vw, 22px)/1.45 var(--f-head); color: var(--ink); }
+blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); margin-top: 8px; }
+.shift { padding-top: 8px; }
+.shift + .shift { margin-top: 36px; }
+.shift .kicker { color: var(--brand); display: block; margin-bottom: 6px; }
+.table-wrap { overflow-x: auto; margin-top: 24px; border: 1px solid var(--border); border-radius: var(--r-lg); background: #fff; }
+.grow { width: 100%; border-collapse: collapse; font-size: 15.5px; min-width: 620px; }
+.grow th, .grow td { text-align: left; vertical-align: top; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+.grow thead th { font: 500 11.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+.grow tbody tr:last-child td { border-bottom: 0; }
+.grow td:first-child { font-weight: 600; width: 26%; }
+.grow td:nth-child(2) { color: var(--muted); }
+.sources { margin: 0; padding-left: 22px; display: grid; gap: 12px; font-size: 15px; }
+.sources li { padding-left: 4px; }
+.sources a { color: var(--brand); font-weight: 600; overflow-wrap: anywhere; }
+.sources span { color: var(--muted); }
+.sources li:target { background: var(--butter-200); border-radius: 8px; }
+
+/* "At CMG" example cards that demonstrate each point */
+.example { margin: 28px 0 0; background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 22px 24px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 28px; box-shadow: 0 12px 30px rgba(42,15,28,.06); }
+.example .ex-label { grid-column: 1 / -1; justify-self: start; font: 500 11.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--rose-950); background: var(--butter-200); padding: 6px 10px; border-radius: 999px; }
+.read .example h3 { font: 700 20px/1.25 var(--f-head); margin: 2px 0 8px; }
+.example p { margin: 0 0 10px; font-size: 16px; }
+.example ul { margin: 0 0 10px; font-size: 16px; }
+.example .ex-body > :last-child { margin-bottom: 0; }
+.example .ex-link { display: inline-flex; align-items: center; min-height: 44px; font: 600 15px var(--f-body); color: var(--brand); text-decoration: none; }
+.example .ex-link:hover { text-decoration: underline; }
+.example .ex-stat { text-align: right; align-self: start; padding-top: 2px; }
+.example .ex-stat b { display: block; font: 800 34px/1 var(--f-head); color: var(--brand); white-space: nowrap; letter-spacing: -.02em; }
+.example .ex-stat span { display: block; font-size: 13px; color: var(--muted); margin-top: 4px; max-width: 14ch; margin-left: auto; }
+@media (max-width: 640px) {
+  .example { grid-template-columns: 1fr; padding: 20px 18px; }
+  .example .ex-stat { text-align: left; order: -1; grid-row: 2; }
+  .example .ex-stat span { margin-left: 0; max-width: none; }
+}
+@media (max-width: 640px) {
+  .table-wrap { overflow: visible; border: 0; background: transparent; }
+  .grow { min-width: 0; }
+  .grow thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .grow, .grow tbody, .grow tr, .grow td { display: block; width: 100%; }
+  .grow tr { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 6px 0; margin-bottom: 12px; }
+  .grow td { border: 0; padding: 8px 18px; }
+  .grow td:first-child { width: 100%; font: 700 18px/1.3 var(--f-head); }
+  .grow td[data-label]::before { content: attr(data-label); display: block; font: 500 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+}
+
+  </style>
+  <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
+  <script>
+    (function () {
+      var d = document.documentElement, f = document.fonts;
+      if (!f || !f.load) return;
+      d.classList.add('wf');
+      var done = function () { d.classList.remove('wf'); };
+      Promise.all(['400 1em Lemon', '400 1em "Bricolage Grotesque"', '600 1em "Bricolage Grotesque"', '700 1em "Bricolage Grotesque"', '800 1em "Bricolage Grotesque"', '400 1em Inter', '500 1em Inter', '600 1em Inter', '400 1em "JetBrains Mono"', '500 1em "JetBrains Mono"']
+        .map(function (s) { return f.load(s); })).then(done, done);
+      setTimeout(done, 800);
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"></div>
+
+  <nav class="nav" aria-label="Primary">
+    <a class="sig" href="index.html" aria-label="Meher Kohli, home">M.</a>
+    <a href="index.html">Home</a>
+    <a href="#contact">Contact</a>
+    <a class="cta" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
+  </nav>
+
+  <header class="c-hero butter">
+    <div class="wrap">
+      <a class="back" href="index.html">← Home</a>
+      <span class="kind label">Case study 04 · UX research</span>
+      <h1>CMG Connect: Realtor App</h1>
+      <p class="summary">Testing a new app for real estate agents before launch, and finding where people got stuck so the team could fix it early.</p>
+      
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="glance" aria-label="At a glance">
+      <div class="wrap">
+        <div class="glance-card rv">
+          <dl class="facts"><div><dt>My role</dt><dd>UX research lead</dd></div><div><dt>Timeline</dt><dd>2 months, testing in January 2024</dd></div><div><dt>Who we tested with</dt><dd>Real estate agents across the US, ages 26–64</dd></div><div><dt>Method</dt><dd>Live and self-guided usability tests</dd></div></dl>
+          <div class="results" aria-label="Results"><div class="result"><b>&lt;10 min</b><span>to sign up and invite a first client</span></div><div class="result"><b>60%+</b><span>got stuck on navigation and labels, now being fixed</span></div><div class="result"><b>~30%</b><span>projected drop in support and training</span></div></div>
+        </div>
+        <figure class="figure rv hero-fig">
+          <div class="fig-frame">
+            <img src="img/QgEevPuS6KxoSRoMHhXK3juJyo.png" width="1600" height="1018" alt="The CMG Connect app on two phones, showing a list of loans and a loan's details" decoding="async">
+            <button type="button" class="zoom-btn" aria-label="Open full size: The CMG Connect app on two phones, showing a list of loans and a loan's details"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>CMG Connect on mobile: the loans list and a loan's details.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="c-section">
+      <div class="wrap">
+        <div class="read rv"><span class="label eyebrow">The situation</span><h2>A new app for real estate <em>agents</em></h2></div>
+        <div class="read rv">
+  <p class="lead">CMG Financial is a national mortgage lender that works with a large network of real estate agents, who use technology to manage their clients and loans.</p>
+  <p>Agents had been using a third-party app that often caused confusion and slowed them down. CMG built its own replacement, <strong>CMG Connect</strong>, a web app that works on phones and computers, to make agents' work simpler and give their clients a more consistent experience.</p>
+  <p>Before launch, we tested a prototype with real agents to find problems early.</p>
+  <div class="callout"><p><strong>What is usability testing?</strong> Watching real people try real tasks with a design, to see where it works and where they get stuck, before anything is built.</p></div></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="read rv"><span class="label eyebrow">The problem</span><h2>If it confuses agents, they'll <em>leave</em></h2></div>
+        <div class="read rv">
+  <p>Agents needed a tool they could learn quickly and use with confidence. The risks were:</p>
+  <ul><li>A confusing sign-up that makes people give up.</li><li>Misunderstanding how the app is organized, for example the difference between <strong>leads</strong> (potential clients) and <strong>loans</strong> (clients already in progress).</li><li>Losing trust in the new tool if it didn't match how agents think about their work.</li></ul>
+  <p>We needed to test real tasks: signing up, inviting clients, tracking a loan's progress, uploading documents and sending invites.</p></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">My role</span><h2>UX research <em>lead</em></h2></div>
+        <div class="grid2 rv"><div class="box"><h3>Led the research</h3><p>Planned and ran both live and self-guided usability tests.</p></div><div class="box"><h3>Mapped the tasks</h3><p>Created detailed step-by-step flows for each key task agents would do.</p></div><div class="box"><h3>Made sense of results</h3><p>Turned observations into clear insights and problem statements.</p></div><div class="box"><h3>Recommended changes</h3><p>Delivered research-backed fixes for navigation, labels and clarity.</p></div></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">How I approached it</span><h2>Real tasks, real <em>people</em></h2></div>
+        <ol class="steps rv" style="counter-reset: step 0"><li><h3>Turn real work into test tasks</h3><p>I mapped the full journey: signing up, inviting clients, tracking loans, uploading documents and sending invites. Then I broke it into scenarios that match how an agent strings tasks together in a real day.</p><p>Each scenario was scripted to guide people while still leaving room to explore naturally.</p></li></ol><figure class="figure rv">
+          <div class="fig-frame">
+            <img src="img/HatL5iK4bM2jVr4SEDNMnk1uV6s.png" width="782" height="1600" alt="Test flow diagram connecting the app screens agents moved through, from sign-up to tracking a loan" loading="lazy" decoding="async">
+            <button type="button" class="zoom-btn" aria-label="Open full size: Test flow diagram connecting the app screens agents moved through, from sign-up to tracking a loan"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The test flow: the series of tasks agents completed.</figcaption>
+        </figure><ol class="steps rv" style="counter-reset: step 1"><li><h3>Build a clickable prototype</h3><p>I built an interactive prototype focused on how the app is organized and how people move through it, not final visual polish.</p><p>I made sure every key action worked (uploading, switching between leads and loans, sending invites) so gaps wouldn't skew the results.</p></li></ol><ol class="steps rv" style="counter-reset: step 2"><li><h3>Run two kinds of tests</h3><p>Between January 4 and 16, 2024, I ran <strong>live sessions</strong> to observe closely and ask follow-up questions, and <strong>self-guided sessions</strong> to see how agents use it on their own. Participants were real estate agents across the US, ages 26 to 64, recruited through the testing platform Userlytics.</p><p>For the self-guided tests, the prototype and instructions had to stand on their own, so I built the task prompts right into the test.</p></li></ol><figure class="figure rv">
+          <div class="fig-frame">
+            <img src="img/x2dklygjqrpBtoPerTRXFV0t0Sc.png" width="774" height="1600" alt="The CMG Connect prototype on a phone as a tester saw it during a self-guided session" loading="lazy" decoding="async">
+            <button type="button" class="zoom-btn" aria-label="Open full size: The CMG Connect prototype on a phone as a tester saw it during a self-guided session"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>The prototype as testers saw it during a self-guided session.</figcaption>
+        </figure><ol class="steps rv" style="counter-reset: step 3"><li><h3>Measure and find patterns</h3><p>I tracked success or failure at every step to see exactly where people dropped off.</p><p>Then I grouped everything people said and did into themes (called affinity mapping) to spot patterns across testers.</p></li></ol><figure class="figure rv">
+          <div class="fig-frame">
+            <img src="img/LJ5fKMoOxF0sSBN9VFk9j9iz5c.png" width="870" height="1600" alt="Affinity map of sticky notes grouping tester feedback into themes" loading="lazy" decoding="async">
+            <button type="button" class="zoom-btn" aria-label="Open full size: Affinity map of sticky notes grouping tester feedback into themes"><span aria-hidden="true">⤢</span> Full size</button>
+          </div>
+          <figcaption>Affinity mapping: grouping feedback into themes.</figcaption>
+        </figure>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">What we found</span><h2>What worked, and what <em>didn't</em></h2></div>
+        <div class="grid3 rv"><div class="box"><span class="tag-good">Worked</span><h3>Fast start</h3><p>Agents set up their profile and sent their first invite in under 10 minutes.</p></div><div class="box"><span class="tag-good">Worked</span><h3>Invites were smooth</h3><p>Sending invites was easy, though every agent wanted to preview the invite first.</p></div><div class="box"><span class="tag-bad">Problem</span><h3>"Leads" vs. "loans" confusion</h3><p>The difference wasn't clear, and tabs labeled "Active" and "Preapproved" made it worse. Many agents failed here.</p></div><div class="box"><span class="tag-bad">Problem</span><h3>Two ways to upload documents</h3><p>Uploads lived under both "View Details" and "Tasks." Only 4 of 5 agents finished without frustration.</p></div><div class="box"><span class="tag-good">Worked</span><h3>Simple and complete</h3><p>Every agent praised how simple it was, nothing felt missing, and they loved seeing their loan's progress step by step.</p></div><div class="box"><span class="tag-idea">Ideas</span><h3>What agents asked for</h3><p>Saved house lists, better calculators, email integration and more personalization.</p></div></div><div class="read rv"><div class="callout"><p><strong>Overall:</strong> 60%+ of testers failed or got confused in navigation and labeling, even though the overall layout felt intuitive.</p></div><h3>What I recommended</h3><ul><li>Combine "Leads" and "Loans" into a single <strong>"Customers"</strong> page, using words agents already use.</li><li>Make uploading obvious: clear upload buttons, rename "Tasks," and add short pop-up tips.</li></ul></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">Challenges</span><h2>Working fast, testing <em>well</em></h2></div>
+        <div class="grid2 rv"><div class="box"><h3>Little time for live sessions</h3><p>The project moved fast, so detailed flows and scenarios guided the self-guided testers.</p></div><div class="box"><h3>Making it feel real</h3><p>Tasks like uploading documents had to feel functional, even with no real data behind the prototype.</p></div><div class="box"><h3>Scope vs. depth</h3><p>We couldn't test everything, so I focused on the tasks that matter most to the business.</p></div><div class="box"><h3>Detail vs. speed</h3><p>Realistic enough for meaningful feedback, but simple enough to change quickly.</p></div></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="rv"><span class="label eyebrow">Results</span><h2>What it <em>delivered</em></h2></div>
+        <div class="grid3 rv"><div class="box dark"><span class="num">&lt;10 min</span><h3>Quick to get started</h3><p>Sign-up and the first client invite took under 10 minutes.</p></div><div class="box dark"><span class="num">100%</span><h3>Core features validated</h3><p>Every tester named simplicity and progress tracking as strengths.</p></div><div class="box dark"><span class="num">~30%</span><h3>Less support needed</h3><p>Projected drop in support requests and training time from the recommended changes.</p></div></div><div class="read rv"><p style="margin-top:20px">The app is still in progress, and this research is already shaping the next round of designs.</p></div>
+      </div>
+    </section><section class="c-section">
+      <div class="wrap">
+        <div class="read rv"><span class="label eyebrow">What I learned</span><h2>Words matter as much as <em>layout</em></h2></div>
+        <div class="read rv">
+  <p>Even simple-looking flows can hide confusion, especially when the labels use internal language (like "lead" vs. "loan") that doesn't match how people think.</p>
+  <p>By focusing on core tasks and realistic scenarios, I found and prioritized the problems before development began, so CMG Connect can launch with clearer design, fewer support requests and more trust from agents.</p></div>
+      </div>
+    </section>
+
+    <section class="wrap next">
+      <a href="servicing-loans.html" class="rv"><div><span class="label">Next case study</span><strong>Servicing Loans Pipeline</strong><p>Back to the first case study: the Tech100 award winner.</p></div><i aria-hidden="true">→</i></a>
+    </section>
+  </main>
+
+  <footer class="contact" id="contact">
+    <div class="wrap">
+      <div class="label">Hiring a senior product designer or design systems lead?</div>
+      <h2>Let's talk<span>.</span></h2>
+      <p>I'd be glad to talk about the role and walk you through my work.</p>
+      <div class="btns">
+        <a class="btn y" href="mailto:mehkohli@gmail.com">✉ mehkohli@gmail.com</a>
+        <a class="btn o" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé ↗</a>
+      </div>
+      <div class="foot"><span>© 2026 Meher Kohli</span><a href="index.html">← Back to home</a></div>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" id="lb" aria-label="Full size image">
+    <div class="lb-bar"><span class="lb-hint">Tap the image to zoom in or out</span><button type="button" class="lb-close" aria-label="Close full size image">×</button></div>
+    <div class="lb-stage"><img alt=""></div>
+    <p class="lb-cap"></p>
+  </dialog>
+
+  <script>
+// Shared behavior for case study pages
+
+// Open at the top. A new case study always starts at its very top, even if the page
+// (or a viewer it's embedded in) tries to restore an old scroll position while loading.
+// Stops as soon as the visitor touches, scrolls or types. Back keeps the restored spot.
+(function () {
+  var root = document.documentElement;
+  var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+  if (nav.type === 'back_forward') { addEventListener('load', function () { root.classList.add('smooth'); }); return; }
+  var touched = false;
+  ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) {
+    addEventListener(ev, function () { touched = true; }, { passive: true, capture: true });
+  });
+  function top() {
+    if (touched) return;
+    if (location.hash) {
+      var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
+      return;
+    }
+    scrollTo(0, 0);
+    try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {}
+    // Safari won't let a framed page scroll its host, but every browser scrolls a focused element into view.
+    var m = document.getElementById('page-top');
+    if (!m && document.body) {
+      m = document.createElement('div');
+      m.id = 'page-top'; m.tabIndex = -1; m.setAttribute('aria-hidden', 'true');
+      m.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;outline:none;pointer-events:none';
+      document.body.insertBefore(m, document.body.firstChild);
+    }
+    if (m && document.activeElement !== m) { try { m.focus({ preventScroll: false }); } catch (e) { m.focus(); } }
+  }
+  // Guard: for the first few seconds, if anything (like a viewer restoring an old position)
+  // scrolls the top of the page out of view before the visitor has touched anything, bring it back.
+  addEventListener('load', function () {
+    var m = document.getElementById('page-top');
+    if (!m || !('IntersectionObserver' in window) || location.hash) return;
+    var until = Date.now() + 5000;
+    var io = new IntersectionObserver(function (es) {
+      if (touched || Date.now() > until) { io.disconnect(); return; }
+      if (!es[es.length - 1].isIntersecting) { m.blur(); top(); }
+    });
+    io.observe(m);
+    var poll = setInterval(function () {
+      if (touched || Date.now() > until) { clearInterval(poll); io.disconnect(); if (document.activeElement === m) m.blur(); return; }
+      io.unobserve(m); io.observe(m);
+    }, 250);
+  });
+  top();
+  document.addEventListener('DOMContentLoaded', top);
+  addEventListener('pageshow', top);
+  addEventListener('load', function () {
+    top();
+    requestAnimationFrame(top);
+    setTimeout(top, 150);
+    setTimeout(function () { top(); root.classList.add('smooth'); }, 400);
+  });
+})();
+
+// Full-size image viewer: stays on the page instead of opening a new tab.
+(function () {
+  var dlg = document.getElementById('lb');
+  if (!dlg || !dlg.showModal) return;
+  var img = dlg.querySelector('img'), cap = dlg.querySelector('.lb-cap'), stage = dlg.querySelector('.lb-stage'), opener = null;
+  function open(src, alt, caption, from) {
+    stage.classList.remove('actual');
+    img.src = src; img.alt = alt; cap.textContent = caption; opener = from;
+    dlg.showModal();
+    dlg.querySelector('.lb-close').focus();
+  }
+  document.querySelectorAll('.fig-frame').forEach(function (frame) {
+    var im = frame.querySelector('img'), btn = frame.querySelector('.zoom-btn');
+    var fc = frame.parentNode.querySelector('figcaption');
+    var go = function () { open(im.currentSrc || im.src, im.alt, fc ? fc.textContent : '', btn); };
+    btn.addEventListener('click', go);
+    im.addEventListener('click', go);
+  });
+  dlg.querySelector('.lb-close').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  img.addEventListener('click', function () { stage.classList.toggle('actual'); });
+  dlg.addEventListener('close', function () { img.removeAttribute('src'); if (opener) opener.focus(); });
+})();
+
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Reading progress bar
+  var bar = document.querySelector('.progress');
+  if (bar) {
+    var onScroll = function () {
+      var h = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(scrollY / h, 1) : 0) + ')';
+    };
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  }
+
+  // Fade sections in as they scroll into view
+  var els = document.querySelectorAll('.rv');
+  if (reduce || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.remove('pre'); io.unobserve(en.target); } });
+  }, { threshold: .12 });
+  els.forEach(function (e) { if (e.getBoundingClientRect().top > innerHeight * .9) { e.classList.add('pre'); io.observe(e); } });
+})();
+
+  </script>
+</body>
+</html>
