@@ -293,13 +293,13 @@
     @media (max-width: 600px) { .contact { padding: 96px 0 40px; } .btns { flex-direction: column; align-items: stretch; max-width: 340px; margin: 0 auto; } .btn { justify-content: center; } .foot { margin-top: 64px; } }
 
     /* reveal */
-    .rv { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
-    .rv.in { opacity: 1; transform: none; }
+    .rv { transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    .rv.pre { opacity: 0; transform: translateY(28px); }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation: none !important; transition: none !important; }
-      .rv { opacity: 1; transform: none; }
+      .rv.pre { opacity: 1; transform: none; }
     }
   </style>
 </head>
@@ -539,11 +539,11 @@
     // Scroll reveal + count-up
     (function () {
       var els = document.querySelectorAll('.rv');
-      if (reduce || !('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+      if (reduce || !('IntersectionObserver' in window)) return;
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           if (!en.isIntersecting) return;
-          en.target.classList.add('in'); io.unobserve(en.target);
+          en.target.classList.remove('pre'); io.unobserve(en.target);
           var n = en.target.querySelector('[data-count]');
           if (n) {
             var end = +n.dataset.count, suf = n.dataset.suffix, t0 = performance.now();
@@ -551,7 +551,7 @@
           }
         });
       }, { threshold: .15 });
-      els.forEach(function (e) { io.observe(e); });
+      els.forEach(function (e) { if (e.getBoundingClientRect().top > innerHeight * .9) { e.classList.add('pre'); io.observe(e); } });
     })();
 
     // Case study quick look
