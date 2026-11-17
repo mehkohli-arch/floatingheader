@@ -134,18 +134,6 @@
     @keyframes sparkle { 0% { opacity: 0; transform: scale(0) rotate(0); } 30% { opacity: 1; transform: scale(1.2) rotate(180deg); } 100% { opacity: 0; transform: scale(1.4) rotate(360deg); } }
     .hero:hover .sp, .hero.sparkle .sp { animation: sparkle 2.2s ease-in-out infinite; }
 
-    /* ═════════ Impact ═════════ */
-    .impact-sec { padding: 96px 0 104px; }
-    .impact-sec .label { color: var(--muted); margin: 0 0 20px; display: block; }
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-    .stat { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 26px 22px; }
-    .stat b { display: block; font: 800 clamp(34px, 4.4vw, 58px)/1 var(--f-head); letter-spacing: -.03em; color: var(--brand); white-space: nowrap; }
-    .stat span { display: block; margin-top: 10px; font-size: 14.5px; color: var(--muted); }
-    .stat.dark { background: var(--rose-950); border-color: var(--rose-950); }
-    .stat.dark b { color: var(--butter-400); font: 400 clamp(30px, 3.8vw, 46px)/1 var(--f-sig); }
-    .stat.dark span { color: rgba(255,255,255,.75); }
-    @media (max-width: 900px) { .stats { grid-template-columns: 1fr 1fr; gap: 10px; } .impact-sec { padding: 64px 0 72px; } .stat { padding: 20px 16px; } }
-
     /* ═════════ Work ═════════ */
     .work { background: var(--rose-950); color: var(--cream); padding: 130px 0 140px; border-radius: var(--r-xl) var(--r-xl) 0 0; }
     .sec-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 72px; }
@@ -167,9 +155,6 @@
     .v-blush { background: linear-gradient(140deg, var(--rose-200), #f7d9c4); }
 
     /* Case study overview grid */
-    .work-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: -36px 0 28px; font-size: 14px; color: rgba(255,248,243,.7); }
-    .work-bar .legend { display: flex; gap: 16px; flex-wrap: wrap; }
-    .work-bar .legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 8px; vertical-align: 1px; }
     .cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; list-style: none; margin: 0; padding: 0; }
     @media (max-width: 680px) { .cases { grid-template-columns: 1fr; } }
     .cs { position: relative; display: flex; flex-direction: column; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-lg); overflow: hidden; transition: transform .35s var(--ease), border-color .25s, background .25s; }
@@ -185,7 +170,6 @@
       .cs h3 { font-size: 24px; }
       .work { padding: 88px 0 96px; }
       .sec-head { margin-bottom: 48px; }
-      .work-bar { margin-top: -20px; }
     }
     .award { align-self: flex-start; margin-bottom: -4px; }
     .cs-body { display: flex; flex-direction: column; gap: 14px; padding: 22px 22px 20px; flex: 1; }
@@ -250,25 +234,6 @@
       .qv-metrics div { display: flex; align-items: baseline; gap: 12px; } .qv-metrics span { margin: 0; }
       .qv-nav button span { display: none; }
     }
-
-    /* ═════════ Systems expertise ═════════ */
-    .expertise { padding: 130px 0 40px; }
-    .expertise .sec-head h2 { color: var(--ink); }
-    .expertise .sec-head h2 em { color: var(--brand); }
-    .expertise .sec-head p { color: var(--muted); }
-    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .card { border-radius: var(--r-xl); padding: 32px 28px 30px; min-height: 340px; display: flex; flex-direction: column; justify-content: flex-start; gap: 32px; }
-    .card .big { font: 400 clamp(44px, 4.6vw, 60px)/1 var(--f-sig); white-space: nowrap; }
-    .card .big small { display: block; font: 500 13px var(--f-body); letter-spacing: 0; margin-top: 10px; opacity: .8; white-space: normal; }
-    .card h3 { font: 800 26px/1.1 var(--f-head); letter-spacing: -.02em; margin: 0 0 10px; }
-    .card p { margin: 0; font-size: 15.5px; line-height: 1.55; }
-    .c1 { background: var(--rose-950); color: var(--cream); } .c1 p { color: rgba(255,248,243,.82); } .c1 .big { color: var(--butter-400); }
-    .c2 { background: var(--brand); color: var(--cream); } .c2 p { color: rgba(255,248,243,.85); } .c2 .big { color: var(--butter-200); }
-    .c3 { background: var(--butter-400); color: var(--rose-950); } .c3 .big { color: var(--brand); }
-    @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } .card { min-height: 0; padding: 28px 22px; } .expertise { padding: 88px 0 24px; } }
-
-    .sys-link { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: var(--rose-950); color: var(--butter-200); font: 600 16px var(--f-body); text-decoration: none; transition: transform .2s var(--ease); }
-    .sys-link:hover { transform: translateY(-2px); }
 
     /* ═════════ About ═════════ */
     .about-sec { padding: 130px 0 120px; }
@@ -350,7 +315,7 @@
         <div class="hello">Hi, I'm</div>
         <h1>Meher Kohli<span class="dot">.</span></h1>
         <p class="role">Senior UX/UI designer &amp; <span>Design Systems</span> expert</p>
-        <p class="sub">I make complex financial software simple to use, and I lead the design system: the shared library of building blocks every product team designs and builds with. Using AI, I delivered a year of that work in 4 months.</p>
+        <p class="sub">I make complex financial software simple to use, and I lead the design systems that let designers, employees and AI tools build it consistently.</p>
         <p class="proof"><span aria-hidden="true">🏆</span><span><b>Tech100 innovation award, 2024</b><span class="proj"> · HousingWire, for a product I designed</span></span></p>
         <div class="hero-cta">
           <a class="hbtn y" href="#work">See case studies ↓</a>
@@ -360,33 +325,12 @@
       <div class="scroll-hint" aria-hidden="true">Scroll ↓</div>
     </section>
 
-    <!-- ═════════ IMPACT ═════════ -->
-    <section class="impact-sec" aria-labelledby="impactTitle">
-      <div class="wrap">
-        <h2 class="label rv" id="impactTitle">Impact at CMG Financial</h2>
-        <div class="stats">
-          <div class="stat rv"><b>12 → 4 mo</b><span>a year of design system work finished in 4 months, using AI</span></div>
-          <div class="stat rv"><b data-count="80" data-suffix="%+">80%+</b><span>faster for sales staff to find customers who could save money</span></div>
-          <div class="stat rv"><b>18–25%</b><span>faster for employees to finish everyday tasks</span></div>
-          <div class="stat dark rv"><b>Tech100</b><span>industry innovation award, 2024 🏆</span></div>
-        </div>
-      </div>
-    </section>
-
     <!-- ═════════ WORK ═════════ -->
     <section class="work" id="work">
       <div class="wrap">
         <div class="sec-head rv">
           <h2>Selected <em>work</em></h2>
-          <p>Three projects from CMG Financial, a US mortgage lender. Each card shows the problem, my role and the result. Open a quick look for more, or read the full story.</p>
-        </div>
-        <div class="work-bar rv">
-          <span>4 case studies · 2024–2026</span>
-          <div class="legend" aria-label="Case study types">
-            <span style="--c:#F6C35B">Product design</span>
-            <span style="--c:#f2a6c6">Design systems</span>
-            <span style="--c:#9fd8bd">UX research</span>
-          </div>
+          <p>Four projects from CMG Financial, a US mortgage lender. Each card shows the problem, my role and the result.</p>
         </div>
 
         <ul class="cases">
@@ -473,31 +417,6 @@
       </div>
     </dialog>
 
-    <!-- ═════════ SYSTEMS EXPERTISE ═════════ -->
-    <section class="expertise" id="systems">
-      <div class="wrap">
-        <div class="sec-head rv">
-          <h2>Systems, <em>faster</em></h2>
-          <p>A design system is a shared library of reusable building blocks (colors, buttons, forms) plus the rules for using them. It keeps every product consistent and accessible, and lets teams build much faster. Here's how I lead one.</p>
-        </div>
-        <div class="cards">
-          <div class="card c1 rv">
-            <div class="big">12 → 4<small>months to finish a year of planned work</small></div>
-            <div><h3>Faster with AI</h3><p>With AI built into my workflow, I delivered our customer design system in 4 months: a Figma library, a Storybook where designers and other employees build their own prototypes, and rules for Claude to follow.</p></div>
-          </div>
-          <div class="card c2 rv">
-            <div class="big">&lt;1 month<small>to add dark mode to our loan software</small></div>
-            <div><h3>Built to change easily</h3><p>I restructured our design tokens (shared settings like "page background") with a layer named by purpose. So adding dark mode took under a month, instead of redesigning every screen.</p></div>
-          </div>
-          <div class="card c3 rv">
-            <div class="big">30%<small>fewer back-and-forth questions with engineers</small></div>
-            <div><h3>Standards people use</h3><p>As the company's go-to design systems expert, I match designs to the code engineers already use, write clear guidelines and coach designers, so products get built right the first time.</p></div>
-          </div>
-        </div>
-  <p class="rv" style="margin:28px 0 0"><a class="sys-link" href="ai-design-systems.html">Read the full story: AI-Ready Design Systems →</a></p>
-      </div>
-    </section>
-
     <!-- ═════════ ABOUT ═════════ -->
     <section class="about-sec" id="about">
       <div class="wrap">
@@ -508,7 +427,7 @@
           <div class="rv">
             <p>I'm a senior UX/UI designer at CMG Financial, a US mortgage lender, and the company's go-to expert on design systems. I love taking complicated software (lots of data, strict rules, many teams) and making it feel simple for the people who use it every day.</p>
             <p>I lead products from first research to launch, and work closely with engineers so what ships is fast and accessible to everyone, including people who use screen readers or keyboards. My work has made everyday tasks 18–25% faster for employees, cut user errors by 12% and increased use of new features by 15%.</p>
-            <p>I use AI every day to work faster and smarter. It's how I finished a year of design system work in 4 months, and I also design AI-powered products.</p>
+            <p>I'm an AI-enabled designer. I use AI throughout my work, from building design systems to prototyping, and I also design AI-powered products.</p>
             <p>I came to design from psychology, and understanding how people think still shapes everything I make.</p>
             <ul class="edu">
               <li><b>M.S. Human-Computer Interaction</b><span>Drexel University · 2024–present</span></li>
