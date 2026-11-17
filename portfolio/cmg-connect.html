@@ -318,7 +318,14 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
       setTimeout(done, 800);
     })();
   </script>
-  <!-- Google Analytics: add the Measurement ID in analytics.py to turn on -->
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-615TQVH430"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-615TQVH430');
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
