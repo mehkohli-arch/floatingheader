@@ -299,6 +299,86 @@
   .cm-list { top: auto; bottom: calc(100% + 10px); left: 0; right: 0; width: auto; transform: none; }
 }
 @media (max-width: 374px) { .cm-btn { padding: 0 7px; font-size: 13px; } }
+/*COMPONENTS*/
+/* ═════════ Design tokens + components (single source of truth) ═════════ */
+:root {
+  /* Type scale */
+  --t-display: clamp(64px, 11vw, 156px); /* Lemon: name, "Let's talk" */
+  --t-h1: clamp(40px, 6vw, 80px);        /* page and section titles */
+  --t-h2: clamp(26px, 3.6vw, 44px);      /* section headings, modal titles */
+  --t-h3: 22px;                          /* card, step and box titles */
+  --t-h4: 18px;                          /* small diagram and tile titles */
+  --t-stat: 36px;                        /* big numbers */
+  --t-lead: clamp(18px, 2vw, 21px);      /* intros and summaries */
+  --t-body: 17px;
+  --t-small: 15px;
+  --t-caption: 13px;
+  --t-label: 12px;                       /* mono, uppercase */
+  --t-tag: 12px;
+  --t-code: 13px;
+  /* Buttons */
+  --btn-lg: 52px;
+  --btn-md: 44px;
+  --nav-item: 40px;
+  --icon-btn: 44px;
+  /* Icons */
+  --icon-sm: 14px;
+  --icon-md: 18px;
+  --icon-lg: 22px;
+}
+
+/* Type */
+strong { font-weight: 600; }
+.hero h1, .contact h2 { font: 400 var(--t-display)/.92 var(--f-sig); letter-spacing: -.02em; }
+.c-hero h1, .sec-head h2 { font: 800 var(--t-h1)/1 var(--f-head); letter-spacing: -.03em; }
+.sec-head h2 em, .c-section h2 em { font-family: var(--f-sig); font-weight: 400; font-size: 1em; font-style: normal; letter-spacing: -.01em; }
+.c-section h2, .hero .role, dialog.qv .qv-head h2, .next strong { font: 800 var(--t-h2)/1.1 var(--f-head); letter-spacing: -.02em; }
+.cs h3, .steps h3, .box h3, .read h3, .read .example h3, .example h3, .card h3, .qv-sec h3.t-h3 { font: 700 var(--t-h3)/1.25 var(--f-head); letter-spacing: -.01em; }
+.layer h3, .map .out h3, .map .src strong, .ai-vis .core, .mode .t { font: 700 var(--t-h4)/1.3 var(--f-head); }
+.cs .impact b, .result b, .box .num, .out b, .qv-metrics b, .example .ex-stat b, .stat b { font: 800 var(--t-stat)/1 var(--f-head); letter-spacing: -.02em; }
+.c-hero .summary, .lead, .hero .sub, .contact p { font-size: var(--t-lead); line-height: 1.55; font-weight: 400; }
+body, .c-section p, .about p, .read li, .example p, .example ul, .qv-sec p, .qv-sec ul, .sec-head p { font-size: var(--t-body); }
+.cs-sum, .facts dd, .box p, .steps p, .layer p, .map .out p, .about .edu li, .skills li, .qv-facts dd, .grow, .cs .impact span,
+.result span, .out span, .qv-metrics span, .flow li, .figure figcaption, .example .ex-stat span, .sources, .callout, .stat span, .map .end, .map .src span { font-size: var(--t-small); line-height: 1.45; }
+.foot, .lb-hint, .lb-cap, .diagram .cap, .ai-vis .leaf { font-size: var(--t-caption); }
+.label, .eyebrow, .facts dt, .qv-facts dt, .cs-meta, .cm-kind, .skills h3, .grow thead th, .map .out .who, .scroll-hint, .example .ex-label,
+.qv-sec h3, .grow td[data-label]::before, .ai-vis .core small, .ai-vis .leaf i, .stage .label {
+  font-family: var(--f-mono); font-size: var(--t-label); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; font-style: normal; line-height: 1.3;
+}
+.tag, .award, .tag-good, .tag-bad, .tag-idea, .badge-new, .demo .pill { font: 600 var(--t-tag)/1 var(--f-body); letter-spacing: 0; text-transform: none; }
+code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-code); font-weight: 500; }
+
+/* Buttons: large (main calls to action) */
+.btn, .hbtn { min-height: var(--btn-lg); height: auto; padding: 0 24px; border-radius: 999px; font: 600 16px/1 var(--f-body); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+/* Buttons: medium (secondary actions in cards and overlays) */
+.ql, .qv-cta, .zoom-btn, .qv-nav button { min-height: var(--btn-md); height: auto; padding: 0 18px; border-radius: 999px; font: 600 var(--t-small)/1 var(--f-body); display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+/* Menu items */
+.nav > a, .cm-btn { min-height: var(--nav-item); padding: 0 16px; border-radius: 999px; font: 500 14px/1 var(--f-body); display: inline-flex; align-items: center; }
+.nav .sig { font: 400 var(--icon-md)/1 var(--f-sig); }
+.nav .cm-list a { display: block; min-height: var(--btn-md); padding: 10px 12px; border-radius: 12px; font: 600 var(--t-small)/1.3 var(--f-body); }
+.nav .cm-list .cm-kind { display: block; margin-bottom: 2px; }
+/* Text links */
+.back, .ex-link, .go { min-height: var(--btn-md); font: 600 var(--t-small)/1 var(--f-body); display: inline-flex; align-items: center; gap: 8px; }
+/* Icon buttons (one circle size, one glyph size) */
+.go i, .next i, .qv-x, .lb-close { width: var(--icon-btn); height: var(--icon-btn); padding: 0; border-radius: 50%; display: grid; place-items: center; font-size: var(--icon-md); line-height: 1; font-style: normal; flex: none; }
+.qv-x, .lb-close { font-size: var(--icon-lg); }
+.go i, .next i { font-weight: 400; }
+.hero .hello { font-size: var(--t-lead); }
+.cite a { font-size: var(--t-tag); }
+.mode .btnx, .demo .acts span { font-size: var(--t-small); }
+.map .arrow, .layers .arr { font-size: var(--icon-lg); }
+.ai-vis .arrows { font-size: var(--icon-md); }
+
+/* Icons inside text and buttons */
+.cm-caret, .zoom-btn span, .award span[aria-hidden], .tag[aria-hidden] { font-size: var(--icon-sm); line-height: 1; }
+
+@media (max-width: 640px) {
+  .nav > a, .cm-btn { min-height: var(--btn-md); padding: 0 10px; }
+}
+@media (max-width: 374px) {
+  .nav > a, .cm-btn { padding: 0 7px; font-size: 13px; }
+}
+/*/COMPONENTS*/
   </style>
   <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
   <script>
