@@ -3,248 +3,561 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#A1285A" />
   <title>Meher Kohli — UX/UI Designer &amp; Design Systems SME</title>
   <meta name="description" content="Meher Kohli, UX/UI designer and company-wide Design Systems SME at CMG Financial. Case studies: Tech100-winning loan servicing pipeline, employee design system, realtor app research." />
-  <meta name="theme-color" content="#fff8f3" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lemon&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lemon&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    /* ═════════ Meher tokens ═════════ */
     :root {
-      --rose: #A1285A; --rose-deep: #7d1d45; --rose-soft: #fbe9f0;
-      --bg: #fff8f3; --surface: #ffffff; --ink: #1a1216; --muted: #5f5258; --line: #ecdfe3;
-      --f-sig: 'Lemon', Georgia, serif;
+      /* primitives */
+      --rose-950:#2a0f1c; --rose-900:#4a1029; --rose-700:#7d1d45; --rose-600:#A1285A; --rose-400:#d0679a; --rose-200:#f2c4d8; --rose-100:#fbe7ef;
+      --butter-400:#F6C35B; --butter-200:#fde7b4;
+      --cream:#fff8f3; --ink:#1a1216; --ink-muted:#6b5d64; --line:#ecdfe3;
+
+      /* semantic */
+      --bg: var(--cream); --text: var(--ink); --muted: var(--ink-muted); --border: var(--line);
+      --brand: var(--rose-600); --brand-deep: var(--rose-950); --brand-soft: var(--rose-100); --highlight: var(--butter-400);
+
+      --f-sig: 'Lemon', 'Bricolage Grotesque', cursive;
       --f-head: 'Bricolage Grotesque', system-ui, sans-serif;
       --f-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      --max: 1120px;
+      --f-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+      --r-sm:8px; --r-md:14px; --r-lg:24px; --r-xl:36px;
+      --max:1200px;
+      --ease: cubic-bezier(.2,.8,.2,1);
     }
+
     *, *::before, *::after { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 72px; }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
-    body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--f-body); -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; -webkit-text-size-adjust: 100%; }
+    body:has(dialog[open]) { overflow: hidden; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 400 17px/1.6 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     a { color: inherit; }
-    :focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; border-radius: 6px; }
-    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-    @media (max-width: 600px) { .wrap { padding: 0 20px; } }
+    :focus-visible { outline: 3px solid var(--highlight); outline-offset: 3px; border-radius: 6px; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+    @media (max-width: 600px) { .wrap { padding: 0 16px; } }
     .skip { position: absolute; left: -9999px; }
-    .skip:focus { left: 16px; top: 12px; z-index: 100; background: var(--surface); padding: 10px 14px; }
+    .skip:focus { left: 16px; top: 16px; background: #fff; color: var(--ink); padding: 8px 12px; z-index: 200; }
+    .mono { font-family: var(--f-mono); }
+    .label { font: 500 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; }
 
-    /* Header */
-    .top { position: sticky; top: 0; z-index: 50; background: rgba(255,248,243,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
-    .top.scrolled { border-color: var(--line); }
-    .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
-    .mark { font: 400 26px/1 var(--f-sig); color: var(--rose); text-decoration: none; opacity: 0; transform: translateY(4px); transition: opacity .25s, transform .25s; }
-    .top.scrolled .mark { opacity: 1; transform: none; }
-    .mark { white-space: nowrap; }
-    @media (max-width: 400px) { .mark { font-size: 21px; } .top nav a { padding: 0 10px; } }
-    @media (max-width: 359px) { .top nav a[href="#work"] { display: none; } }
-    .top nav { display: flex; align-items: center; gap: 4px; }
-    .top nav a { text-decoration: none; font: 500 15px var(--f-body); color: var(--muted); padding: 0 12px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 8px; }
-    .top nav a:hover { color: var(--ink); }
-    .top nav a.resume { color: var(--rose); font-weight: 600; }
-    @media (max-width: 600px) { .top nav .opt { display: none; } }
-
-    /* Buttons */
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 0 22px; border-radius: 999px; font: 600 16px var(--f-body); text-decoration: none; border: 1.5px solid var(--line); background: var(--surface); transition: border-color .2s, background .2s; }
-    .btn:hover { border-color: var(--rose); }
-    .btn.primary { background: var(--rose); border-color: var(--rose); color: #fff; }
-    .btn.primary:hover { background: var(--rose-deep); border-color: var(--rose-deep); }
-
-    /* Intro */
-    .intro { padding: 40px 0 56px; }
-    .intro .name { font: 400 clamp(56px, 9vw, 96px)/.95 var(--f-sig); color: var(--rose); margin: 0 0 18px; }
-    .intro h1 { font: 700 clamp(28px, 4.2vw, 48px)/1.12 var(--f-head); letter-spacing: -.02em; margin: 0; max-width: 22ch; }
-    .intro .lede { font-size: clamp(17px, 1.8vw, 19px); color: var(--muted); max-width: 60ch; margin: 18px 0 0; }
-    .proof { display: inline-flex; align-items: center; gap: 10px; margin-top: 24px; padding: 10px 16px; border-radius: 12px; background: var(--rose-soft); font-size: 15px; }
-    .proof b { font-weight: 600; }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-    @media (max-width: 600px) {
-      .intro { padding: 24px 0 48px; }
-      .actions { display: grid; grid-template-columns: 1fr 1fr; }
-      .actions .primary { grid-column: 1 / -1; }
-      .proof { display: flex; align-items: flex-start; }
+    /* ═════════ Nav ═════════ */
+    .nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; background: rgba(42,15,28,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 10px 30px rgba(42,15,28,.25); }
+    .nav a { color: #fff; text-decoration: none; font: 500 14px var(--f-body); padding: 9px 16px; border-radius: 999px; transition: background .2s; white-space: nowrap; }
+    .nav a:hover { background: rgba(255,255,255,.12); }
+    .nav .sig { font: 400 18px var(--f-sig); color: var(--butter-200); padding: 6px 14px; }
+    .nav .cta { background: var(--butter-400); color: var(--rose-950); }
+    .nav .cta:hover { background: var(--butter-200); }
+    @media (max-width: 640px) {
+      .nav { top: auto; bottom: calc(12px + env(safe-area-inset-bottom)); width: calc(100% - 24px); max-width: 420px; justify-content: space-between; padding: 6px; }
+      .nav a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 12px; font-size: 14px; }
+      .nav .sig { display: none; }
+      body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
     }
 
-    /* Section headings */
-    .section { padding: 72px 0; border-top: 1px solid var(--line); }
-    .section h2 { font: 700 clamp(28px, 3.6vw, 40px)/1.1 var(--f-head); letter-spacing: -.02em; margin: 0 0 8px; }
-    .section .sub { color: var(--muted); margin: 0 0 36px; max-width: 60ch; }
-    @media (max-width: 600px) { .section { padding: 56px 0; } }
+    /* ═════════ Hero ═════════ */
+    .hero { position: relative; min-height: 100vh; min-height: 100svh; background: var(--brand); color: var(--cream); overflow: hidden; display: grid; place-items: center; isolation: isolate; }
+    .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background:
+        radial-gradient(60% 50% at 20% 15%, rgba(246,195,91,.22), transparent 60%),
+        radial-gradient(50% 60% at 85% 85%, rgba(42,15,28,.55), transparent 60%),
+        radial-gradient(40% 40% at 90% 10%, rgba(242,196,216,.25), transparent 60%); }
+    .hero .grid-bg { position: absolute; inset: 0; z-index: -1; opacity: .12; background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%); }
+    .hero-inner { text-align: center; padding: 120px 20px 100px; position: relative; z-index: 5; }
+    .hero .hello { font: 500 clamp(16px, 2vw, 20px) var(--f-body); opacity: .9; margin-bottom: 8px; }
+    .hero h1 { font: 400 clamp(64px, 11vw, 156px)/.9 var(--f-sig); margin: 0; letter-spacing: -.02em; color: var(--cream); text-shadow: 0 20px 60px rgba(42,15,28,.35); }
+    .hero h1 .dot { color: var(--butter-400); }
+    .hero .role { font: 800 clamp(22px, 3.4vw, 40px)/1.1 var(--f-head); margin: 20px auto 0; max-width: 20ch; letter-spacing: -.01em; }
+    .hero .role span { background: var(--butter-400); color: var(--rose-950); padding: 0 .25em; border-radius: 10px; display: inline-block; transform: rotate(-1.5deg); }
+    .hero .sub { max-width: 54ch; margin: 22px auto 0; font-size: clamp(16px, 1.6vw, 18px); color: rgba(255,248,243,.82); }
+    .hero-cta { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .hbtn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 26px; border-radius: 999px; font: 600 16px var(--f-body); text-decoration: none; transition: transform .2s var(--ease), background .2s; }
+    .hbtn:hover { transform: translateY(-2px); }
+    .hbtn.y { background: var(--butter-400); color: var(--rose-950); }
+    .hbtn.o { border: 1.5px solid rgba(255,248,243,.55); color: var(--cream); }
+    @media (max-width: 480px) { .hero-cta { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; } .hbtn { padding: 0 12px; font-size: 15px; } }
+    .proof { display: inline-flex; align-items: center; gap: 8px; margin: 22px 0 0; padding: 9px 16px; border-radius: 999px; background: rgba(42,15,28,.35); border: 1px solid rgba(255,255,255,.18); font: 500 14.5px var(--f-body); color: var(--cream); }
+    .proof b { color: var(--butter-200); font-weight: 600; }
+    .scroll-hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; opacity: .7; z-index: 5; }
 
-    /* Case study cards */
-    .cases { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    @media (max-width: 1000px) { .cases { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 640px) { .cases { grid-template-columns: 1fr; gap: 16px; } }
-    .cs { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
-    .cs:hover { border-color: var(--rose); box-shadow: 0 12px 32px rgba(161,40,90,.10); }
-    .cs:focus-within { border-color: var(--rose); }
+    /* floating system objects */
+    .floaty { position: absolute; z-index: 3; will-change: transform; pointer-events: none; }
+    .floaty > * { animation: bob 7s ease-in-out infinite; }
+    @keyframes bob { 0%,100% { transform: translateY(-10px) rotate(var(--rot,0deg)); } 50% { transform: translateY(12px) rotate(calc(var(--rot,0deg) * -1)); } }
+    .chip { font: 500 13px var(--f-body); background: #fff; color: var(--ink); border-radius: 14px; padding: 12px 14px; box-shadow: 0 18px 40px rgba(42,15,28,.28); display: flex; align-items: center; gap: 10px; }
+    .chip .sw { width: 34px; height: 34px; border-radius: 9px; background: var(--brand); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+    .chip small { display: block; font: 400 11px var(--f-mono); color: var(--muted); }
+    .cb { width: 22px; height: 22px; border-radius: 6px; background: var(--brand); color: #fff; display: grid; place-items: center; font-size: 13px; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--butter-400); }
+    .fake-btn { font: 600 14px var(--f-body); background: var(--rose-950); color: var(--butter-200); padding: 13px 22px; border-radius: 999px; box-shadow: 0 0 0 3px var(--brand), 0 0 0 6px var(--butter-400), 0 18px 40px rgba(42,15,28,.35); }
+    .toggle { width: 64px; height: 36px; border-radius: 999px; background: var(--butter-400); position: relative; box-shadow: 0 18px 40px rgba(42,15,28,.3); }
+    .toggle::after { content: ""; position: absolute; top: 4px; right: 4px; width: 28px; height: 28px; border-radius: 50%; background: #fff; }
+    .contrast { font: 500 12px var(--f-mono); background: var(--rose-950); color: #fff; border-radius: 12px; padding: 10px 12px; display: grid; gap: 4px; box-shadow: 0 18px 40px rgba(42,15,28,.35); }
+    .contrast b { font: 800 22px var(--f-head); color: var(--butter-400); }
+    .cursor-tag { display: flex; flex-direction: column; align-items: flex-start; }
+    .cursor-tag svg { width: 22px; height: 22px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.25)); }
+    .cursor-tag span { margin: -2px 0 0 16px; background: var(--butter-400); color: var(--rose-950); font: 600 12px var(--f-body); padding: 5px 10px; border-radius: 4px 999px 999px 999px; }
+    .sticker { font-size: 54px; filter: drop-shadow(0 12px 20px rgba(42,15,28,.35)); }
+    .spacing { display: flex; align-items: flex-end; gap: 4px; background: #fff; padding: 10px 12px; border-radius: 12px; box-shadow: 0 18px 40px rgba(42,15,28,.28); }
+    .spacing i { display: block; width: 10px; background: var(--rose-200); border-radius: 3px; }
+    .spacing em { font: 400 11px var(--f-mono); color: var(--muted); font-style: normal; margin-left: 6px; }
+
+    .f1 { top: 14%; left: 7%; }   .f1 > * { --rot: -6deg; }
+    .f2 { top: 9%; right: 6%; }  .f2 > * { --rot: 5deg; animation-duration: 6s; }
+    .f3 { top: 48%; left: 4%; }   .f3 > * { --rot: 3deg; animation-duration: 8s; }
+    .f4 { top: 66%; right: 5%; }  .f4 > * { --rot: -4deg; animation-duration: 6.5s; }
+    .f5 { bottom: 12%; left: 16%; } .f5 > * { --rot: 8deg; animation-duration: 7.5s; }
+    .f6 { bottom: 14%; right: 18%; } .f6 > * { --rot: -3deg; animation-duration: 5.5s; }
+    .f7 { top: 17%; left: 25%; }  .f7 > * { --rot: -10deg; animation-duration: 6.8s; }
+    .f8 { top: 10%; left: 46%; }  .f8 > * { --rot: 6deg; animation-duration: 7.2s; }
+    @media (max-width: 900px) { .f3, .f4, .f7 { display: none; } .f1 { top: 11%; left: 3%; } .f2 { top: 12%; right: 3%; } .f8 { display: none; } }
+    @media (max-width: 600px) {
+      .f1 { top: 20px; left: 12px; } .f2 { top: 20px; right: 12px; }
+      .f1 .chip, .f2 .contrast { zoom: .72; }
+      .proof .proj { display: none; }
+      .f5 { display: none; }
+      .f6 { right: 5%; bottom: 3%; } .f6 .sticker { font-size: 40px; }
+      .hero-inner { padding: 100px 16px 104px; }
+      .hero .hello { display: none; }
+      .hero .role { font-size: 22px; margin-top: 14px; }
+      .hero .sub { font-size: 16px; margin-top: 14px; }
+      .proof { border-radius: 16px; font-size: 13.5px; margin-top: 16px; text-align: left; }
+      .hero-cta { margin-top: 20px; }
+      .scroll-hint { display: none; }
+    }
+
+    /* sparkles on hover (signature from the original header) */
+    .sparkle-layer { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+    .sp { position: absolute; opacity: 0; color: var(--butter-400); font-size: 22px; }
+    @keyframes sparkle { 0% { opacity: 0; transform: scale(0) rotate(0); } 30% { opacity: 1; transform: scale(1.2) rotate(180deg); } 100% { opacity: 0; transform: scale(1.4) rotate(360deg); } }
+    .hero:hover .sp, .hero.sparkle .sp { animation: sparkle 2.2s ease-in-out infinite; }
+
+    /* ═════════ Impact ═════════ */
+    .impact-sec { padding: 96px 0 104px; }
+    .impact-sec .label { color: var(--muted); margin: 0 0 20px; display: block; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .stat { background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 26px 22px; }
+    .stat b { display: block; font: 800 clamp(34px, 4.4vw, 58px)/1 var(--f-head); letter-spacing: -.03em; color: var(--brand); white-space: nowrap; }
+    .stat span { display: block; margin-top: 10px; font-size: 14.5px; color: var(--muted); }
+    .stat.dark { background: var(--rose-950); border-color: var(--rose-950); }
+    .stat.dark b { color: var(--butter-400); font: 400 clamp(30px, 3.8vw, 46px)/1 var(--f-sig); }
+    .stat.dark span { color: rgba(255,255,255,.75); }
+    @media (max-width: 900px) { .stats { grid-template-columns: 1fr 1fr; gap: 10px; } .impact-sec { padding: 64px 0 72px; } .stat { padding: 20px 16px; } }
+
+    /* ═════════ Work ═════════ */
+    .work { background: var(--rose-950); color: var(--cream); padding: 130px 0 140px; border-radius: var(--r-xl) var(--r-xl) 0 0; }
+    .sec-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 72px; }
+    .sec-head h2 { font: 800 clamp(48px, 8vw, 112px)/.9 var(--f-head); letter-spacing: -.04em; margin: 0; }
+    .sec-head h2 em { font: 400 1em var(--f-sig); font-style: normal; color: var(--butter-400); letter-spacing: -.02em; }
+    .sec-head p { max-width: 38ch; margin: 0; color: rgba(255,248,243,.7); }
+
+    .tag { font: 500 12px/1 var(--f-mono); padding: 7px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.2); color: rgba(255,248,243,.85); }
+    .tag.gold { background: var(--butter-400); border-color: var(--butter-400); color: var(--rose-950); }
+    .v-rose { background: linear-gradient(140deg, var(--brand), var(--rose-700)); }
+    .v-butter { background: linear-gradient(140deg, var(--butter-400), #f19a6b); }
+    .v-blush { background: linear-gradient(140deg, var(--rose-200), #f7d9c4); }
+
+    /* Case study overview grid */
+    .work-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: -36px 0 28px; font-size: 14px; color: rgba(255,248,243,.7); }
+    .work-bar .legend { display: flex; gap: 16px; flex-wrap: wrap; }
+    .work-bar .legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 8px; vertical-align: 1px; }
+    .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; list-style: none; margin: 0; padding: 0; }
+    @media (max-width: 1040px) { .cases { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 680px) { .cases { grid-template-columns: 1fr; } }
+    .cs { position: relative; display: flex; flex-direction: column; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-lg); overflow: hidden; transition: transform .35s var(--ease), border-color .25s, background .25s; }
+    .cs:hover { transform: translateY(-4px); border-color: rgba(246,195,91,.55); background: rgba(255,255,255,.07); }
+    .cs:focus-within { border-color: var(--butter-400); }
     /* Real product images: shown in full, never cropped or altered */
-    .thumb { height: 280px; padding: 14px; background: #fcf1f5; display: flex; align-items: center; justify-content: center; }
-    .thumb img { display: block; max-width: 100%; max-height: 252px; width: auto; height: auto; }
-    .cs-body { display: flex; flex-direction: column; gap: 12px; padding: 20px 22px 22px; flex: 1; }
-    .cs-type { font: 600 13px var(--f-body); color: var(--rose); }
-    .cs h3 { font: 700 23px/1.15 var(--f-head); letter-spacing: -.01em; margin: 0; }
+    .thumb { height: 320px; padding: 16px; background: #fcf1f5; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .thumb img { display: block; max-width: 100%; max-height: 288px; width: auto; height: auto; transition: transform .5s var(--ease); }
+    .cs:hover .thumb img { transform: scale(1.03); }
+    @media (max-width: 680px) {
+      .thumb { height: 300px; padding: 14px; } .thumb img { max-height: 272px; }
+      .cs-body { padding: 20px 18px 18px; }
+      .cs h3 { font-size: 24px; }
+      .work { padding: 88px 0 96px; }
+      .sec-head { margin-bottom: 48px; }
+      .work-bar { margin-top: -20px; }
+    }
+    .award { align-self: flex-start; margin-bottom: -4px; }
+    .cs-body { display: flex; flex-direction: column; gap: 14px; padding: 22px 22px 20px; flex: 1; }
+    .cs-meta { display: flex; justify-content: space-between; gap: 8px; font: 500 12px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: rgba(255,248,243,.6); }
+    .cs-meta .kind { color: var(--c); }
+    .cs-meta .kind::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--c); margin-right: 7px; vertical-align: 1px; }
+    .cs h3 { font: 800 26px/1.08 var(--f-head); letter-spacing: -.02em; margin: 0; }
     .cs h3 a { text-decoration: none; }
-    .cs h3 a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+    .cs h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
     .cs h3 a:focus-visible { outline: none; }
-    .cs dl { margin: 0; display: grid; gap: 10px; font-size: 15px; }
-    .cs dt { font: 600 12px var(--f-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-    .cs dd { margin: 2px 0 0; line-height: 1.45; }
-    .cs .outcome dd { font-weight: 600; }
-    .cs .more { margin-top: auto; padding-top: 6px; font: 600 15px var(--f-body); color: var(--rose); }
-    .award { align-self: flex-start; font: 600 12.5px var(--f-body); color: #7a4e00; background: #fde7b4; padding: 5px 10px; border-radius: 999px; }
+    .cs-sum { margin: 0; font-size: 15px; line-height: 1.5; color: rgba(255,248,243,.75); }
+    .facts { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 0; padding: 14px 0; border-block: 1px solid rgba(255,255,255,.1); }
+    .facts dt { font: 500 11.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: rgba(255,248,243,.5); margin-bottom: 3px; }
+    .facts dd { margin: 0; font-size: 13.5px; line-height: 1.35; }
+    .impact { display: flex; align-items: baseline; gap: 12px; }
+    .impact b { font: 800 34px/1 var(--f-head); color: var(--butter-400); letter-spacing: -.03em; white-space: nowrap; }
+    .impact span { font-size: 13.5px; line-height: 1.35; color: rgba(255,248,243,.8); }
+    .cs-actions { margin-top: auto; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .ql { position: relative; z-index: 2; font: 600 14px var(--f-body); color: var(--cream); background: transparent; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; min-height: 44px; padding: 0 18px; cursor: pointer; transition: background .2s, border-color .2s; }
+    .ql:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.5); }
+    .go { display: inline-flex; align-items: center; gap: 8px; font: 600 14px var(--f-body); color: var(--cream); }
+    .go i { width: 44px; height: 44px; border-radius: 50%; background: var(--brand); display: grid; place-items: center; font-style: normal; transition: transform .3s var(--ease), background .2s; }
+    .cs:hover .go i, .cs:focus-within .go i { transform: rotate(-45deg); background: var(--butter-400); color: var(--rose-950); }
 
-    /* About */
-    .about { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: start; }
-    @media (max-width: 860px) { .about { grid-template-columns: 1fr; gap: 32px; } }
-    .about p { margin: 0 0 16px; max-width: 62ch; }
-    .about p:last-child { margin-bottom: 0; }
-    .skills h3 { font: 600 13px var(--f-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+    /* Quick look dialog */
+    dialog.qv { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 32px); padding: 0; border: 0; border-radius: var(--r-xl); background: var(--cream); color: var(--ink); box-shadow: 0 40px 100px rgba(42,15,28,.5); overflow: auto; }
+    dialog.qv::backdrop { background: rgba(26,10,18,.66); backdrop-filter: blur(6px); }
+    dialog.qv[open] { animation: pop .35s var(--ease); }
+    @keyframes sheet { from { transform: translateY(100%); } }
+    @keyframes pop { from { opacity: 0; transform: translateY(18px) scale(.98); } }
+    .qv-head { position: relative; padding: 30px 32px 26px; color: var(--cream); }
+    .qv-head.v-butter, .qv-head.v-blush { color: var(--rose-950); }
+    .qv-head .cs-meta { color: inherit; opacity: .8; justify-content: flex-start; gap: 6px 16px; flex-wrap: wrap; padding-right: 52px; }
+    .qv-head .cs-meta .kind { color: inherit; } .qv-head .cs-meta .kind::before { background: currentColor; }
+    .qv-head h2 { font: 800 clamp(28px, 4vw, 40px)/1.05 var(--f-head); letter-spacing: -.02em; margin: 12px 0 0; padding-right: 48px; }
+    .qv-x { position: absolute; top: 18px; right: 18px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(255,255,255,.9); color: var(--ink); font-size: 20px; cursor: pointer; }
+    .qv-body { padding: 28px 32px 8px; display: grid; gap: 24px; }
+    .qv-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0; }
+    .qv-facts div { background: #fff; border: 1px solid var(--border); border-radius: var(--r-md); padding: 12px 14px; }
+    .qv-facts dt { font: 500 11.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .qv-facts dd { margin: 0; font-size: 14px; line-height: 1.4; }
+    .qv-sec h3 { font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--brand); margin: 0 0 8px; }
+    .qv-sec p { margin: 0; color: var(--ink); }
+    .qv-sec ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+    .qv-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .qv-metrics div { background: var(--rose-950); color: var(--cream); border-radius: var(--r-md); padding: 16px; }
+    .qv-metrics b { display: block; font: 800 30px/1 var(--f-head); color: var(--butter-400); letter-spacing: -.02em; }
+    .qv-metrics span { display: block; font-size: 13px; line-height: 1.4; margin-top: 6px; color: rgba(255,248,243,.8); }
+    .qv-foot { position: sticky; bottom: 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 32px; background: color-mix(in srgb, var(--cream) 92%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--border); margin-top: 20px; flex-wrap: wrap; }
+    .qv-nav { display: flex; gap: 8px; }
+    .qv-nav button { height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--border); background: #fff; color: var(--ink); font: 500 14px var(--f-body); cursor: pointer; }
+    .qv-nav button:hover { border-color: var(--brand); }
+    .qv-cta { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; background: var(--brand); color: #fff; font: 600 14px var(--f-body); text-decoration: none; }
+    .qv-cta:hover { background: var(--rose-700); }
+    @media (max-width: 640px) {
+      dialog.qv { width: 100%; max-width: 100%; margin: auto 0 0; max-height: 92vh; max-height: 92dvh; border-radius: 28px 28px 0 0; }
+      dialog.qv[open] { animation: sheet .35s var(--ease); }
+      .qv-foot { padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important; }
+      .qv-head, .qv-body { padding-left: 20px; padding-right: 20px; }
+      .qv-foot { padding: 12px 20px; }
+      .qv-facts, .qv-metrics { grid-template-columns: 1fr; }
+      .qv-metrics div { display: flex; align-items: baseline; gap: 12px; } .qv-metrics span { margin: 0; }
+      .qv-nav button span { display: none; }
+    }
+
+    /* ═════════ About ═════════ */
+    .about-sec { padding: 130px 0 120px; }
+    .about-sec .sec-head h2 { color: var(--ink); }
+    .about-sec .sec-head h2 em { color: var(--brand); }
+    .about { display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px; align-items: start; }
+    .about p { margin: 0 0 18px; font-size: 18px; max-width: 60ch; }
+    .about .edu { display: grid; gap: 10px; margin: 28px 0 0; padding: 0; list-style: none; }
+    .about .edu li { background: #fff; border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 18px; font-size: 15px; display: flex; justify-content: space-between; gap: 4px 12px; flex-wrap: wrap; }
+    .about .edu b { font-weight: 600; }
+    .about .edu span { color: var(--muted); }
+    .skills { background: var(--rose-950); color: var(--cream); border-radius: var(--r-xl); padding: 28px; }
+    .skills h3 { font: 500 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--butter-200); margin: 0 0 12px; }
     .skills ul { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-    .skills li { font-size: 14.5px; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+    .skills ul:last-child { margin-bottom: 0; }
+    .skills li { font-size: 14.5px; padding: 7px 13px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); }
+    @media (max-width: 900px) { .about { grid-template-columns: 1fr; gap: 32px; } .about-sec { padding: 88px 0 96px; } .about p { font-size: 17px; } .skills { padding: 22px 18px; border-radius: 28px; } }
 
-    /* Contact */
-    .contact { background: var(--rose); color: #fff; border-radius: 28px 28px 0 0; padding: 72px 0 32px; margin-top: 24px; }
-    .contact h2 { font: 700 clamp(30px, 4.4vw, 48px)/1.1 var(--f-head); letter-spacing: -.02em; margin: 0 0 12px; max-width: 20ch; }
-    .contact p { margin: 0 0 28px; color: rgba(255,255,255,.85); max-width: 52ch; }
-    .contact .btn { background: transparent; border-color: rgba(255,255,255,.5); color: #fff; }
-    .contact .btn:hover { border-color: #fff; }
-    .contact .btn.primary { background: #fff; color: var(--rose); border-color: #fff; }
-    .contact :focus-visible { outline-color: #fff; }
-    .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 64px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.25); font-size: 14px; color: rgba(255,255,255,.75); padding-bottom: env(safe-area-inset-bottom); }
-    @media (max-width: 600px) { .contact .actions { grid-template-columns: 1fr; } }
+    /* ═════════ Contact ═════════ */
+    .contact { background: var(--brand); color: var(--cream); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 130px 0 60px; position: relative; overflow: hidden; text-align: center; }
+    .contact .label { color: var(--butter-200); }
+    .contact h2 { font: 400 clamp(64px, 15vw, 200px)/.9 var(--f-sig); margin: 22px 0 18px; letter-spacing: -.02em; }
+    .contact h2 span { color: var(--butter-400); }
+    .contact p { max-width: 46ch; margin: 0 auto 36px; color: rgba(255,248,243,.82); font-size: 18px; }
+    .btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 54px; padding: 0 26px; border-radius: 999px; font: 600 16px var(--f-body); text-decoration: none; transition: transform .2s var(--ease); }
+    .btn:hover { transform: translateY(-2px); }
+    .btn.y { background: var(--butter-400); color: var(--rose-950); }
+    .btn.o { border: 1.5px solid rgba(255,248,243,.5); color: var(--cream); }
+    .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 110px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.18); font-size: 13px; color: rgba(255,248,243,.7); text-align: left; }
+    .foot a { text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+    @media (max-width: 600px) { .contact { padding: 96px 0 40px; } .btns { flex-direction: column; align-items: stretch; max-width: 340px; margin: 0 auto; } .btn { justify-content: center; } .foot { margin-top: 64px; } }
+
+    /* reveal */
+    .rv { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    .rv.in { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .rv { opacity: 1; transform: none; }
+    }
   </style>
 </head>
 <body>
-  <a class="skip" href="#work">Skip to case studies</a>
+  <a class="skip" href="#main">Skip to content</a>
 
-  <header class="top" id="top">
-    <div class="wrap">
-      <a class="mark" href="#top" aria-label="Back to top" tabindex="-1">Meher Kohli</a>
-      <nav aria-label="Primary">
-        <a href="#work">Work</a>
-        <a class="opt" href="#about">About</a>
-        <a class="opt" href="#contact">Contact</a>
-        <a class="resume" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
-      </nav>
-    </div>
-  </header>
+  <nav class="nav" aria-label="Primary">
+    <a class="sig" href="#top" aria-label="Meher Kohli, back to top">M.</a>
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a class="cta" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
+  </nav>
 
-  <main>
-    <!-- Answers the recruiter's questions in one screen: who, what level, what specialty, proof, how to reach -->
-    <section class="intro">
+  <main id="main">
+    <!-- ═════════ HERO ═════════ -->
+    <section class="hero" id="top">
+      <div class="grid-bg" aria-hidden="true"></div>
+
+      <div aria-hidden="true">
+        <div class="floaty f1" data-depth="18"><div class="chip"><span class="sw"></span><div>--rose-600<small>#A1285A · brand</small></div></div></div>
+        <div class="floaty f2" data-depth="-22"><div class="contrast"><span>contrast</span><b>7.1 : 1</b><span>AAA ✓</span></div></div>
+        <div class="floaty f3" data-depth="14"><div class="toggle"></div></div>
+        <div class="floaty f4" data-depth="-16"><div class="spacing"><i style="height:8px"></i><i style="height:14px"></i><i style="height:22px"></i><i style="height:34px"></i><em>space.1→4</em></div></div>
+        <div class="floaty f5" data-depth="24"><div class="chip"><span class="cb">✓</span><div>Checkbox<small>state: checked · focus</small></div></div></div>
+        <div class="floaty f6" data-depth="-20"><div class="sticker">🐶</div></div>
+        <div class="floaty f7" data-depth="10"><div class="cursor-tag"><svg viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-8L21 10z" fill="#F6C35B" stroke="#2a0f1c" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Meher</span></div></div>
+        <div class="floaty f8" data-depth="-12"><div class="sticker" style="font-size:38px">🌸</div></div>
+      </div>
+
+      <div class="sparkle-layer" aria-hidden="true">
+        <span class="sp" style="left:30%;top:30%">✦</span><span class="sp" style="left:68%;top:28%;animation-delay:.4s">✦</span>
+        <span class="sp" style="left:24%;top:62%;animation-delay:.8s">✧</span><span class="sp" style="left:74%;top:66%;animation-delay:1.1s">✦</span>
+        <span class="sp" style="left:50%;top:18%;animation-delay:.2s">✧</span><span class="sp" style="left:58%;top:80%;animation-delay:1.4s">✦</span>
+      </div>
+
+      <div class="hero-inner">
+        <div class="hello">Hi, I'm</div>
+        <h1>Meher Kohli<span class="dot">.</span></h1>
+        <p class="role">UX/UI designer &amp; company-wide <span>Design Systems</span> SME</p>
+        <p class="sub">At CMG Financial since 2022, I design mortgage and lending tools end to end, from research to shipped release, and lead the design system that keeps them consistent and accessible.</p>
+        <p class="proof"><span aria-hidden="true">🏆</span><span><b>HousingWire Tech100 winner, 2024</b><span class="proj"> · Servicing Loans Pipeline</span></span></p>
+        <div class="hero-cta">
+          <a class="hbtn y" href="#work">See case studies ↓</a>
+          <a class="hbtn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
+        </div>
+      </div>
+      <div class="scroll-hint" aria-hidden="true">Scroll ↓</div>
+    </section>
+
+    <!-- ═════════ IMPACT ═════════ -->
+    <section class="impact-sec" aria-labelledby="impactTitle">
       <div class="wrap">
-        <p class="name">Meher Kohli</p>
-        <h1>UX/UI designer and company-wide Design Systems SME for enterprise fintech.</h1>
-        <p class="lede">At CMG Financial since 2022, I design mortgage and lending tools end to end, from research to shipped release, and lead the design system that keeps them consistent and accessible.</p>
-        <p class="proof"><span aria-hidden="true">🏆</span><span><b>HousingWire Tech100 winner, 2024</b> for the Servicing Loans Pipeline</span></p>
-        <div class="actions">
-          <a class="btn primary" href="#work">View case studies</a>
-          <a class="btn" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
-          <a class="btn" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn</a>
+        <h2 class="label rv" id="impactTitle">Impact at CMG Financial</h2>
+        <div class="stats">
+          <div class="stat rv"><b data-count="80" data-suffix="%+">80%+</b><span>faster for loan officers to find refinance opportunities</span></div>
+          <div class="stat rv"><b>18–25%</b><span>faster employee task completion</span></div>
+          <div class="stat rv"><b data-count="30" data-suffix="%">30%</b><span>fewer design-to-dev clarification cycles</span></div>
+          <div class="stat dark rv"><b>Tech100</b><span>HousingWire award, 2024 🏆</span></div>
         </div>
       </div>
     </section>
 
-    <!-- Same four answers on every card so hiring managers can compare: problem, my role, outcome, then go deeper -->
-    <section class="section" id="work">
+    <!-- ═════════ WORK ═════════ -->
+    <section class="work" id="work">
       <div class="wrap">
-        <h2>Case studies</h2>
-        <p class="sub">Product design, design systems and research for mortgage and lending platforms used every day by loan officers, realtors and internal teams.</p>
+        <div class="sec-head rv">
+          <h2>Selected <em>work</em></h2>
+          <p>Three case studies at a glance. Open a quick look for the summary, or read the full story.</p>
+        </div>
+        <div class="work-bar rv">
+          <span>3 case studies · 2024–2025</span>
+          <div class="legend" aria-label="Case study types">
+            <span style="--c:#F6C35B">Product design</span>
+            <span style="--c:#f2a6c6">Design systems</span>
+            <span style="--c:#9fd8bd">UX research</span>
+          </div>
+        </div>
 
         <ul class="cases">
-          <li class="cs">
+          <li class="cs rv" style="--c:#F6C35B">
             <div class="thumb">
-              <img src="https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=512 512w, https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=1024 1024w" sizes="(max-width: 640px) 100vw, (max-width: 1000px) 50vw, 360px" alt="Clear 2.0 Servicing Loans pipeline table with quick rates and benefit analysis panels" decoding="async">
+              <img src="https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=512 512w, https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=1024 1024w" sizes="(max-width: 680px) 100vw, (max-width: 1040px) 50vw, 380px" alt="Clear 2.0 Servicing Loans pipeline table with quick rates and benefit analysis panels" loading="lazy" decoding="async">
             </div>
             <div class="cs-body">
-              <span class="cs-type">Product design · 4 weeks</span>
+              <div class="cs-meta"><span class="kind">Product design</span><span>4 weeks</span></div>
+              <span class="tag gold award">🏆 HousingWire Tech100 winner, 2024</span>
               <h3><a href="https://mehersportfolio.framer.website/cmgservicingloans">Servicing Loans Pipeline</a></h3>
-              <span class="award">🏆 Tech100 winner 2024</span>
-              <dl>
-                <div><dt>Problem</dt><dd>Loan officers were missing refinance and MI-reduction revenue hidden in their portfolios.</dd></div>
-                <div><dt>My role</dt><dd>Lead designer, end to end: IA, flows, UI and MVP scope</dd></div>
-                <div class="outcome"><dt>Outcome</dt><dd>80%+ faster to find a refinance opportunity</dd></div>
-              </dl>
-              <span class="more" aria-hidden="true">Read case study →</span>
+              <dl class="facts"><div><dt>Problem</dt><dd>Loan officers were missing refinance and MI-reduction revenue hidden in their portfolios.</dd></div><div><dt>My role</dt><dd>Lead designer, end to end: IA, flows, UI and MVP scope</dd></div></dl>
+              <div class="impact"><b>80%+</b><span>faster to find a refinance opportunity</span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="0" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
           </li>
 
-          <li class="cs">
+          <li class="cs rv" style="--c:#f2a6c6">
             <div class="thumb">
-              <img src="https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=512 512w, https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=1024 1024w" sizes="(max-width: 640px) 100vw, (max-width: 1000px) 50vw, 360px" alt="Design system documentation: component guidance, table header variants, filter popovers and token tables" loading="lazy" decoding="async">
+              <img src="https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=512 512w, https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=1024 1024w" sizes="(max-width: 680px) 100vw, (max-width: 1040px) 50vw, 380px" alt="Design system documentation: component guidance, table header variants, filter popovers and token tables" loading="lazy" decoding="async">
             </div>
             <div class="cs-body">
-              <span class="cs-type">Design systems · 5 months</span>
+              <div class="cs-meta"><span class="kind">Design systems</span><span>5 months</span></div>
               <h3><a href="https://mehersportfolio.framer.website/cmgexdesignsystem">Employee Experience Design System</a></h3>
-              <dl>
-                <div><dt>Problem</dt><dd>Inconsistent components and accessibility gaps across internal tools slowed design and dev.</dd></div>
-                <div><dt>My role</dt><dd>Design Systems SME and mentor, then owner of tokens and components</dd></div>
-                <div class="outcome"><dt>Outcome</dt><dd>30% fewer design-to-dev clarification cycles</dd></div>
-              </dl>
-              <span class="more" aria-hidden="true">Read case study →</span>
+              <dl class="facts"><div><dt>Problem</dt><dd>Inconsistent components and accessibility gaps across internal tools slowed design and dev.</dd></div><div><dt>My role</dt><dd>Design Systems SME and mentor, then owner of tokens and components</dd></div></dl>
+              <div class="impact"><b>30%</b><span>fewer design-to-dev clarification cycles</span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
           </li>
 
-          <li class="cs">
+          <li class="cs rv" style="--c:#9fd8bd">
             <div class="thumb">
-              <img src="https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=512 512w, https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=1024 1024w" sizes="(max-width: 640px) 100vw, (max-width: 1000px) 50vw, 360px" alt="CMG Connect realtor app on two phones showing the Loans list and a loan detail with tasks" loading="lazy" decoding="async">
+              <img src="https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=512 512w, https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=1024 1024w" sizes="(max-width: 680px) 100vw, (max-width: 1040px) 50vw, 380px" alt="CMG Connect realtor app on two phones showing the Loans list and a loan detail with tasks" loading="lazy" decoding="async">
             </div>
             <div class="cs-body">
-              <span class="cs-type">UX research · 2 months</span>
+              <div class="cs-meta"><span class="kind">UX research</span><span>2 months</span></div>
               <h3><a href="https://mehersportfolio.framer.website/cmgconnect">CMG Connect: Realtor App</a></h3>
-              <dl>
-                <div><dt>Problem</dt><dd>A new in-house realtor app risked confusing users before launch.</dd></div>
-                <div><dt>My role</dt><dd>Research lead: test plan, prototypes, sessions, synthesis</dd></div>
-                <div class="outcome"><dt>Outcome</dt><dd>Found 60%+ failure points in navigation and terminology, then redesigned them</dd></div>
-              </dl>
-              <span class="more" aria-hidden="true">Read case study →</span>
+              <dl class="facts"><div><dt>Problem</dt><dd>A new in-house realtor app risked confusing users before launch.</dd></div><div><dt>My role</dt><dd>Research lead: test plan, prototypes, sessions, synthesis</dd></div></dl>
+              <div class="impact"><b>60%+</b><span>failure points found in navigation and terminology, then redesigned</span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="2" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
             </div>
           </li>
         </ul>
       </div>
     </section>
 
-    <!-- Short, human, and keyword-rich for recruiters scanning for fit -->
-    <section class="section" id="about">
-      <div class="wrap about">
-        <div>
-          <h2>About</h2>
-          <p>I'm a UX/UI designer at CMG Financial, where I'm the company-wide Subject Matter Expert for design systems. I like the hard parts of enterprise software: dense data, regulated workflows, and many teams shipping into the same product.</p>
-          <p>I design features end to end and partner closely with engineering on the component library, PrimeNG performance and accessibility compliance. My work has made employee tasks 18–25% faster, cut user errors by 12% and raised feature adoption by 15%.</p>
-          <p>I came to design from psychology (B.S., Virginia Commonwealth University), earned the Google UX Design certificate, and I'm completing a Master's in Human-Computer Interaction at Drexel University.</p>
+    <dialog class="qv" id="qv" aria-labelledby="qvTitle">
+      <div class="qv-head" id="qvHead">
+        <div class="cs-meta"><span class="kind" id="qvKind"></span><span id="qvTime"></span></div>
+        <h2 id="qvTitle"></h2>
+        <button type="button" class="qv-x" id="qvClose" aria-label="Close quick look">×</button>
+      </div>
+      <div class="qv-body">
+        <dl class="qv-facts" id="qvFacts"></dl>
+        <div class="qv-sec"><h3>The problem</h3><p id="qvProblem"></p></div>
+        <div class="qv-sec"><h3>What I did</h3><ul id="qvDid"></ul></div>
+        <div class="qv-sec"><h3>Outcome</h3><div class="qv-metrics" id="qvMetrics"></div></div>
+      </div>
+      <div class="qv-foot">
+        <div class="qv-nav">
+          <button type="button" id="qvPrev" aria-label="Previous case study">← <span>Previous</span></button>
+          <button type="button" id="qvNext" aria-label="Next case study"><span>Next</span> →</button>
         </div>
-        <div class="skills">
-          <h3>Design systems</h3>
-          <ul><li>Token architecture</li><li>Component libraries</li><li>Atomic design</li><li>Documentation</li><li>WCAG accessibility</li><li>Developer collaboration</li></ul>
-          <h3>Product design</h3>
-          <ul><li>End-to-end UX/UI</li><li>Information architecture</li><li>Complex data workflows</li><li>AI products</li><li>Stakeholder communication</li></ul>
-          <h3>Research &amp; tools</h3>
-          <ul><li>Usability testing</li><li>Prototyping</li><li>Figma</li><li>Userlytics</li><li>PrimeNG</li></ul>
+        <a class="qv-cta" id="qvLink" href="#">Read full case study →</a>
+      </div>
+    </dialog>
+
+    <!-- ═════════ ABOUT ═════════ -->
+    <section class="about-sec" id="about">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <h2>About <em>me</em></h2>
+        </div>
+        <div class="about">
+          <div class="rv">
+            <p>I'm a UX/UI designer at CMG Financial, where I'm the company-wide Subject Matter Expert for design systems. I like the hard parts of enterprise software: dense data, regulated workflows, and many teams shipping into the same product.</p>
+            <p>I design features end to end and partner closely with engineering on the component library, PrimeNG performance and accessibility compliance. My work has made employee tasks 18–25% faster, cut user errors by 12% and raised feature adoption by 15%.</p>
+            <p>I came to design from psychology, which still shapes how I research and design for people.</p>
+            <ul class="edu">
+              <li><b>M.S. Human-Computer Interaction</b><span>Drexel University · 2024–present</span></li>
+              <li><b>Google UX Design Certificate</b><span>2022</span></li>
+              <li><b>B.S. Psychology, minor in Chemistry</b><span>Virginia Commonwealth University · 2021</span></li>
+            </ul>
+          </div>
+          <div class="skills rv">
+            <h3>Design systems</h3>
+            <ul><li>Token architecture</li><li>Component libraries</li><li>Atomic design</li><li>Documentation</li><li>WCAG accessibility</li><li>Developer collaboration</li></ul>
+            <h3>Product design</h3>
+            <ul><li>End-to-end UX/UI</li><li>Information architecture</li><li>Complex data workflows</li><li>AI products</li><li>Stakeholder communication</li></ul>
+            <h3>Research &amp; tools</h3>
+            <ul><li>Usability testing</li><li>Prototyping</li><li>Figma</li><li>Userlytics</li><li>PrimeNG</li></ul>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- ═════════ CONTACT ═════════ -->
     <section class="contact" id="contact">
       <div class="wrap">
-        <h2>Hiring for product design or design systems?</h2>
+        <div class="label">Hiring for product design or design systems?</div>
+        <h2>Let's talk<span>.</span></h2>
         <p>I'd be glad to talk about the role and walk you through my work.</p>
-        <div class="actions">
-          <a class="btn primary" href="mailto:mehkohli@gmail.com">mehkohli@gmail.com</a>
-          <a class="btn" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
+        <div class="btns">
+          <a class="btn y" href="mailto:mehkohli@gmail.com">✉ mehkohli@gmail.com</a>
+          <a class="btn o" href="https://www.linkedin.com/in/meher--kohli/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn o" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé ↗</a>
         </div>
-        <div class="foot"><span>© 2026 Meher Kohli</span><a href="#top">Back to top</a></div>
+        <div class="foot"><span>© 2026 Meher Kohli</span><a href="#top">Back to top ↑</a></div>
       </div>
     </section>
   </main>
 
   <script>
-    // Hairline under the header once the page scrolls
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Hero parallax on floating system objects
     (function () {
-      var h = document.querySelector('.top');
-      function f() { h.classList.toggle('scrolled', window.scrollY > 8); }
-      addEventListener('scroll', f, { passive: true }); f();
+      var hero = document.querySelector('.hero'), items = document.querySelectorAll('.floaty');
+      if (reduce || !matchMedia('(pointer: fine)').matches) return;
+      hero.addEventListener('mousemove', function (e) {
+        var r = hero.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        items.forEach(function (el) { var d = +el.dataset.depth; el.style.transform = 'translate(' + (x * d) + 'px,' + (y * d) + 'px)'; });
+      });
+    })();
+
+    // Sparkles on tap for touch screens (hover doesn't exist there)
+    (function () {
+      var hero = document.querySelector('.hero'), t;
+      if (reduce || matchMedia('(hover: hover)').matches) return;
+      hero.addEventListener('pointerdown', function () { hero.classList.add('sparkle'); clearTimeout(t); t = setTimeout(function () { hero.classList.remove('sparkle'); }, 2400); });
+    })();
+
+    // Scroll reveal + count-up
+    (function () {
+      var els = document.querySelectorAll('.rv');
+      if (reduce || !('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          en.target.classList.add('in'); io.unobserve(en.target);
+          var n = en.target.querySelector('[data-count]');
+          if (n) {
+            var end = +n.dataset.count, suf = n.dataset.suffix, t0 = performance.now();
+            (function tick(t) { var p = Math.min((t - t0) / 1200, 1); n.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))) + suf; if (p < 1) requestAnimationFrame(tick); })(t0);
+          }
+        });
+      }, { threshold: .15 });
+      els.forEach(function (e) { io.observe(e); });
+    })();
+
+    // Case study quick look
+    (function () {
+      var C = [
+        { kind: 'Product design', time: '4 weeks · Tech100 winner 2024', title: 'Servicing Loans Pipeline', v: 'v-rose',
+          url: 'https://mehersportfolio.framer.website/cmgservicingloans',
+          facts: [['Role', 'Lead product designer, end-to-end'], ['Team', 'Product, BAs, servicing SMEs, engineering'], ['Platform', 'Clear 2.0 CRM · web']],
+          problem: 'In a slow origination market, loan officers were losing commission. Refinance and MI-reduction opportunities were hidden across fragmented systems and manual servicing tasks.',
+          did: ['Used business analysts as domain proxies when direct access to users wasn\'t possible', 'Designed a sortable pipeline, a slide-in detail panel and a guided scenario flow', 'Defined the MVP and reused the existing design system to ship in four weeks', 'Bridged servicing and origination: copy a scenario into a new loan application'],
+          metrics: [['80%+', 'faster to identify a refinance opportunity'], ['15–20%', 'estimated revenue retained or gained'], ['Tech100', 'HousingWire award 2024, shown in a live demo']] },
+        { kind: 'Design systems', time: '5 months · ongoing', title: 'Employee Experience Design System', v: 'v-butter',
+          url: 'https://mehersportfolio.framer.website/cmgexdesignsystem',
+          facts: [['Role', 'Design Systems SME and mentor, then owner'], ['Team', 'Lead designer, engineering'], ['Platform', 'Internal tools · PrimeNG']],
+          problem: 'Employee products had inconsistent components, ad-hoc styling and accessibility gaps. Developer handoffs needed repeated clarification, Figma files were bloated, and onboarding a designer took 5+ days.',
+          did: ['Audited PrimeNG component usage across internal tools with developers', 'Set typography, spacing and color rules and a scalable token architecture', 'Built WCAG contrast, focus, ARIA and keyboard support into every component', 'Mentored the lead designer, then took ownership and finished the token and component builds'],
+          metrics: [['30%', 'fewer design-to-dev clarification cycles'], ['~20%', 'smaller Figma files'], ['5+ days', 'of onboarding replaced by documented components']] },
+        { kind: 'UX research', time: '2 months · Jan 2024 testing', title: 'CMG Connect: Realtor App', v: 'v-blush',
+          url: 'https://mehersportfolio.framer.website/cmgconnect',
+          facts: [['Role', 'UX research lead, prototyping'], ['Participants', 'US realtors, ages 26–64'], ['Method', 'Moderated + unmoderated (Userlytics)']],
+          problem: 'Realtors relied on an inefficient third-party app. The in-house replacement risked onboarding drop-off, confusion between leads and loans, and low trust if it didn\'t match how realtors think.',
+          did: ['Mapped end-to-end flows for onboarding, invites, loan tracking and document upload', 'Built interactive mid-fidelity prototypes focused on IA and navigation', 'Ran moderated and unmoderated tests and tracked success at each step', 'Recommended merging leads and loans into one Customers view, clearer upload actions and toast guidance'],
+          metrics: [['<10 min', 'from profile setup to first client invite'], ['60%+', 'task failure found in navigation and terminology'], ['~30%', 'projected cut in support and training time']] }
+      ];
+      var dlg = document.getElementById('qv'), cur = 0, opener = null;
+      function $(id) { return document.getElementById(id); }
+      function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+      function fill(i) {
+        cur = (i + C.length) % C.length; var c = C[cur];
+        $('qvHead').className = 'qv-head ' + c.v;
+        $('qvKind').textContent = c.kind; $('qvTime').textContent = c.time; $('qvTitle').textContent = c.title;
+        $('qvFacts').innerHTML = c.facts.map(function (f) { return '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
+        $('qvProblem').textContent = c.problem;
+        $('qvDid').innerHTML = c.did.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('');
+        $('qvMetrics').innerHTML = c.metrics.map(function (m) { return '<div><b>' + esc(m[0]) + '</b><span>' + esc(m[1]) + '</span></div>'; }).join('');
+        $('qvLink').href = c.url;
+        $('qvPrev').querySelector('span').textContent = C[(cur + C.length - 1) % C.length].title.split(':')[0];
+        $('qvNext').querySelector('span').textContent = C[(cur + 1) % C.length].title.split(':')[0];
+        dlg.scrollTop = 0;
+      }
+      document.querySelectorAll('.ql').forEach(function (b) {
+        b.addEventListener('click', function () { opener = b; fill(+b.dataset.case); dlg.showModal(); $('qvClose').focus(); });
+      });
+      $('qvClose').addEventListener('click', function () { dlg.close(); });
+      $('qvPrev').addEventListener('click', function () { fill(cur - 1); });
+      $('qvNext').addEventListener('click', function () { fill(cur + 1); });
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') fill(cur + 1); if (e.key === 'ArrowLeft') fill(cur - 1); });
+      dlg.addEventListener('close', function () { if (opener) opener.focus(); });
     })();
   </script>
 </body>
