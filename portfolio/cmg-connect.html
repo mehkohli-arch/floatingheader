@@ -277,15 +277,14 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 
   <nav class="nav" aria-label="Primary">
     <a class="sig" href="index.html" aria-label="Meher Kohli, home">M.</a>
-    <a href="index.html#work">Work</a>
-    <a href="index.html#about">About</a>
+    <a href="index.html">Home</a>
     <a href="#contact">Contact</a>
     <a class="cta" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
   </nav>
 
   <header class="c-hero butter">
     <div class="wrap">
-      <a class="back" href="index.html#work">← All case studies</a>
+      <a class="back" href="index.html">← Home</a>
       <span class="kind label">Case study 04 · UX research</span>
       <h1>CMG Connect: Realtor App</h1>
       <p class="summary">Testing a new app for real estate agents before launch, and finding where people got stuck so the team could fix it early.</p>
@@ -401,12 +400,17 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 (function () {
   var root = document.documentElement;
   var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
-  function settle() {
-    if (nav.type === 'back_forward' || !location.hash) return;
+  function settle(first) {
+    if (nav.type === 'back_forward') return;
+    if (!location.hash) {
+      // A new page always opens at its top, even when it's shown inside another page's frame.
+      if (first) { scrollTo(0, 0); try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {} }
+      return;
+    }
     var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
     if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
   }
-  settle();
+  settle(true);
   addEventListener('load', function () {
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
       settle();
