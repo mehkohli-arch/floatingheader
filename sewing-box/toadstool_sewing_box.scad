@@ -1,36 +1,39 @@
 // =====================================================================
-//  "Loaf Cat" Sewing Box  — parametric, 3D-printable
-//  ~330 W x 240 D x 290 H mm body (13" x 9.5" x 11.4"), ~355 mm to ear tips
-//  Two stacks of lift-out trays with snap-on lids hang inside the top
-//  of the box; the deep bin underneath holds fabric, scissors, projects.
+//  Toadstool Sewing Box  — parametric, 3D-printable
+//  Stem body ~330 W x 240 D x 290 H mm (13" x 9.5" x 11.4"); the spotted
+//  cap lid brings it to ~370 mm tall.
+//  Two stacks of lift-out trays with snap-on lids hang inside the top of
+//  the stem; the deep bin underneath holds fabric, scissors, projects.
 //
 //  Render one printable part at a time:
-//     openscad -D 'part="body_lower_left"' -o out.stl cat_sewing_box.scad
+//     openscad -D 'part="body_lower_left"' -o out.stl toadstool_sewing_box.scad
 //  part = "assembly" | "exploded"
 //       | "body_lower_left" | "body_lower_right"
 //       | "body_upper_left" | "body_upper_right"
-//       | "lid_left" | "lid_right" | "ear_left" | "ear_right"
+//       | "cap_front_left" | "cap_front_right" | "cap_back_left" | "cap_back_right"
 //       | "tray_deep_grid" | "tray_deep_split"
 //       | "tray_shallow_grid" | "tray_shallow_long" | "tray_lid"
 // =====================================================================
 
 part = "assembly";
 
-/* ---------- main box ---------- */
+/* ---------- stem (main box) ---------- */
 W      = 330;    // outside width  (x)
 D      = 240;    // outside front-to-back (y)
-H      = 290;    // body height (z), without lid
+H      = 290;    // body height (z), without cap
 R      = 40;     // corner radius (plan view)
 WALL   = 4;      // wall thickness
 FLOOR  = 4;      // floor thickness
-TIER   = 165;    // body is printed in a lower and upper tier, split here (hidden by the collar)
+TIER   = 165;    // body is printed in a lower and upper tier, split here (hidden by the ring)
 SLEEVE = 8;      // how far the joining sleeve reaches into each tier
 
-/* ---------- lid ---------- */
-LID_T   = 6;     // lid plate thickness
-LIP_H   = 8;     // locating lip that drops into the box
-LIP_T   = 2.4;
-LID_CLR = 0.3;
+/* ---------- cap (lid) ---------- */
+CAP_OVER = 18;   // how far the cap overhangs the stem (cap prints in 4 quarters)
+CAP_H    = 95;   // dome height
+CAP_P    = 2.3;  // dome "squareness" (2 = ellipse, higher = flatter top)
+LIP_H    = 6;    // rim on top of the stem that keys into a groove under the cap
+LIP_T    = 2;    // (it is the inner part of the stem wall, so no space is lost)
+LID_CLR  = 0.3;
 
 /* ---------- trays ---------- */
 TW     = 153;    // tray body width  (x)
@@ -66,10 +69,9 @@ PIN_L   = 6;     // depth each side -> cut 11 mm filament pieces
 $fn = 64;
 
 // ------------- derived stack heights -------------
-// lower tray lug rests on the ledge; everything above it is computed so the
-// upper tray lid clears the main-lid lip by 2 mm.
+// the lower tray's lugs rest on the ledge; the upper tray lid ends 2 mm below the cap
 STACK_ABOVE_LEDGE = (LUG_TOP + LUG_T) + TL_PLATE + H_SHALLOW + TL_PLATE;
-ZL = H - LIP_H - 2 - STACK_ABOVE_LEDGE;           // ledge top height
+ZL = H - 2 - STACK_ABOVE_LEDGE;                    // ledge top height
 Z_DEEP    = ZL - (H_DEEP - LUG_TOP - LUG_T);       // bottom of deep tray
 Z_SHALLOW = Z_DEEP + H_DEEP + TL_PLATE;           // bottom of shallow tray
 echo(str("Ledge top at z=", ZL, "  bin depth under trays=", Z_DEEP - FLOOR));
@@ -87,73 +89,58 @@ module slice(z) translate([0,0,z]) linear_extrude(0.01) children();
 // =====================================================================
 //  Cute details (2D, drawn in the plane of the wall they sit on)
 // =====================================================================
-module eye2d() {
-    difference() {
-        scale([15, 19]) circle(1);
-        translate([-5, 7]) circle(5.5);        // sparkle
-        translate([ 5.5, -7]) circle(2.5);
-    }
+module eye2d() difference() {
+    scale([15, 19]) circle(1);
+    translate([-5, 7]) circle(5.5);          // sparkle
+    translate([5.5, -7]) circle(2.5);
 }
-module nose2d() hull() { translate([-11, 6]) circle(4); translate([11, 6]) circle(4); translate([0,-6]) circle(4); }
 module arc2d(r, t, a0, a1)
     for (a = [a0:6:a1-6]) hull() {
         translate(r*[cos(a), sin(a)]) circle(t/2, $fn=16);
         translate(r*[cos(a+6), sin(a+6)]) circle(t/2, $fn=16);
     }
-module mouth2d() {
-    translate([-9, 0]) arc2d(9, 3.2, 200, 360);
-    translate([ 9, 0]) arc2d(9, 3.2, 180, 340);
-}
-module stroke2d(p, q, t) hull() { translate(p) circle(t/2, $fn=16); translate(q) circle(t/2, $fn=16); }
-module whiskers2d(s) {
-    stroke2d([s*86, 222], [s*121, 230], 3);
-    stroke2d([s*86, 213], [s*122, 213], 3);
-    stroke2d([s*86, 204], [s*121, 196], 3);
-}
-module paw2d() {
-    hull() { translate([-12, 12]) circle(10); translate([12, 12]) circle(10); translate([0, 6]) circle(12); }
-    for (x = [-15, 0, 15]) translate([x, 32 + (x == 0 ? 4 : 0)]) circle(6.5);
-}
-module tail2d() {
-    // (y, z) on the right-hand side wall; tapers from base to tip
-    pts = [[45, 8, 13], [67, 30, 12.5], [71, 58, 12], [55, 84, 11], [27, 96, 10],
-           [3, 92, 9], [-9, 76, 8], [1, 62, 7.5]];
-    for (i = [0:len(pts)-2]) hull() {
-        translate([pts[i][0], pts[i][1]]) circle(pts[i][2]/2);
-        translate([pts[i+1][0], pts[i+1][1]]) circle(pts[i+1][2]/2);
+module smile2d() arc2d(14, 3.6, 200, 340);
+module blade2d(x, lean, h) hull() { translate([x - 4, 0]) square([8, 1]); translate([x + lean, h]) circle(1.6, $fn=16); }
+module grass2d() { blade2d(-9, -10, 24); blade2d(0, 2, 34); blade2d(9, 11, 26); }
+module baby_shroom2d(spots=true) {
+    translate([-8, 0]) square([16, 34]);                      // stem
+    translate([0, 30]) difference() {                        // cap
+        scale([28, 20]) circle(1);
+        translate([-40, -40]) square([80, 40]);
+        if (spots) { translate([-11, 8]) circle(4); translate([6, 12]) circle(3.2); translate([16, 4]) circle(2.6); }
     }
 }
 
 // emboss a 2D (x,z) shape outward from the front face
 module on_front(depth) translate([0, -D/2 + 0.01, 0]) rotate([90, 0, 0]) linear_extrude(depth) children();
-// emboss a 2D (y,z) shape outward from the right side face
+// emboss a 2D (y,z) shape outward from the right / left side faces
 module on_right(depth) translate([W/2 - 0.01, 0, 0]) rotate([90, 0, 90]) linear_extrude(depth) children();
+module on_left(depth)  translate([-W/2 + 0.01, 0, 0]) rotate([90, 0, -90]) linear_extrude(depth) children();
 
-module face() {
+module details() {
+    // face just under the cap
     for (s = [-1, 1]) {
-        on_front(1.8) translate([s*56, 240]) eye2d();
-        on_front(1.6) whiskers2d(s);
-        on_front(0.8) translate([s*70, 206]) scale([1.6, 1]) circle(10);     // blush
-        on_front(2.2) translate([s*50, 0]) paw2d();
+        on_front(1.8) translate([s*48, 246]) eye2d();
+        on_front(0.8) translate([s*80, 222]) scale([1.6, 1]) circle(11);      // blush
     }
-    on_front(2.0) translate([0, 222]) nose2d();
-    on_front(1.6) translate([0, 209]) mouth2d();
-    // bell hanging from the collar
-    on_front(3.0) translate([0, TIER - COLLAR - 13]) difference() {
-        union() { circle(13); translate([0, 12]) circle(4); }
-        translate([-8, -1.2]) square([16, 2.4]);
-        translate([0, -6]) circle(2.5);
-    }
+    on_front(1.6) translate([0, 238]) smile2d();
+    // grass tufts along the base
+    for (g = [[-95, 1], [-70, 0.8], [60, 0.9], [100, 1.1]]) on_front(2.0) translate([g[0], 0]) scale(g[1]) grass2d();
+    // a baby toadstool on each side
+    on_right(2.2) translate([20, 0]) baby_shroom2d();
+    on_right(2.0) translate([-30, 0]) scale(0.8) grass2d();
+    on_left(2.2)  translate([-15, 0]) scale(0.8) baby_shroom2d();
+    on_left(2.0)  translate([30, 0]) grass2d();
 }
 
 // =====================================================================
-//  Body
+//  Stem (body)
 // =====================================================================
-COLLAR = 14;       // collar band height (its top edge = tier seam)
-COLLAR_T = 2.5;
-module collar() {
-    hull() { slice(TIER - COLLAR) outline(-0.5); slice(TIER - COLLAR + COLLAR_T) outline(COLLAR_T); }
-    prism(TIER - COLLAR + COLLAR_T, TIER - 0.05) outline(COLLAR_T);
+RING   = 16;       // mushroom "ring" band height (its top edge = tier seam)
+RING_T = 3;
+module ring() {
+    hull() { slice(TIER - RING) outline(-0.5); slice(TIER - RING + RING_T) outline(RING_T); }
+    prism(TIER - RING + RING_T, TIER - 0.05) outline(RING_T);
 }
 
 module ledge() {
@@ -166,24 +153,23 @@ module ledge() {
     }
 }
 
-module body_full(details=true) {
-    if (details) body_details();
+module body_full(with_details=true) {
+    if (with_details) body_details();
     difference() {
         prism(0, H) outline();
         prism(FLOOR, H + 1) outline(-WALL);
     }
+    // key rim on top (inner 2 mm of the wall, sticks up into the cap groove)
+    difference() { prism(H - 0.01, H + LIP_H) outline(-WALL + LIP_T); prism(H - 1, H + LIP_H + 1) outline(-WALL); }
     ledge();
-    collar();
+    ring();
 }
-module body_details() {
-    intersection() { face(); translate([-W, -D, 0]) cube([2*W, 2*D, H]); }
-    on_right(2.2) tail2d();
-}
+module body_details() intersection() { details(); translate([-W, -D, 0]) cube([2*W, 2*D, H]); }
 
 module sleeve(x_side) intersection() {
     union() {
-        difference() { prism(TIER - SLEEVE, TIER)          outline(-WALL + 0.01); prism(TIER - SLEEVE - 1, TIER + 1)          outline(-WALL - 2); }
-        difference() { prism(TIER - 0.01, TIER + SLEEVE - 0.5) outline(-WALL - 0.25); prism(TIER - 1, TIER + SLEEVE + 1)  outline(-WALL - 2); }
+        difference() { prism(TIER - SLEEVE, TIER)              outline(-WALL + 0.01); prism(TIER - SLEEVE - 1, TIER + 1)   outline(-WALL - 2); }
+        difference() { prism(TIER - 0.01, TIER + SLEEVE - 0.5) outline(-WALL - 0.25); prism(TIER - 1, TIER + SLEEVE + 1)   outline(-WALL - 2); }
     }
     half_box(x_side, -1, H + 10);
 }
@@ -196,7 +182,7 @@ module pin_holes(pts_yz) for (p = pts_yz)
 FRONT_Y = -(D/2 - WALL/2);
 module body_piece(x_side, tier) {
     z0 = tier == 0 ? -1 : TIER;
-    z1 = tier == 0 ? TIER : H + 10;
+    z1 = tier == 0 ? TIER : H + LIP_H + 10;
     zs = tier == 0 ? [20, 60, 100, 140] : [TIER + 20, TIER + 55, TIER + 100, H - 12];
     difference() {
         union() {
@@ -211,42 +197,54 @@ module body_piece(x_side, tier) {
 }
 
 // =====================================================================
-//  Main lid (with ears)
+//  Cap (lid): solid spotted dome, prints right-side up with no supports
 // =====================================================================
-EAR_X  = 100;
-EAR_T  = 12;
-EAR_Y0 = -D/2 + 12;                 // front face of ear
-PEG    = 5.6;
-PEG_X  = [-24, 24];
+CAP_STEPS = 16;
+function cap_s(t) = pow(1 - pow(t, CAP_P), 1/CAP_P);    // plan scale at height fraction t
 
-module ear2d(s) hull() {
-    translate([-48, 0]) square([96, 1]);
-    translate([s*12, 66]) circle(10);
-}
-module ear(s) {
-    // modelled in place: base at z = 0, front face at y = 0, thickness along +y
-    difference() {
-        translate([0, EAR_T, 0]) rotate([90, 0, 0]) linear_extrude(EAR_T) ear2d(s);
-        translate([0, -0.01, 0]) rotate([-90, 0, 0]) mirror([0,1,0])
-            linear_extrude(1.6) offset(-10) ear2d(s);                           // inner-ear recess
-    }
-    for (x = PEG_X) translate([x - PEG/2, EAR_T - PEG, -3.8]) cube([PEG, PEG, 3.81]);
-}
-module ear_sockets() for (s = [-1, 1], x = PEG_X)
-    translate([s*EAR_X + x - (PEG + 0.4)/2, EAR_Y0 + EAR_T - PEG - 0.2, H + LID_T - 4.2]) cube([PEG + 0.4, PEG + 0.4, 5]);
-
-module lid_full() {
-    difference() {
-        union() {
-            hull() { prism(H, H + LID_T - 2) outline(); slice(H + LID_T - 0.01) outline(-2); }
-            difference() { prism(H - LIP_H, H + 0.01) outline(-WALL - LID_CLR); prism(H - LIP_H - 1, H + 1) outline(-WALL - LID_CLR - LIP_T); }
-        }
-        ear_sockets();
+module dome(grow=0) hull() {
+    slice(H) outline(CAP_OVER - 2);                          // small bevel underneath
+    for (k = [0:CAP_STEPS]) {
+        t = min(k / CAP_STEPS, 0.995);
+        s = cap_s(t);
+        sx = s * (W/2 + CAP_OVER + grow) / (W/2 + CAP_OVER);
+        sy = s * (D/2 + CAP_OVER + grow) / (D/2 + CAP_OVER);
+        translate([0, 0, H + 2 + t*(CAP_H - 2 + grow)]) linear_extrude(0.01) scale([sx, sy]) outline(CAP_OVER);
     }
 }
-module lid_piece(x_side) difference() {
-    intersection() { lid_full(); half_box(x_side, H - LIP_H - 1, H + LID_T + 1); }
-    pin_holes([for (y = [-90, -35, 35, 90]) [y, H + 3]]);
+
+// spots: [x, y, radius] in plan view; they are raised 1.6 mm and follow the dome
+SPOTS = [[0, 5, 30], [-100, -40, 22], [105, -30, 24], [-75, 75, 17], [80, 78, 19],
+         [-30, -100, 16], [45, -112, 13], [-140, 30, 15], [150, 40, 14],
+         [-160, -95, 11], [160, -95, 12], [10, 112, 12]];
+SPOT_C = [0, 0, H - 80];          // spots are projected out from this point
+function spot_z(x, y) = let(rho = max(abs(x) / (W/2 + CAP_OVER), abs(y) / (D/2 + CAP_OVER)))
+                        H + 2 + (CAP_H - 2) * pow(1 - pow(min(rho, 0.99), CAP_P), 1/CAP_P);
+module spot_rays() for (sp = SPOTS) {
+    v = [sp[0], sp[1], spot_z(sp[0], sp[1])] - SPOT_C;
+    translate(SPOT_C) rotate([0, acos(v[2]/norm(v)), atan2(v[1], v[0])])
+        cylinder(r=sp[2], h=norm(v) + 40);
+}
+module spots() intersection() { dome(1.6); spot_rays(); }
+
+module cap_groove() difference() {
+    prism(H - 1, H + LIP_H + 0.5) outline(-WALL + LIP_T + LID_CLR);
+    prism(H - 2, H + LIP_H + 2) outline(-WALL - LID_CLR);
+}
+module cap_full(with_spots=true) difference() {
+    union() { dome(); if (with_spots) spots(); }
+    cap_groove();
+}
+module quarter_box(x_side, y_side)
+    translate([x_side < 0 ? -W : 0, y_side < 0 ? -D : 0, H - 1]) cube([W, D, CAP_H + 20]);
+module pin_holes_y(pts_xz) for (p = pts_xz)
+    translate([p[0], 0, p[1]]) rotate([90, 0, 0]) cylinder(d=PIN_D, h=2*PIN_L, center=true, $fn=16);
+module cap_piece(x_side, y_side) difference() {
+    intersection() { cap_full(); quarter_box(x_side, y_side); }
+    pin_holes([for (y = [-115, -60, -20, 20, 60, 115]) [y, H + 12]]);
+    pin_holes([for (y = [-70, -25, 25, 70]) [y, H + 45]]);
+    pin_holes_y([for (x = [-160, -110, -60, -20, 20, 60, 110, 160]) [x, H + 12]]);
+    pin_holes_y([for (x = [-110, -50, 50, 110]) [x, H + 45]]);
 }
 
 // =====================================================================
@@ -278,34 +276,26 @@ module tray(h, nx, ny) {
     dividers(h, nx, ny);
 }
 
-module button2d() difference() {
-    circle(17);
-    circle(14.5);
-}
 module tray_lid(h=0) {   // modelled in place on a tray of height h
     difference() {
         union() {
             prism(h, h + TL_PLATE) t_outline(SK_IN + SK_T);
             prism(h - SK_DEPTH, h) t_outline(SK_IN + SK_T);
-            // pry tab over one lug
-            translate([-10, TD/2, h - SK_DEPTH]) cube([20, 8, 2]);
+            translate([-10, TD/2, h - SK_DEPTH]) cube([20, 8, 2]);       // pry tab over one lug
         }
         prism(h - 5.6, h + 0.01) t_outline(SK_IN);
         hull() { slice(h - SK_DEPTH - 0.01) t_outline(SK_IN); slice(h - SK_DEPTH + 0.55) t_outline(CATCH); }
         hull() { slice(h - SK_DEPTH + 0.55) t_outline(CATCH); slice(h - SK_DEPTH + 0.85) t_outline(CATCH); }
         hull() { slice(h - SK_DEPTH + 0.85) t_outline(CATCH); slice(h - 5.6 + 0.01) t_outline(SK_IN); }
-        // debossed sewing-button motif
-        translate([0, 0, h + TL_PLATE - 0.8]) linear_extrude(1) {
-            button2d();
-            for (a = [45:90:315]) rotate(a) translate([5, 0]) circle(2.6);
-        }
+        // debossed little toadstool on top
+        translate([0, 0, h + TL_PLATE - 0.8]) linear_extrude(1) translate([0, -20]) baby_shroom2d(false);
     }
 }
 
 // =====================================================================
 //  Assembly / part selection
 // =====================================================================
-C_BODY = "#f2c9a0"; C_FACE = "#5a3b2e"; C_LID = "#f2c9a0"; C_EAR = "#f2c9a0";
+C_STEM = "#f6ecd8"; C_DETAIL = "#6b4a3a"; C_CAP = "#d9453b"; C_SPOT = "#fffaf0";
 C_TRAY = ["#f4a7b9", "#a7d8f4", "#c9e6a1", "#fde59a"];
 
 module tray_set(explode=0) {
@@ -320,31 +310,20 @@ module tray_set(explode=0) {
         }
     }
 }
-module whole_lid() {
-    color(C_LID) lid_full();
-    for (s = [-1, 1]) color(C_EAR) translate([s*EAR_X, EAR_Y0, H + LID_T]) ear(s);
-}
+module whole_cap() { color(C_CAP) cap_full(false); color(C_SPOT) difference() { spots(); cap_groove(); } }
+module whole_body() { color(C_STEM) body_full(false); color(C_DETAIL) body_details(); }
 
-if (part == "assembly") {
-    color(C_BODY) body_full(false); color(C_FACE) body_details();
-    tray_set();
-    whole_lid();
-}
-else if (part == "exploded") {
-    color(C_BODY) body_full(false); color(C_FACE) body_details();
-    tray_set(80);
-    translate([0, 0, 260]) whole_lid();
-}
+if (part == "assembly") { whole_body(); tray_set(); whole_cap(); }
+else if (part == "exploded") { whole_body(); tray_set(80); translate([0, 0, 260]) whole_cap(); }
 else if (part == "body_lower_left")  body_piece(-1, 0);
 else if (part == "body_lower_right") body_piece( 1, 0);
 else if (part == "body_upper_left")  translate([0, 0, -TIER]) body_piece(-1, 1);
 else if (part == "body_upper_right") translate([0, 0, -TIER]) body_piece( 1, 1);
-// lid halves flipped so the top face prints on the bed
-else if (part == "lid_left")  translate([0, 0, H + LID_T]) rotate([180, 0, 0]) lid_piece(-1);
-else if (part == "lid_right") translate([0, 0, H + LID_T]) rotate([180, 0, 0]) lid_piece( 1);
-// ears print lying on their back face
-else if (part == "ear_left")  rotate([-90, 0, 0]) translate([0, -EAR_T, 0]) ear(-1);
-else if (part == "ear_right") rotate([-90, 0, 0]) translate([0, -EAR_T, 0]) ear( 1);
+// cap halves print right-side up, flat underside on the bed
+else if (part == "cap_front_left")  translate([0, 0, -H]) cap_piece(-1, -1);
+else if (part == "cap_front_right") translate([0, 0, -H]) cap_piece( 1, -1);
+else if (part == "cap_back_left")   translate([0, 0, -H]) cap_piece(-1,  1);
+else if (part == "cap_back_right")  translate([0, 0, -H]) cap_piece( 1,  1);
 else if (part == "tray_deep_grid")    tray(H_DEEP, 3, 4);
 else if (part == "tray_deep_split")   tray(H_DEEP, 1, 2);
 else if (part == "tray_shallow_grid") tray(H_SHALLOW, 2, 3);
