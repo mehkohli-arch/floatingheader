@@ -285,6 +285,26 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
   .grow td[data-label]::before { content: attr(data-label); display: block; font: 500 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
 }
 
+
+/* Case studies dropdown in the menu */
+.cm { position: relative; display: inline-flex; }
+.cm-btn { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #fff; font: 500 14px var(--f-body); padding: 9px 16px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.cm-btn:hover, .cm-btn[aria-expanded="true"] { background: rgba(255,255,255,.12); }
+.cm-caret { font-size: 11px; transition: transform .2s; }
+.cm-btn[aria-expanded="true"] .cm-caret { transform: rotate(180deg); }
+.cm-list { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%); width: 300px; margin: 0; padding: 8px; list-style: none; background: #2a0f1c; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; box-shadow: 0 18px 40px rgba(42,15,28,.35); z-index: 120; }
+.cm-list[hidden] { display: none; }
+.cm-list a { display: block; padding: 10px 12px; min-height: 44px; border-radius: 12px; color: #fff; text-decoration: none; font: 600 15px/1.3 var(--f-body); }
+.cm-list a:hover, .cm-list a:focus-visible { background: rgba(255,255,255,.1); }
+.cm-list a[aria-current="page"] { background: rgba(246,195,91,.18); }
+.cm-kind { display: block; font: 500 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: #fde7b4; margin-bottom: 2px; }
+@media (max-width: 640px) {
+  .cm-btn { min-height: 44px; padding: 0 10px; }
+  .cm { position: static; }
+  .cm-list { top: auto; bottom: calc(100% + 10px); left: 0; right: 0; width: auto; transform: none; }
+}
+@media (max-width: 374px) { .cm-btn { padding: 0 7px; font-size: 13px; } }
+
   </style>
   <style>html.wf body { opacity: 0; } @media (prefers-reduced-motion: no-preference) { body { transition: opacity .2s; } }</style>
   <script>
@@ -306,7 +326,8 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
   <nav class="nav" aria-label="Primary">
     <a class="sig" href="index.html" aria-label="Meher Kohli, home">M.</a>
     <a href="index.html">Home</a>
-    <a href="#contact">Contact</a>
+    <div class="cm"><button type="button" class="cm-btn" aria-expanded="false" aria-controls="cm-list">Case studies <span class="cm-caret" aria-hidden="true">▾</span></button><ul class="cm-list" id="cm-list" hidden><li><a href="ai-design-systems.html" aria-current="page"><span class="cm-kind">Design systems + AI</span>AI-Ready Design Systems</a></li><li><a href="design-system.html"><span class="cm-kind">Design systems</span>Employee Experience Design System</a></li><li><a href="servicing-loans.html"><span class="cm-kind">Product design</span>Servicing Loans Pipeline</a></li><li><a href="cmg-connect.html"><span class="cm-kind">UX research</span>CMG Connect: Realtor App</a></li></ul></div>
+    <a href="index.html#about">About</a>
     <a class="cta" href="https://drive.google.com/file/d/1_7QyMZPTrXjoIrbl1z8iu8Kn4wFuUsJ9/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
   </nav>
 
@@ -477,18 +498,29 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
 (function () {
   var root = document.documentElement;
   var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
-  if (nav.type === 'back_forward') { addEventListener('load', function () { root.classList.add('smooth'); }); return; }
+  // Remember where the reader was, so the Back button can return them there.
+  var key = 'scroll:' + location.pathname;
+  addEventListener('pagehide', function () { try { sessionStorage.setItem(key, String(Math.round(scrollY))); } catch (e) {} });
+  try { history.scrollRestoration = 'manual'; } catch (e) {}
+  if (nav.type === 'back_forward') {
+    var saved = 0; try { saved = +sessionStorage.getItem(key) || 0; } catch (e) {}
+    var back = function () { scrollTo(0, saved); };
+    back(); document.addEventListener('DOMContentLoaded', back);
+    addEventListener('load', function () { back(); setTimeout(back, 150); setTimeout(function () { back(); root.classList.add('smooth'); }, 400); });
+    return;
+  }
+  try { history.scrollRestoration = 'manual'; } catch (e) {}
+  // A section in the address (e.g. #about) is honored when arriving from another page, never on reload.
+  var target = null;
+  if (location.hash && nav.type !== 'reload') target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (location.hash) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
   var touched = false;
   ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) {
     addEventListener(ev, function () { touched = true; }, { passive: true, capture: true });
   });
   function top() {
     if (touched) return;
-    if (location.hash) {
-      var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-      if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
-      return;
-    }
+    if (target) { target.scrollIntoView({ block: 'start', behavior: 'instant' }); return; }
     scrollTo(0, 0);
     try { root.scrollIntoView({ block: 'start', behavior: 'instant' }); } catch (e) {}
     // Safari won't let a framed page scroll its host, but every browser scrolls a focused element into view.
@@ -505,7 +537,7 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
   // scrolls the top of the page out of view before the visitor has touched anything, bring it back.
   addEventListener('load', function () {
     var m = document.getElementById('page-top');
-    if (!m || !('IntersectionObserver' in window) || location.hash) return;
+    if (!m || !('IntersectionObserver' in window) || target) return;
     var until = Date.now() + 5000;
     var io = new IntersectionObserver(function (es) {
       if (touched || Date.now() > until) { io.disconnect(); return; }
@@ -526,6 +558,19 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
     setTimeout(top, 150);
     setTimeout(function () { top(); root.classList.add('smooth'); }, 400);
   });
+  // In-page links (menu, Back to top, citations) scroll without changing the address, so a reload starts at the top.
+  document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a[href^="#"]');
+  if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey) return;
+  var id = decodeURIComponent(a.getAttribute('href').slice(1));
+  var el = id ? document.getElementById(id) : null;
+  if (!el) return;
+  e.preventDefault();
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  el.scrollIntoView({ block: 'start', behavior: still ? 'instant' : 'smooth' });
+  if (id === 'main' || el.tabIndex < 0) { if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1'); el.focus({ preventScroll: true }); }
+});
+
 })();
 
 // Full-size image viewer: stays on the page instead of opening a new tab.
@@ -572,6 +617,17 @@ blockquote.pull footer { font: 500 14px var(--f-body); color: var(--muted); marg
     entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.remove('pre'); io.unobserve(en.target); } });
   }, { threshold: .12 });
   els.forEach(function (e) { if (e.getBoundingClientRect().top > innerHeight * .9) { e.classList.add('pre'); io.observe(e); } });
+})();
+
+
+// Case studies dropdown
+(function () {
+  var btn = document.querySelector('.cm-btn'), list = document.getElementById('cm-list');
+  if (!btn || !list) return;
+  function set(open) { btn.setAttribute('aria-expanded', open ? 'true' : 'false'); list.hidden = !open; }
+  btn.addEventListener('click', function (e) { e.stopPropagation(); set(list.hidden); if (!list.hidden) { var a = list.querySelector('a'); if (a) a.focus(); } });
+  document.addEventListener('click', function (e) { if (!list.hidden && !list.contains(e.target)) set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !list.hidden) { set(false); btn.focus(); } });
 })();
 
   </script>
