@@ -26,8 +26,9 @@
   --ease: cubic-bezier(.2,.8,.2,1);
 }
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 24px; -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 400 17px/1.65 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+html { scroll-padding-top: 24px; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html.smooth { scroll-behavior: smooth; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 17px/1.65 var(--f-body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
 a { color: inherit; }
 img { max-width: 100%; }
 :focus-visible { outline: 3px solid var(--butter-400); outline-offset: 3px; border-radius: 6px; }
@@ -171,7 +172,6 @@ img { max-width: 100%; }
 .rv { transition: opacity .7s var(--ease), transform .7s var(--ease); }
 .rv.pre { opacity: 0; transform: translateY(24px); }
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .rv.pre { opacity: 1; transform: none; }
 }
@@ -357,6 +357,24 @@ img { max-width: 100%; }
 
   <script>
 // Shared behavior for case study pages
+// Arrive at a linked section instantly (no glide on page load), correct once fonts settle,
+// never override the spot the browser restores on Back, then enable smooth scrolling for in-page taps.
+(function () {
+  var root = document.documentElement;
+  var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+  function settle() {
+    if (nav.type === 'back_forward' || !location.hash) return;
+    var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
+  }
+  settle();
+  addEventListener('load', function () {
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
+      settle();
+      requestAnimationFrame(function () { root.classList.add('smooth'); });
+    });
+  });
+})();
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
