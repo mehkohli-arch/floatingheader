@@ -149,10 +149,12 @@
     .cs { position: relative; display: flex; flex-direction: column; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-lg); overflow: hidden; transition: transform .35s var(--ease), border-color .25s, background .25s; }
     .cs:hover { transform: translateY(-4px); border-color: rgba(246,195,91,.55); background: rgba(255,255,255,.07); }
     .cs:focus-within { border-color: var(--butter-400); }
-    .thumb { position: relative; height: 230px; display: grid; place-items: center; overflow: hidden; }
-    .thumb .mock { zoom: .6; transition: transform .5s var(--ease); }
-    .cs:hover .thumb .mock { transform: scale(1.04); }
-    .thumb .flag { position: absolute; top: 14px; left: 14px; z-index: 2; }
+    /* Real product images: shown in full, never cropped or altered */
+    .thumb { height: 320px; padding: 16px; background: #fcf1f5; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .thumb img { display: block; max-width: 100%; max-height: 288px; width: auto; height: auto; transition: transform .5s var(--ease); }
+    .cs:hover .thumb img { transform: scale(1.03); }
+    @media (max-width: 680px) { .thumb { height: 380px; } .thumb img { max-height: 348px; } }
+    .award { align-self: flex-start; margin-bottom: -4px; }
     .cs-body { display: flex; flex-direction: column; gap: 14px; padding: 22px 22px 20px; flex: 1; }
     .cs-meta { display: flex; justify-content: space-between; gap: 8px; font: 500 11.5px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: rgba(255,248,243,.6); }
     .cs-meta .kind { color: var(--c); }
@@ -211,58 +213,6 @@
       .qv-metrics div { display: flex; align-items: baseline; gap: 12px; } .qv-metrics span { margin: 0; }
       .qv-nav button span { display: none; }
     }
-
-    /* mock: pipeline */
-    .browser { width: 100%; max-width: 520px; background: #fff; color: var(--ink); border-radius: 14px; box-shadow: 0 30px 60px rgba(42,15,28,.4); overflow: hidden; font-size: 11.5px; }
-    .browser .bar { display: flex; gap: 6px; padding: 10px 12px; background: #f6eef1; }
-    .browser .bar i { width: 9px; height: 9px; border-radius: 50%; background: #e2cfd6; }
-    .pipe { display: grid; grid-template-columns: 1fr 150px; min-height: 250px; }
-    .pipe table { width: 100%; border-collapse: collapse; }
-    .pipe th { text-align: left; font: 500 9.5px var(--f-mono); text-transform: uppercase; color: var(--muted); padding: 10px 10px 6px; letter-spacing: .05em; }
-    .pipe td { padding: 9px 10px; border-top: 1px solid #f1e6ea; white-space: nowrap; }
-    .pipe tr.sel td { background: var(--brand-soft); }
-    .badge { font: 600 10px var(--f-body); padding: 3px 7px; border-radius: 999px; background: #e3f4ea; color: #1e7046; }
-    .badge.mi { background: var(--butter-200); color: #7a4e00; }
-    .panel { background: var(--rose-950); color: #fff; padding: 12px; display: grid; gap: 8px; align-content: start; animation: slidein 3.5s var(--ease) infinite alternate; }
-    .panel b { font: 800 22px var(--f-head); color: var(--butter-400); }
-    .panel small { opacity: .7; font-size: 10px; }
-    .panel .cta { background: var(--butter-400); color: var(--rose-950); text-align: center; padding: 7px; border-radius: 8px; font-weight: 600; }
-    .panel .ln { height: 6px; border-radius: 4px; background: rgba(255,255,255,.15); }
-    @keyframes slidein { 0%,30% { transform: translateX(8px); opacity: .85; } 100% { transform: translateX(0); opacity: 1; } }
-    @media (max-width: 520px) { .pipe { grid-template-columns: 1fr; } .panel { display: none; } .hide-xs { display: none; } }
-
-    /* mock: design system sheet */
-    .ds-sheet { width: 100%; max-width: 500px; background: #fff; color: var(--ink); border-radius: 16px; padding: 18px; box-shadow: 0 30px 60px rgba(120,60,0,.3); display: grid; gap: 14px; }
-    .ds-sheet .label { color: var(--muted); font-size: 10px; }
-    .swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
-    .swatches i { aspect-ratio: 1; border-radius: 8px; }
-    .ds-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .b { font: 600 12px var(--f-body); padding: 9px 14px; border-radius: 9px; }
-    .b.p { background: var(--brand); color: #fff; }
-    .b.s { border: 1.5px solid var(--brand); color: var(--brand); }
-    .b.f { background: var(--brand); color: #fff; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--rose-950); }
-    .inp { flex: 1; min-width: 140px; border: 1.5px solid #e5d7dc; border-radius: 9px; padding: 9px 11px; font-size: 12px; color: var(--muted); }
-    .chk { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
-    .chk i { width: 16px; height: 16px; border-radius: 4px; background: var(--brand); color: #fff; font-style: normal; font-size: 11px; display: grid; place-items: center; }
-    .aa { display: flex; gap: 8px; }
-    .aa div { flex: 1; border-radius: 10px; padding: 10px; font: 500 11px var(--f-mono); display: flex; justify-content: space-between; align-items: center; }
-    .aa .ok { color: #1e7046; background: #e3f4ea; padding: 2px 6px; border-radius: 99px; }
-
-    /* mock: phone */
-    .phones { display: flex; gap: 18px; align-items: center; }
-    .phone { width: 210px; background: #fff; color: var(--ink); border-radius: 30px; padding: 12px; box-shadow: 0 30px 60px rgba(120,30,70,.3); border: 6px solid var(--rose-950); }
-    .phone.back { transform: rotate(-6deg) translateY(16px); width: 180px; opacity: .95; }
-    .phone .notch { width: 70px; height: 6px; border-radius: 99px; background: #eadde2; margin: 0 auto 12px; }
-    .phone h5 { font: 800 15px var(--f-head); margin: 0 0 10px; }
-    .ms { display: grid; gap: 10px; font-size: 11.5px; }
-    .ms div { display: flex; align-items: center; gap: 8px; }
-    .ms i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #e5d7dc; flex: none; font-style: normal; font-size: 10px; display: grid; place-items: center; }
-    .ms .done i { background: var(--brand); border-color: var(--brand); color: #fff; }
-    .ms .now i { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-soft); }
-    .phone .btnx { margin-top: 14px; background: var(--rose-950); color: var(--butter-200); font: 600 12px var(--f-body); text-align: center; padding: 10px; border-radius: 12px; }
-    .finding { position: absolute; font: 600 11.5px var(--f-body); background: var(--rose-950); color: #fff; padding: 8px 12px; border-radius: 12px; box-shadow: 0 12px 30px rgba(42,15,28,.3); }
-    .finding::before { content: "●"; color: var(--butter-400); margin-right: 6px; }
-    @media (max-width: 520px) { .phone.back { display: none; } .finding { display: none; } }
 
     /* ═════════ Systems lab ═════════ */
     .systems { padding: 140px 0; background: var(--cream); }
@@ -433,32 +383,12 @@
 
         <ul class="cases">
           <li class="cs rv" style="--c:#F6C35B">
-            <div class="thumb v-rose" aria-hidden="true">
-              <span class="tag gold flag">🏆 Tech100 winner</span>
-              <div class="mock">
-                <div class="browser">
-              <div class="bar"><i></i><i></i><i></i></div>
-              <div class="pipe">
-                <table>
-                  <tr><th>Borrower</th><th>Opportunity</th><th class="hide-xs">LTV</th><th class="hide-xs">Rate</th></tr>
-                  <tr><td>A. Patel</td><td><span class="badge">Cash-out</span></td><td class="hide-xs">62%</td><td class="hide-xs">7.1%</td></tr>
-                  <tr class="sel"><td><b>J. Rivera</b></td><td><span class="badge">Refi</span></td><td class="hide-xs">68%</td><td class="hide-xs">7.4%</td></tr>
-                  <tr><td>M. Chen</td><td><span class="badge mi">MI removal</span></td><td class="hide-xs">78%</td><td class="hide-xs">6.9%</td></tr>
-                  <tr><td>S. Okafor</td><td><span class="badge">Refi</span></td><td class="hide-xs">55%</td><td class="hide-xs">7.6%</td></tr>
-                  <tr><td>L. Novak</td><td><span class="badge mi">MI removal</span></td><td class="hide-xs">79%</td><td class="hide-xs">6.8%</td></tr>
-                </table>
-                <div class="panel">
-                  <small>Scenario · 30yr fixed</small>
-                  <b>−$312/mo</b>
-                  <div class="ln" style="width:90%"></div><div class="ln" style="width:70%"></div><div class="ln" style="width:80%"></div>
-                  <div class="cta">Copy to new loan</div>
-                </div>
-              </div>
-            </div>
-              </div>
+            <div class="thumb">
+              <img src="https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=512 512w, https://framerusercontent.com/images/HiIGvdk1R77FB9GSV2OZiGMt3B4.png?scale-down-to=1024 1024w" sizes="(max-width: 680px) 100vw, (max-width: 1040px) 50vw, 380px" alt="Clear 2.0 Servicing Loans pipeline table with quick rates and benefit analysis panels" loading="lazy" decoding="async">
             </div>
             <div class="cs-body">
               <div class="cs-meta"><span class="kind">Product design</span><span>4 weeks</span></div>
+              <span class="tag gold award">🏆 HousingWire Tech100 winner</span>
               <h3><a href="https://mehersportfolio.framer.website/cmgservicingloans">Servicing Loans Pipeline</a></h3>
               <p class="cs-sum">Helping loan officers find hidden refinance and MI-reduction revenue in their existing portfolios.</p>
               <dl class="facts"><div><dt>Role</dt><dd>Lead product designer, end-to-end</dd></div><div><dt>Platform</dt><dd>Enterprise CRM · web</dd></div></dl>
@@ -468,22 +398,8 @@
           </li>
 
           <li class="cs rv" style="--c:#f2a6c6">
-            <div class="thumb v-butter" aria-hidden="true">
-              <div class="mock">
-                <div class="ds-sheet">
-              <div class="label">Color · primitives → semantic</div>
-              <div class="swatches"><i style="background:#2a0f1c"></i><i style="background:#7d1d45"></i><i style="background:#A1285A"></i><i style="background:#d0679a"></i><i style="background:#f2c4d8"></i><i style="background:#fbe7ef"></i></div>
-              <div class="label">Buttons · default / secondary / focus</div>
-              <div class="ds-row"><span class="b p">Primary</span><span class="b s">Secondary</span><span class="b f">Focused</span></div>
-              <div class="label">Form controls</div>
-              <div class="ds-row"><span class="inp">Loan number</span><span class="chk"><i>✓</i> Remember</span></div>
-              <div class="label">Accessibility checks</div>
-              <div class="aa">
-                <div style="background:#A1285A;color:#fff">Aa 7.1:1 <span class="ok">AAA</span></div>
-                <div style="background:#fbe7ef;color:#7d1d45">Aa 6.4:1 <span class="ok">AA</span></div>
-              </div>
-            </div>
-              </div>
+            <div class="thumb">
+              <img src="https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=512 512w, https://framerusercontent.com/images/ctxvV92Lcjmf0muavgpU4QOd3o.png?scale-down-to=1024 1024w" sizes="(max-width: 680px) 100vw, (max-width: 1040px) 50vw, 380px" alt="Design system documentation: component guidance, table header variants, filter popovers and token tables" loading="lazy" decoding="async">
             </div>
             <div class="cs-body">
               <div class="cs-meta"><span class="kind">Design systems</span><span>5 months</span></div>
@@ -496,28 +412,8 @@
           </li>
 
           <li class="cs rv" style="--c:#9fd8bd">
-            <div class="thumb v-blush" aria-hidden="true">
-              <div class="mock">
-                <div class="phones">
-              <div class="phone back">
-                <div class="notch"></div>
-                <h5>Customers</h5>
-                <div class="ms"><div class="done"><i>✓</i> Leads + loans merged</div><div class="done"><i>✓</i> Clear upload action</div><div class="now"><i></i> Preview invite</div></div>
-              </div>
-              <div class="phone">
-                <div class="notch"></div>
-                <h5>Loan milestones</h5>
-                <div class="ms">
-                  <div class="done"><i>✓</i> Pre-approved</div>
-                  <div class="done"><i>✓</i> Docs uploaded</div>
-                  <div class="now"><i></i> Appraisal</div>
-                  <div><i></i> Clear to close</div>
-                  <div><i></i> Funded</div>
-                </div>
-                <div class="btnx">Invite client</div>
-              </div>
-            </div>
-              </div>
+            <div class="thumb">
+              <img src="https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=1024" srcset="https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=512 512w, https://framerusercontent.com/images/XieLqVnQhKxCrVQVaumV0lElg.png?scale-down-to=1024 1024w" sizes="(max-width: 680px) 100vw, (max-width: 1040px) 50vw, 380px" alt="CMG Connect realtor app on two phones showing the Loans list and a loan detail with tasks" loading="lazy" decoding="async">
             </div>
             <div class="cs-body">
               <div class="cs-meta"><span class="kind">UX research</span><span>2 months</span></div>
