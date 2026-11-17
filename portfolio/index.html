@@ -133,34 +133,83 @@
     .sec-head h2 em { font: 400 1em var(--f-sig); font-style: normal; color: var(--butter-400); letter-spacing: -.02em; }
     .sec-head p { max-width: 38ch; margin: 0; color: rgba(255,248,243,.7); }
 
-    .case { display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center; padding: 64px 0; border-top: 1px solid rgba(255,255,255,.12); text-decoration: none; }
-    .case:nth-of-type(even) .case-visual { order: -1; }
-    .case-num { font: 400 18px var(--f-sig); color: var(--rose-400); }
-    .case h3 { font: 800 clamp(34px, 4.4vw, 56px)/1 var(--f-head); letter-spacing: -.03em; margin: 12px 0 16px; }
-    .case p { color: rgba(255,248,243,.72); margin: 0 0 20px; max-width: 48ch; }
-    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
-    .tag { font: 500 12px/1 var(--f-mono); padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.2); color: rgba(255,248,243,.85); }
+    .tag { font: 500 12px/1 var(--f-mono); padding: 7px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.2); color: rgba(255,248,243,.85); }
     .tag.gold { background: var(--butter-400); border-color: var(--butter-400); color: var(--rose-950); }
-    .outs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 26px; }
-    .out { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-md); padding: 14px; }
-    .out b { display: block; font: 800 26px/1 var(--f-head); color: var(--butter-400); letter-spacing: -.02em; }
-    .out span { display: block; font-size: 12.5px; line-height: 1.4; margin-top: 6px; color: rgba(255,248,243,.7); }
-    .go { display: inline-flex; align-items: center; gap: 10px; font: 600 15px var(--f-body); color: var(--cream); }
-    .go i { width: 40px; height: 40px; border-radius: 50%; background: var(--brand); display: grid; place-items: center; font-style: normal; transition: transform .3s var(--ease); }
-    .case:hover .go i { transform: rotate(-45deg); background: var(--butter-400); color: var(--rose-950); }
-
-    .case-visual { border-radius: var(--r-lg); padding: 28px; min-height: 380px; position: relative; overflow: hidden; display: grid; place-items: center; transition: transform .5s var(--ease); }
-    .case:hover .case-visual { transform: scale(1.015) rotate(-.4deg); }
     .v-rose { background: linear-gradient(140deg, var(--brand), var(--rose-700)); }
     .v-butter { background: linear-gradient(140deg, var(--butter-400), #f19a6b); }
     .v-blush { background: linear-gradient(140deg, var(--rose-200), #f7d9c4); }
-    @media (max-width: 900px) {
-      .case { grid-template-columns: 1fr; gap: 32px; padding: 48px 0; }
-      .case:nth-of-type(even) .case-visual { order: 0; }
-      .case-visual { min-height: 300px; padding: 18px; }
-      .outs { grid-template-columns: 1fr; }
-      .out { display: flex; align-items: baseline; gap: 12px; }
-      .out b { min-width: 90px; }
+
+    /* Case study overview grid */
+    .work-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: -36px 0 28px; font-size: 14px; color: rgba(255,248,243,.7); }
+    .work-bar .legend { display: flex; gap: 16px; flex-wrap: wrap; }
+    .work-bar .legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 8px; vertical-align: 1px; }
+    .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; list-style: none; margin: 0; padding: 0; }
+    @media (max-width: 1040px) { .cases { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 680px) { .cases { grid-template-columns: 1fr; } }
+    .cs { position: relative; display: flex; flex-direction: column; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-lg); overflow: hidden; transition: transform .35s var(--ease), border-color .25s, background .25s; }
+    .cs:hover { transform: translateY(-4px); border-color: rgba(246,195,91,.55); background: rgba(255,255,255,.07); }
+    .cs:focus-within { border-color: var(--butter-400); }
+    .thumb { position: relative; height: 230px; display: grid; place-items: center; overflow: hidden; }
+    .thumb .mock { zoom: .6; transition: transform .5s var(--ease); }
+    .cs:hover .thumb .mock { transform: scale(1.04); }
+    .thumb .flag { position: absolute; top: 14px; left: 14px; z-index: 2; }
+    .cs-body { display: flex; flex-direction: column; gap: 14px; padding: 22px 22px 20px; flex: 1; }
+    .cs-meta { display: flex; justify-content: space-between; gap: 8px; font: 500 11.5px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: rgba(255,248,243,.6); }
+    .cs-meta .kind { color: var(--c); }
+    .cs-meta .kind::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--c); margin-right: 7px; vertical-align: 1px; }
+    .cs h3 { font: 800 26px/1.08 var(--f-head); letter-spacing: -.02em; margin: 0; }
+    .cs h3 a { text-decoration: none; }
+    .cs h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+    .cs h3 a:focus-visible { outline: none; }
+    .cs-sum { margin: 0; font-size: 15px; line-height: 1.5; color: rgba(255,248,243,.75); }
+    .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; padding: 14px 0; border-block: 1px solid rgba(255,255,255,.1); }
+    .facts dt { font: 500 10.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: rgba(255,248,243,.5); margin-bottom: 3px; }
+    .facts dd { margin: 0; font-size: 13.5px; line-height: 1.35; }
+    .impact { display: flex; align-items: baseline; gap: 12px; }
+    .impact b { font: 800 34px/1 var(--f-head); color: var(--butter-400); letter-spacing: -.03em; white-space: nowrap; }
+    .impact span { font-size: 13.5px; line-height: 1.35; color: rgba(255,248,243,.8); }
+    .cs-actions { margin-top: auto; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .ql { position: relative; z-index: 2; font: 600 14px var(--f-body); color: var(--cream); background: transparent; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; height: 40px; padding: 0 16px; cursor: pointer; transition: background .2s, border-color .2s; }
+    .ql:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.5); }
+    .go { display: inline-flex; align-items: center; gap: 8px; font: 600 14px var(--f-body); color: var(--cream); }
+    .go i { width: 36px; height: 36px; border-radius: 50%; background: var(--brand); display: grid; place-items: center; font-style: normal; transition: transform .3s var(--ease), background .2s; }
+    .cs:hover .go i, .cs:focus-within .go i { transform: rotate(-45deg); background: var(--butter-400); color: var(--rose-950); }
+
+    /* Quick look dialog */
+    dialog.qv { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 32px); padding: 0; border: 0; border-radius: var(--r-xl); background: var(--cream); color: var(--ink); box-shadow: 0 40px 100px rgba(42,15,28,.5); overflow: auto; }
+    dialog.qv::backdrop { background: rgba(26,10,18,.66); backdrop-filter: blur(6px); }
+    dialog.qv[open] { animation: pop .35s var(--ease); }
+    @keyframes pop { from { opacity: 0; transform: translateY(18px) scale(.98); } }
+    .qv-head { position: relative; padding: 30px 32px 26px; color: var(--cream); }
+    .qv-head.v-butter, .qv-head.v-blush { color: var(--rose-950); }
+    .qv-head .cs-meta { color: inherit; opacity: .8; justify-content: flex-start; gap: 6px 16px; flex-wrap: wrap; padding-right: 52px; }
+    .qv-head .cs-meta .kind { color: inherit; } .qv-head .cs-meta .kind::before { background: currentColor; }
+    .qv-head h2 { font: 800 clamp(28px, 4vw, 40px)/1.05 var(--f-head); letter-spacing: -.02em; margin: 12px 0 0; padding-right: 48px; }
+    .qv-x { position: absolute; top: 18px; right: 18px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(255,255,255,.9); color: var(--ink); font-size: 20px; cursor: pointer; }
+    .qv-body { padding: 28px 32px 8px; display: grid; gap: 24px; }
+    .qv-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0; }
+    .qv-facts div { background: #fff; border: 1px solid var(--border); border-radius: var(--r-md); padding: 12px 14px; }
+    .qv-facts dt { font: 500 10.5px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .qv-facts dd { margin: 0; font-size: 14px; line-height: 1.4; }
+    .qv-sec h3 { font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--brand); margin: 0 0 8px; }
+    .qv-sec p { margin: 0; color: var(--ink); }
+    .qv-sec ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+    .qv-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .qv-metrics div { background: var(--rose-950); color: var(--cream); border-radius: var(--r-md); padding: 16px; }
+    .qv-metrics b { display: block; font: 800 30px/1 var(--f-head); color: var(--butter-400); letter-spacing: -.02em; }
+    .qv-metrics span { display: block; font-size: 13px; line-height: 1.4; margin-top: 6px; color: rgba(255,248,243,.8); }
+    .qv-foot { position: sticky; bottom: 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 32px; background: color-mix(in srgb, var(--cream) 92%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--border); margin-top: 20px; flex-wrap: wrap; }
+    .qv-nav { display: flex; gap: 8px; }
+    .qv-nav button { height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--border); background: #fff; color: var(--ink); font: 500 14px var(--f-body); cursor: pointer; }
+    .qv-nav button:hover { border-color: var(--brand); }
+    .qv-cta { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; background: var(--brand); color: #fff; font: 600 14px var(--f-body); text-decoration: none; }
+    .qv-cta:hover { background: var(--rose-700); }
+    @media (max-width: 640px) {
+      .qv-head, .qv-body { padding-left: 20px; padding-right: 20px; }
+      .qv-foot { padding: 12px 20px; }
+      .qv-facts, .qv-metrics { grid-template-columns: 1fr; }
+      .qv-metrics div { display: flex; align-items: baseline; gap: 12px; } .qv-metrics span { margin: 0; }
+      .qv-nav button span { display: none; }
     }
 
     /* mock: pipeline */
@@ -371,25 +420,23 @@
       <div class="wrap">
         <div class="sec-head rv">
           <h2>Selected <em>work</em></h2>
-          <p>Mortgage and fintech platforms used every day by loan officers, realtors and internal teams, where clarity directly drives revenue.</p>
+          <p>Three case studies, side by side. Compare them at a glance, open a quick look for the summary, or read the full story.</p>
+        </div>
+        <div class="work-bar rv">
+          <span>3 case studies · 2024–2025</span>
+          <div class="legend" aria-label="Case study types">
+            <span style="--c:#F6C35B">Product design</span>
+            <span style="--c:#f2a6c6">Design systems</span>
+            <span style="--c:#9fd8bd">UX research</span>
+          </div>
         </div>
 
-        <!-- Case 1 -->
-        <a class="case rv" href="https://mehersportfolio.framer.website/cmgservicingloans">
-          <div>
-            <div class="case-num">01</div>
-            <h3>Servicing Loans Pipeline</h3>
-            <div class="tags"><span class="tag gold">🏆 Tech100 winner</span><span class="tag">End-to-end</span><span class="tag">Enterprise CRM</span><span class="tag">4 weeks</span></div>
-            <p>Loan officers were missing refinance and MI-reduction opportunities buried in their portfolios. I designed a new pipeline with a slide-in scenario panel in one month, without direct user access, for a live demo at the Tech100 conference.</p>
-            <div class="outs">
-              <div class="out"><b>80%+</b><span>faster to find a refi opportunity</span></div>
-              <div class="out"><b>15–20%</b><span>estimated revenue retained or gained</span></div>
-              <div class="out"><b>1 click</b><span>from scenario to new loan</span></div>
-            </div>
-            <span class="go"><i>→</i> Read the case study</span>
-          </div>
-          <div class="case-visual v-rose" aria-hidden="true">
-            <div class="browser">
+        <ul class="cases">
+          <li class="cs rv" style="--c:#F6C35B">
+            <div class="thumb v-rose" aria-hidden="true">
+              <span class="tag gold flag">🏆 Tech100 winner</span>
+              <div class="mock">
+                <div class="browser">
               <div class="bar"><i></i><i></i><i></i></div>
               <div class="pipe">
                 <table>
@@ -408,25 +455,22 @@
                 </div>
               </div>
             </div>
-          </div>
-        </a>
-
-        <!-- Case 2 -->
-        <a class="case rv" href="https://mehersportfolio.framer.website/cmgexdesignsystem">
-          <div>
-            <div class="case-num">02</div>
-            <h3>Employee Experience Design System</h3>
-            <div class="tags"><span class="tag gold">Design systems</span><span class="tag">Tokens</span><span class="tag">WCAG</span><span class="tag">PrimeNG</span><span class="tag">Mentorship</span></div>
-            <p>Internal tools suffered from inconsistent components, ad-hoc styling and accessibility gaps. I audited PrimeNG usage with engineers, defined a token architecture and accessible components, and mentored the lead designer. When they left, I took ownership and finished the build.</p>
-            <div class="outs">
-              <div class="out"><b>30%</b><span>fewer design–dev clarification cycles</span></div>
-              <div class="out"><b>~20%</b><span>lighter Figma files</span></div>
-              <div class="out"><b>5+ days</b><span>of onboarding replaced by docs</span></div>
+              </div>
             </div>
-            <span class="go"><i>→</i> Read the case study</span>
-          </div>
-          <div class="case-visual v-butter" aria-hidden="true">
-            <div class="ds-sheet">
+            <div class="cs-body">
+              <div class="cs-meta"><span class="kind">Product design</span><span>4 weeks</span></div>
+              <h3><a href="https://mehersportfolio.framer.website/cmgservicingloans">Servicing Loans Pipeline</a></h3>
+              <p class="cs-sum">Helping loan officers find hidden refinance and MI-reduction revenue in their existing portfolios.</p>
+              <dl class="facts"><div><dt>Role</dt><dd>Lead product designer, end-to-end</dd></div><div><dt>Platform</dt><dd>Enterprise CRM · web</dd></div></dl>
+              <div class="impact"><b>80%+</b><span>faster to spot a refinance opportunity</span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="0" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+            </div>
+          </li>
+
+          <li class="cs rv" style="--c:#f2a6c6">
+            <div class="thumb v-butter" aria-hidden="true">
+              <div class="mock">
+                <div class="ds-sheet">
               <div class="label">Color · primitives → semantic</div>
               <div class="swatches"><i style="background:#2a0f1c"></i><i style="background:#7d1d45"></i><i style="background:#A1285A"></i><i style="background:#d0679a"></i><i style="background:#f2c4d8"></i><i style="background:#fbe7ef"></i></div>
               <div class="label">Buttons · default / secondary / focus</div>
@@ -439,25 +483,22 @@
                 <div style="background:#fbe7ef;color:#7d1d45">Aa 6.4:1 <span class="ok">AA</span></div>
               </div>
             </div>
-          </div>
-        </a>
-
-        <!-- Case 3 -->
-        <a class="case rv" href="https://mehersportfolio.framer.website/cmgconnect">
-          <div>
-            <div class="case-num">03</div>
-            <h3>CMG Connect: Realtor App</h3>
-            <div class="tags"><span class="tag gold">UX research</span><span class="tag">Usability testing</span><span class="tag">Prototyping</span><span class="tag">IA</span></div>
-            <p>Before replacing a third-party realtor tool, I ran moderated and unmoderated tests with realtors across the US. The findings reshaped the information architecture, including merging leads and loans into a single Customers view.</p>
-            <div class="outs">
-              <div class="out"><b>&lt;10 min</b><span>from profile setup to first invite</span></div>
-              <div class="out"><b>60%+</b><span>failure points found and redesigned</span></div>
-              <div class="out"><b>~30%</b><span>projected cut in support and training</span></div>
+              </div>
             </div>
-            <span class="go"><i>→</i> Read the case study</span>
-          </div>
-          <div class="case-visual v-blush" aria-hidden="true">
-            <div class="phones">
+            <div class="cs-body">
+              <div class="cs-meta"><span class="kind">Design systems</span><span>5 months</span></div>
+              <h3><a href="https://mehersportfolio.framer.website/cmgexdesignsystem">Employee Experience Design System</a></h3>
+              <p class="cs-sum">Tokens, accessible components and docs that brought consistency to a set of internal tools.</p>
+              <dl class="facts"><div><dt>Role</dt><dd>DS lead · mentor, then owner</dd></div><div><dt>Platform</dt><dd>Internal tools · PrimeNG</dd></div></dl>
+              <div class="impact"><b>30%</b><span>fewer design-to-dev clarification cycles</span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="1" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+            </div>
+          </li>
+
+          <li class="cs rv" style="--c:#9fd8bd">
+            <div class="thumb v-blush" aria-hidden="true">
+              <div class="mock">
+                <div class="phones">
               <div class="phone back">
                 <div class="notch"></div>
                 <h5>Customers</h5>
@@ -476,12 +517,41 @@
                 <div class="btnx">Invite client</div>
               </div>
             </div>
-            <div class="finding" style="top:14%;right:6%">100% loved milestone tracking</div>
-            <div class="finding" style="bottom:12%;left:6%">“Leads vs loans” → 1 view</div>
-          </div>
-        </a>
+              </div>
+            </div>
+            <div class="cs-body">
+              <div class="cs-meta"><span class="kind">UX research</span><span>2 months</span></div>
+              <h3><a href="https://mehersportfolio.framer.website/cmgconnect">CMG Connect: Realtor App</a></h3>
+              <p class="cs-sum">Usability testing an in-house realtor app before launch, to fix navigation and terminology issues early.</p>
+              <dl class="facts"><div><dt>Role</dt><dd>UX research lead, prototyping</dd></div><div><dt>Platform</dt><dd>Web app · realtors</dd></div></dl>
+              <div class="impact"><b>&lt;10 min</b><span>from profile setup to first client invite</span></div>
+              <div class="cs-actions"><button type="button" class="ql" data-case="2" aria-haspopup="dialog">Quick look</button><span class="go" aria-hidden="true">Case study <i>→</i></span></div>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
+
+    <dialog class="qv" id="qv" aria-labelledby="qvTitle">
+      <div class="qv-head" id="qvHead">
+        <div class="cs-meta"><span class="kind" id="qvKind"></span><span id="qvTime"></span></div>
+        <h2 id="qvTitle"></h2>
+        <button type="button" class="qv-x" id="qvClose" aria-label="Close quick look">×</button>
+      </div>
+      <div class="qv-body">
+        <dl class="qv-facts" id="qvFacts"></dl>
+        <div class="qv-sec"><h3>The problem</h3><p id="qvProblem"></p></div>
+        <div class="qv-sec"><h3>What I did</h3><ul id="qvDid"></ul></div>
+        <div class="qv-sec"><h3>Outcome</h3><div class="qv-metrics" id="qvMetrics"></div></div>
+      </div>
+      <div class="qv-foot">
+        <div class="qv-nav">
+          <button type="button" id="qvPrev" aria-label="Previous case study">← <span>Previous</span></button>
+          <button type="button" id="qvNext" aria-label="Next case study"><span>Next</span> →</button>
+        </div>
+        <a class="qv-cta" id="qvLink" href="#">Read full case study →</a>
+      </div>
+    </dialog>
 
     <!-- ═════════ SYSTEMS ═════════ -->
     <section class="systems" id="systems">
@@ -619,6 +689,54 @@
         });
       });
       render();
+    })();
+    // Case study quick look
+    (function () {
+      var C = [
+        { kind: 'Product design', time: '4 weeks · Tech100 winner', title: 'Servicing Loans Pipeline', v: 'v-rose',
+          url: 'https://mehersportfolio.framer.website/cmgservicingloans',
+          facts: [['Role', 'Lead product designer, end-to-end'], ['Team', 'Product, BAs, servicing SMEs, engineering'], ['Platform', 'Clear 2.0 CRM · web']],
+          problem: 'In a slow origination market, loan officers were losing commission. Refinance and MI-reduction opportunities were hidden across fragmented systems and manual servicing tasks.',
+          did: ['Used business analysts as domain proxies when direct access to users wasn\'t possible', 'Designed a sortable pipeline, a slide-in detail panel and a guided scenario flow', 'Defined the MVP and reused the existing design system to ship in four weeks', 'Bridged servicing and origination: copy a scenario into a new loan application'],
+          metrics: [['80%+', 'faster to identify a refinance opportunity'], ['15–20%', 'estimated revenue retained or gained'], ['Tech100', 'HousingWire award, shown in a live demo']] },
+        { kind: 'Design systems', time: '5 months · ongoing', title: 'Employee Experience Design System', v: 'v-butter',
+          url: 'https://mehersportfolio.framer.website/cmgexdesignsystem',
+          facts: [['Role', 'DS expert and mentor, then owner'], ['Team', 'Lead designer, engineering'], ['Platform', 'Internal tools · PrimeNG']],
+          problem: 'Employee products had inconsistent components, ad-hoc styling and accessibility gaps. Developer handoffs needed repeated clarification, Figma files were bloated, and onboarding a designer took 5+ days.',
+          did: ['Audited PrimeNG component usage across internal tools with developers', 'Set typography, spacing and color rules and a scalable token architecture', 'Built WCAG contrast, focus, ARIA and keyboard support into every component', 'Mentored the lead designer, then took ownership and finished the token and component builds'],
+          metrics: [['30%', 'fewer design-to-dev clarification cycles'], ['~20%', 'smaller Figma files'], ['5+ days', 'of onboarding replaced by documented components']] },
+        { kind: 'UX research', time: '2 months · Jan 2024 testing', title: 'CMG Connect: Realtor App', v: 'v-blush',
+          url: 'https://mehersportfolio.framer.website/cmgconnect',
+          facts: [['Role', 'UX research lead, prototyping'], ['Participants', 'US realtors, ages 26–64'], ['Method', 'Moderated + unmoderated (Userlytics)']],
+          problem: 'Realtors relied on an inefficient third-party app. The in-house replacement risked onboarding drop-off, confusion between leads and loans, and low trust if it didn\'t match how realtors think.',
+          did: ['Mapped end-to-end flows for onboarding, invites, loan tracking and document upload', 'Built interactive mid-fidelity prototypes focused on IA and navigation', 'Ran moderated and unmoderated tests and tracked success at each step', 'Recommended merging leads and loans into one Customers view, clearer upload actions and toast guidance'],
+          metrics: [['<10 min', 'from profile setup to first client invite'], ['60%+', 'task failure found in navigation and terminology'], ['~30%', 'projected cut in support and training time']] }
+      ];
+      var dlg = document.getElementById('qv'), cur = 0, opener = null;
+      function $(id) { return document.getElementById(id); }
+      function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+      function fill(i) {
+        cur = (i + C.length) % C.length; var c = C[cur];
+        $('qvHead').className = 'qv-head ' + c.v;
+        $('qvKind').textContent = c.kind; $('qvTime').textContent = c.time; $('qvTitle').textContent = c.title;
+        $('qvFacts').innerHTML = c.facts.map(function (f) { return '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
+        $('qvProblem').textContent = c.problem;
+        $('qvDid').innerHTML = c.did.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('');
+        $('qvMetrics').innerHTML = c.metrics.map(function (m) { return '<div><b>' + esc(m[0]) + '</b><span>' + esc(m[1]) + '</span></div>'; }).join('');
+        $('qvLink').href = c.url;
+        $('qvPrev').querySelector('span').textContent = C[(cur + C.length - 1) % C.length].title.split(':')[0];
+        $('qvNext').querySelector('span').textContent = C[(cur + 1) % C.length].title.split(':')[0];
+        dlg.scrollTop = 0;
+      }
+      document.querySelectorAll('.ql').forEach(function (b) {
+        b.addEventListener('click', function () { opener = b; fill(+b.dataset.case); dlg.showModal(); $('qvClose').focus(); });
+      });
+      $('qvClose').addEventListener('click', function () { dlg.close(); });
+      $('qvPrev').addEventListener('click', function () { fill(cur - 1); });
+      $('qvNext').addEventListener('click', function () { fill(cur + 1); });
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') fill(cur + 1); if (e.key === 'ArrowLeft') fill(cur - 1); });
+      dlg.addEventListener('close', function () { if (opener) opener.focus(); });
     })();
   </script>
 </body>
