@@ -61,11 +61,11 @@ img { max-width: 100%; }
 .c-hero.rose { background: linear-gradient(140deg, var(--rose-600), var(--rose-950)); }
 .c-hero.plum { background: linear-gradient(140deg, var(--rose-950), var(--rose-950)); }
 .c-hero.butter { background: linear-gradient(140deg, var(--butter-400), var(--butter-400)); color: var(--rose-950); }
-.back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; font: 600 15px var(--f-body); opacity: .9; margin-bottom: 18px; }
+.back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; font: 600 15px var(--f-body); margin-bottom: 18px; }
 .back:hover { opacity: 1; text-decoration: underline; }
-.c-hero .kind { display: block; margin-bottom: 14px; opacity: .85; }
+.c-hero .kind { display: block; margin-bottom: 14px; }
 .c-hero h1 { font: 800 clamp(38px, 6.4vw, 80px)/1.0 var(--f-head); letter-spacing: -.03em; margin: 0; max-width: 18ch; }
-.c-hero .summary { font-size: clamp(18px, 2vw, 22px); line-height: 1.5; margin: 20px 0 0; max-width: 46ch; opacity: .92; }
+.c-hero .summary { font-size: clamp(18px, 2vw, 22px); line-height: 1.5; margin: 20px 0 0; max-width: 46ch; }
 .award { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 8px 14px; border-radius: 999px; background: var(--butter-400); color: var(--rose-950); font: 600 14px var(--f-body); }
 @media (max-width: 600px) { .c-hero { padding: 40px 0 48px; } }
 
@@ -438,6 +438,12 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
 .c-hero.rose, .c-hero.plum, .c-hero.butter { background: var(--rose-600); color: var(--cream); }
 .v-rose, .v-butter, .v-plum, .v-blush { background: var(--rose-600); }
 dialog.qv .qv-head, dialog.qv .qv-head .cs-meta { color: var(--cream); }
+/* Secondary text in headers: solid cream (6.7:1 on rose), room to breathe */
+dialog.qv .qv-head .cs-meta { opacity: 1; flex-direction: column; align-items: flex-start; gap: 8px; line-height: 1.4; }
+dialog.qv .qv-head .cs-meta .kind { letter-spacing: .08em; }
+dialog.qv .qv-head #qvTime { font: 500 var(--t-small)/1.4 var(--f-body); letter-spacing: 0; text-transform: none; }
+.c-hero .kind, .c-hero .summary, .c-hero .back { opacity: 1; color: var(--cream); }
+.c-hero .kind { letter-spacing: .08em; line-height: 1.5; }
 /* Butter is for highlights on plum only; on rose, labels are cream for contrast */
 .contact .label { color: var(--cream); }
 /* Outline buttons on dark: one border strength */
