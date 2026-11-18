@@ -432,6 +432,12 @@ code, .layer code, .mode code { font-family: var(--f-mono); font-size: var(--t-c
 .c-hero.rose, .c-hero.plum, .c-hero.butter { background: var(--rose-600); color: var(--cream); }
 .v-rose, .v-butter, .v-plum, .v-blush { background: var(--rose-600); }
 dialog.qv .qv-head, dialog.qv .qv-head .cs-meta { color: var(--cream); }
+/* Secondary text in headers: solid cream (6.7:1 on rose), room to breathe */
+dialog.qv .qv-head .cs-meta { opacity: 1; flex-direction: column; align-items: flex-start; gap: 8px; line-height: 1.4; }
+dialog.qv .qv-head .cs-meta .kind { letter-spacing: .08em; }
+dialog.qv .qv-head #qvTime { font: 500 var(--t-small)/1.4 var(--f-body); letter-spacing: 0; text-transform: none; }
+.c-hero .kind, .c-hero .summary, .c-hero .back { opacity: 1; color: var(--cream); }
+.c-hero .kind { letter-spacing: .08em; line-height: 1.5; }
 /* Butter is for highlights on plum only; on rose, labels are cream for contrast */
 .contact .label { color: var(--cream); }
 /* Outline buttons on dark: one border strength */
