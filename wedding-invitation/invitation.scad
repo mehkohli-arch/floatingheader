@@ -4,7 +4,9 @@
 //
 //  5 x 7 in card, printed FACE-DOWN. Fine tulle-net lace border with a floral
 //  vine, an arched centre panel with engraved lettering, and four corner
-//  pockets on the back for a 4 x 6 in paper details card.
+//  pockets on the back for a 4 x 6 in paper details card. Four flaps on living
+//  hinges fold over the front into an envelope closed by a monogram seal.
+//  Build the print files with tools/build.sh, previews with tools/previews.sh.
 //
 //  part = "body"   card (colour 1: ivory / white)  -> run tools/build.sh
 //  part = "inlay"  engraved lettering + motifs, 0.6 mm (colour 2: gold), optional
@@ -36,7 +38,7 @@ text_grow = 0.14;   // thickens hairlines just enough to print
 
 // ---------------- paper insert & pockets (back) ----------------
 insert_w = 101.6;  insert_h = 152.4;   // 4 x 6 in
-clear = 0.75;  paper_gap = 0.7;  flap_t = 0.9;  wall_w = 2.0;  leg = 16;
+clear = 0.75;  paper_gap = 0.7;  pk_flap_t = 0.9;  wall_w = 2.0;  leg = 16;
 
 // ---------------- lace ----------------
 sc_r = 2.3;  sc_step = 4.3;   // scalloped edge
@@ -80,9 +82,9 @@ module outline() union() { square([W-2*sc_r, H-2*sc_r], center=true); along_edge
 module eyelets() along_edges() circle(d=1.0, $fn=12);
 
 // ---------------- tulle net ----------------
-module net_holes() {
+module net_holes(x0=-W/2, x1=W/2, y0=-H/2, y1=H/2) {
     dy = hex_p*sqrt(3)/2;
-    for (j=[-ceil(H/2/dy):ceil(H/2/dy)], i=[-ceil(W/2/hex_p)-1:ceil(W/2/hex_p)+1])
+    for (j=[floor(y0/dy)-1:ceil(y1/dy)+1], i=[floor(x0/hex_p)-1:ceil(x1/hex_p)+1])
         translate([i*hex_p + (abs(j)%2)*hex_p/2, j*dy]) rotate(30) circle(d=hex_hole/cos(30), $fn=6);
 }
 module net_band() difference() {
@@ -230,12 +232,146 @@ module pocket() {
         translate([a-leg-1, b-leg-1]) square([leg+1+wall_w, leg+1+wall_w]);
         translate([a-leg-2, b-leg-2]) square([leg+2, leg+2]);
     }
-    translate([0,0,paper_gap]) linear_extrude(flap_t) difference() {
+    translate([0,0,paper_gap]) linear_extrude(pk_flap_t) difference() {
         polygon([[a+wall_w, b+wall_w], [a-leg, b+wall_w], [a+wall_w, b-leg]]);
         translate([a + wall_w - (leg+wall_w)/3 + 0.6, b + wall_w - (leg+wall_w)/3 + 0.6]) blossom(3.4, 5, false);
     }
 }
 module pockets() translate([0,0,T]) for (sx=[-1,1], sy=[-1,1]) scale([sx,sy,1]) pocket();
+
+// ============================================================================
+//  ENVELOPE: four lace flaps joined to the card by living hinges (0.4 mm
+//  strips on the bed layer). They fold over the front: sides, bottom, then
+//  the top flap with its monogram seal. Coordinates below are print coords.
+// ============================================================================
+env_t   = 1.0;            // flap thickness
+hinge_t = 0.4;            // living hinge = first two layers
+g_side = 2.0;  g_bot = 2.8;  g_top = 4.0;   // hinge gaps (grow with the stack)
+side_h = 62;   bot_h = 79;   top_h = 80;     // flap depths
+seal_r = 12.5;  seal_t = 1.8;  relief = 0.45;
+rim = 2.2;
+
+function hy_top() = H/2 + g_top/2;
+side_bw = H/2 - 3;   tb_bw = W/2 - 3;
+
+module dot(p, r=0.01) translate(p) circle(r, $fn=8);
+
+// flap outlines in print coords, plus their free edges for picots/vines
+module top_shape() hull() { dot([-tb_bw, H/2+g_top]); dot([tb_bw, H/2+g_top]); translate(seal_c()) circle(seal_r-0.5, $fn=72); }
+function seal_c() = [0, H/2 + g_top + top_h - seal_r];
+module bot_shape() hull() { dot([-tb_bw, -H/2-g_bot]); dot([tb_bw, -H/2-g_bot]); translate([0, -H/2-g_bot-bot_h+5]) circle(5); }
+module side_shape(s) hull() { dot([s*(W/2+g_side), -side_bw]); dot([s*(W/2+g_side), side_bw]); translate([s*(W/2+g_side+side_h-5), 0]) circle(5); }
+
+band_w = 13.5;   // width of the lace trim along each flap's free edges
+
+function flap_tip(w) = w=="top" ? seal_c() : w=="bot" ? [0, -H/2-g_bot-bot_h+5]
+                     : [(w=="right"?1:-1)*(W/2+g_side+side_h-5), 0];
+function flap_base(w) = w=="top" ? [[-tb_bw, H/2+g_top], [tb_bw, H/2+g_top]]
+                      : w=="bot" ? [[-tb_bw, -H/2-g_bot], [tb_bw, -H/2-g_bot]]
+                      : let(x=(w=="right"?1:-1)*(W/2+g_side)) [[x, -side_bw], [x, side_bw]];
+function flap_inner(w) = (flap_base(w)[0] + flap_base(w)[1] + flap_tip(w))/3;
+
+module flap_edges(w, mode) {
+    tip = flap_tip(w);
+    tip_skip = w=="top" ? seal_r + 1.5 : 5;
+    for (p = flap_base(w)) {
+        d = tip - p;  L = norm(d) - tip_skip;  u = d/norm(d);
+        nrm0 = [-u[1], u[0]];
+        nrm = (nrm0*(flap_inner(w) - p) > 0) ? nrm0 : -nrm0;     // points into the flap
+        if (mode=="picot")
+            for (i=[1:floor(L/3.3)]) translate(p + u*(i*3.3)) circle(r=1.3, $fn=16);
+        else if (mode=="eyelet")
+            for (i=[1:floor(L/3.3)-1]) translate(p + u*(i*3.3) + nrm*3.0) circle(d=1.1, $fn=14);
+        else
+            translate(p + u*(L*0.5 + 1) + nrm*(rim + 5.4)) rotate(atan2(u[1], u[0]))
+                edge_vine(L*0.78 + 32 - 14, mode=="inner");
+    }
+}
+
+module flap_shape(w) {
+    if (w=="top") top_shape();
+    if (w=="bot") bot_shape();
+    if (w=="left")  side_shape(-1);
+    if (w=="right") side_shape(1);
+}
+
+module hinge_band(which) {   // solid strip along the hinge edge of a flap
+    if (which=="top") translate([-W/2, H/2+g_top]) square([W, 3]);
+    if (which=="bot") translate([-W/2, -H/2-g_bot-3]) square([W, 3]);
+    if (which=="left")  translate([-W/2-g_side-3, -H/2]) square([3, H]);
+    if (which=="right") translate([ W/2+g_side,   -H/2]) square([3, H]);
+}
+
+module base_extension(w) {   // continues the flap past its hinge so the trim skips the hinge edge
+    b = flap_base(w);  t = flap_tip(w);
+    u = (b[0]+b[1])/2 - t;  ext = u/norm(u)*40;
+    polygon([b[0], b[1], b[1]+ext, b[0]+ext]);
+}
+
+module lace_zone(w) difference() {      // where the net goes
+    offset(-rim) flap_shape(w);
+    offset(-band_w) union() { flap_shape(w); base_extension(w); }
+    hinge_band(w);
+    if (w=="top") translate(seal_c()) circle(seal_r+1);
+}
+
+module flap_lace(w) {
+    tip = flap_tip(w);
+    difference() {
+        union() { flap_shape(w); intersection() { offset(1.4) flap_shape(w); flap_edges(w, "picot"); } }
+        if (w != "top") difference() { flap_edges(w, "eyelet"); hinge_band(w); }
+        if (w == "top") difference() {
+            intersection() {
+                lace_zone(w);
+                net_holes(tip[0] < 0 ? tip[0]-8 : -W/2-8, tip[0] > 0 ? tip[0]+8 : W/2+8,
+                          tip[1] < 0 ? tip[1]-8 : -H/2-8, tip[1] > 0 ? tip[1]+8 : H/2+8);
+            }
+            flap_edges(w, "vine");
+        }
+        if (w == "top") intersection() { lace_zone(w); flap_edges(w, "inner"); }
+    }
+}
+
+module hinge_strip(which) {
+    if (which=="top") translate([-tb_bw+6, H/2-1.4]) square([2*tb_bw-12, g_top+1.4+2.5]);
+    if (which=="bot") translate([-tb_bw+6, -H/2-g_bot-2.5]) square([2*tb_bw-12, g_bot+1.4+2.5]);
+    if (which=="left")  translate([-W/2-g_side-2.5, -side_bw+6]) square([g_side+1.4+2.5, 2*side_bw-12]);
+    if (which=="right") translate([ W/2-1.4,        -side_bw+6]) square([g_side+1.4+2.5, 2*side_bw-12]);
+}
+
+// wax-seal medallion (print coords; art is pre-rotated 180 deg so it reads
+// upright once the top flap is folded down)
+module seal_disc() translate(seal_c())
+    polygon([for (a=[0:3:357]) let(r = seal_r + 0.45*sin(7*a) + 0.25*sin(13*a+40)) [r*cos(a), r*sin(a)]]);
+module seal_art() translate(seal_c()) rotate(180) {
+    difference() { circle(r=seal_r-1.6); circle(r=seal_r-2.3); }
+    scale(0.78) wreath(0);
+    offset(r=0.1) text(monogram, size=3.4, font=script_font, halign="center", valign="center", spacing=0.95);
+}
+
+flaps = ["left", "right", "bot", "top"];
+
+module env_flaps3d() {
+    for (w=flaps) linear_extrude(env_t) flap_lace(w);
+    for (w=flaps) linear_extrude(hinge_t) hinge_strip(w);
+    linear_extrude(seal_t) seal_disc();
+    translate([0,0,seal_t]) linear_extrude(relief) seal_art();
+}
+
+// 2D views as seen from the FRONT (viewer coords = mirror-x of print coords)
+module fold_view(which) {   // flap folded closed
+    if (which=="top")   translate([0,  2*(H/2+g_top/2)]) rotate(180) children();
+    if (which=="bot")   translate([0, -2*(H/2+g_bot/2)]) rotate(180) children();
+    if (which=="right") translate([-2*(W/2+g_side/2), 0]) children();
+    if (which=="left")  translate([ 2*(W/2+g_side/2), 0]) children();
+}
+
+if (part == "layer_flaps") env_flaps3d();
+if (part == "2d_flaps_open") mirror([1,0]) { for (w=flaps) flap_lace(w); seal_disc(); }
+if (part == "2d_hinges_open") mirror([1,0]) for (w=flaps) hinge_strip(w);
+for (w=flaps) if (part == str("2d_fold_", w)) fold_view(w) flap_lace(w);
+if (part == "2d_fold_seal") fold_view("top") seal_disc();
+if (part == "2d_fold_sealart") fold_view("top") seal_art();
 
 if (part == "body")        card_body();   // full model (slow CGAL in OpenSCAD 2021; build.sh is faster)
 // fast layer exports, merged by tools/build.sh
