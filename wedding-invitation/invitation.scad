@@ -43,7 +43,7 @@ PW  = 165;      // page width = folded envelope width (6.5 in)
 P1h = 86;       // bottom panel
 P2h = 90;       // middle panel = folded envelope height (3.5 in)
 P3h = 63;       // top flap, to the tip
-P3rect = 15;    // straight part of the flap before the point
+P3rect = 0;     // straight part of the flap before the point
 g1  = 2.5;      // hinge gaps; fold 2 is wider because it wraps over P1
 g2  = 5.0;
 T       = 1.2;  // sheet thickness
@@ -59,15 +59,20 @@ seal_r = 12.5;  seal_c = [0, y3t - seal_r];  seal_t = 1.9;  relief = 0.45;
 
 // paper details card, tucked into four corner slits on P1
 insert_w = 127;  insert_h = 63.5;   // 5 x 2.5 in
-insert_cy = (13 + y1b) / 2 + 0.5;
 slit_d = 8;      // how far each corner tucks in
 
 // ---------------- lace ----------------
-pic_r = 1.45;  pic_step = 3.4;   // picot edge
-net_out = 3.4;  net_in = 13;
+// Chantilly-style border along every outer edge (edge-local units, mm):
+//   0 .. sr        scallops, each holding an openwork fan, picots on the rim
+//   sr .. lace_w   fine net with garland swags, open flowers, leaves and buds
+//   lace_w         solid cordonnet line, then a beaded row of tiny holes
+sr      = 5.2;       // scallop radius (= scallop depth)
+lace_w  = 17;        // total border width
+unit    = 10.8;      // scallop pitch (stretched to fit each edge exactly)
+rose_r  = 8;         // corner rosettes
 hex_p = 2.25;  hex_hole = 1.62;   // ~0.63 mm threads
-vine_c = (net_out + net_in) / 2;
 fold_rim = 2.5;                   // solid strip along each fold
+insert_cy = (lace_w + y1b) / 2 + 0.3;
 
 $fn = 36;
 
@@ -146,7 +151,7 @@ X = PW/2;
 module p1() translate([-X, y1a]) square([PW, P1h]);
 module p2() translate([-X, y2a]) square([PW, P2h]);
 module p3() hull() {
-    translate([-X, y3a]) square([PW, P3rect]);
+    translate([-X, y3a]) square([PW, max(P3rect, 0.01)]);
     translate(seal_c) circle(seal_r, $fn=72);
 }
 // the same panels continued past their folds, so offsets ignore fold edges
@@ -162,45 +167,89 @@ module p3v() hull() {
 }
 module p3x() union() { p3(); translate([-X, y3a - 30]) square([PW, 30 + P3rect]); }
 
-// outer (non-fold) edges, as [from, to]
-V_l = [[-X, y3r], [seal_c[0] - seal_r*0.6, seal_c[1] + seal_r*0.2]];
-// lace lives only on the flap's V edge; the rest of the sheet stays plain
-outer_edges = [
-    [[-X, y3r], [-9, seal_c[1] + 4.5]], [[X, y3r], [9, seal_c[1] + 4.5]]
+// ---------------- the lace border ----------------
+// lace edges: [from, to, margin at start, margin at end, a point inside the page]
+function vtan(sx) = let(P=[sx*X, y3r], L=sqrt(pow(norm(seal_c-P),2) - seal_r*seal_r)) P + vdir(sx)*L;
+lace_edges = [
+    [[-X, 0],   [X, 0],      2*rose_r, 2*rose_r, [0, 30]],                 // bottom
+    [[-X, 0],   [-X, y1b],   2*rose_r, 0, [0, 40]],  [[X, 0], [X, y1b], 2*rose_r, 0, [0, 40]],
+    [[-X, y2a], [-X, y2b],   0, 0, [0, y2a+40]],     [[X, y2a], [X, y2b], 0, 0, [0, y2a+40]],
+    [[-X, y3a], vtan(-1),    0, 0, [0, y3a+15]],     [[X, y3a], vtan(1),  0, 0, [0, y3a+15]]
 ];
-module along(e, step, start=0) {
-    d = e[1] - e[0];  L = norm(d);
-    for (i=[0:floor((L-start)/step)]) translate(e[0] + d*((start + i*step)/L)) children();
-}
-module picots() for (e=outer_edges) along(e, pic_step, pic_step) circle(r=pic_r, $fn=16);
-module eyelets() for (e=outer_edges) let(d=e[1]-e[0], u=d/norm(d), n=[-u[1],u[0]])
-    along(e, pic_step, pic_step/2) translate(n*(n*([0,Ytot/2]-e[0]) > 0 ? 1 : -1)*2.0) circle(d=1.0, $fn=12);
+corners = [[-X + rose_r, rose_r], [X - rose_r, rose_r]];
 
-module sheet_outline() {
-    p1(); p2(); p3();
-    intersection() { picots(); union() { offset(pic_r) p1(); offset(pic_r) p2(); offset(pic_r) p3(); } }
+// place edge-local geometry (x along the edge, y pointing into the page)
+module on_edge(e) {
+    d = e[1] - e[0];  L = norm(d);  u = d/L;  n0 = [-u[1], u[0]];
+    n = (n0*(e[4] - e[0]) > 0) ? n0 : -n0;
+    // local frame: x -> u, y -> n  (a reflection when n = -n0, which is fine here)
+    multmatrix([[u[0], n[0], 0, e[0][0] + u[0]*e[2]],
+                [u[1], n[1], 0, e[0][1] + u[1]*e[2]],
+                [0, 0, 1, 0], [0, 0, 0, 1]])
+        children();
 }
+function e_len(e) = norm(e[1] - e[0]) - e[2] - e[3];
 
-// lace net band, per panel, kept clear of the folds
-module band(pnl) {
-    if (pnl==1) intersection() { difference() { offset(-net_out) p1x(); offset(-net_in) p1x(); } translate([-X, y1a]) square([PW, P1h - fold_rim]); }
-    if (pnl==2) intersection() { difference() { offset(-net_out) p2x(); offset(-net_in) p2x(); } translate([-X, y2a + fold_rim]) square([PW, P2h - 2*fold_rim]); }
-    if (pnl==3) intersection() {
-        difference() { offset(-net_out) p3v(); offset(-net_in) p3v(); translate(seal_c) circle(seal_r + 1); }
-        offset(-net_out) p3();
-        translate([-X, y3a + fold_rim]) square([PW, P3h]);
+module teardrop(l, w0, w1) hull() { circle(d=w0, $fn=12); translate([l,0]) circle(d=w1, $fn=16); }
+
+// one edge's worth of lace, in local coordinates; `mode` picks the layer
+module lace_run(L, mode) {
+    n = max(1, round(L/unit));  U = L/n;
+    if (mode=="strip") translate([-0.01, -2]) square([L + 0.02, sr + 2]);
+    for (k=[0:n-1]) translate([U*(k+0.5), 0]) {
+        if (mode=="scallop") translate([0, sr]) {
+            circle(sr, $fn=48);
+            for (a=[200:14:340]) translate(sr*[cos(a), sin(a)]) circle(0.62, $fn=12);   // picots
+        }
+        if (mode=="holes") translate([0, sr]) {
+            // fan: 5 blades; every strand between holes is >= ~0.45 mm
+            for (a=[210:30:330]) rotate(a) translate([1.8, 0]) teardrop(1.6, 0.45, 0.85);
+            for (a=[195:30:345]) translate(4.2*[cos(a), sin(a)]) circle(d=0.72, $fn=12);
+        }
+        if (mode=="motifs") {
+            // garland swag between two flowers, with a bud and a pair of leaves at its crest
+            stroke([for (t=[0:0.1:1.001]) [U*(t-0.5), sr + 3.0 + 3.6*sin(t*180)]], 0.62);
+            translate([0, sr + 6.6]) { rotate(90) leaf(2.4, 1.15); rotate(140) leaf(2.1, 0.9); rotate(40) leaf(2.1, 0.9); }
+            translate([0, sr + 1.6]) circle(d=1.5, $fn=16);                                // fan pivot
+            translate([0, lace_w - 3.2]) for (a=[90, 210, 330]) translate(0.75*[cos(a), sin(a)]) circle(d=0.95, $fn=12);
+        }
+    }
+    for (k=[0:n]) translate([U*k, sr + 3.0]) {
+        if (mode=="motifs") lace_blossom(2.75, 5);
+        if (mode=="motif_holes") rotate(k*36) lace_blossom(2.75, 5, true);
+    }
+    if (mode=="net") translate([0, sr + 0.7]) square([L, lace_w - 1.2 - sr - 0.7]);
+    if (mode=="beads") for (x=[1.1:2.2:L-0.5]) translate([x, lace_w + 0.9]) circle(d=0.75, $fn=10);
+}
+module lace(mode) for (e=lace_edges) on_edge(e) lace_run(e_len(e), mode);
+
+module rosette(mode) {
+    if (mode=="disc") { circle(rose_r, $fn=72); for (a=[0:15:359]) translate(rose_r*[cos(a), sin(a)]) circle(0.62, $fn=12); }
+    if (mode=="holes") {
+        for (a=[0:36:359]) rotate(a + 18) translate([1.9, 0]) teardrop(2.6, 0.5, 1.15);
+        for (a=[0:22.5:359]) translate(6.0*[cos(a), sin(a)]) circle(d=0.8, $fn=12);
+        for (a=[11.25:22.5:359]) translate(7.0*[cos(a), sin(a)]) circle(d=0.55, $fn=10);
     }
 }
-module bands() band(3);
+module rosettes(mode) for (c=corners) translate(c) rosette(mode);
 
-// floral vines in the band
-module vine_on(p, q, inner) {
-    d = q - p;  L = norm(d);  u = d/L;  n = [-u[1], u[0]];
-    s = (n*([0, Ytot/2] - p) > 0) ? 1 : -1;
-    translate((p+q)/2 + n*s*vine_c) rotate(atan2(u[1], u[0])) edge_vine(L, inner);
+module keep_off_folds() union() {
+    translate([-X, y1a]) square([PW, P1h - fold_rim]);
+    translate([-X, y2a + fold_rim]) square([PW, P2h - 2*fold_rim]);
+    difference() { translate([-X, y3a + fold_rim]) square([PW, P3h]); translate(seal_c) circle(seal_r + 1.5); }
 }
-module vines(inner=false) {
-    for (s=[-1,1]) vine_on([s*X, y3r - 6], [s*16, seal_c[1] + 1], inner);
+
+module sheet_outline() {
+    difference() {
+        union() { p1(); p2(); p3(); }
+        lace("strip");
+        for (c=corners) translate(c) square(2*rose_r + 0.02, center=true);
+    }
+    translate(seal_c) circle(seal_r, $fn=96);   // clean round tip under the seal
+    intersection() {
+        union() { lace("scallop"); rosettes("disc"); }
+        union() { offset(0.7) p1(); offset(0.7) p2(); offset(0.7) p3(); }
+    }
 }
 
 // corner slits for the paper card
@@ -212,9 +261,20 @@ module slits() for (sx=[-1,1], sy=[-1,1]) {
 
 // everything cut through the sheet
 module through() {
-    eyelets();
-    difference() { intersection() { bands(); net_holes(-X, X, 0, Ytot); } vines(); }
-    intersection() { bands(); vines(true); }
+    intersection() {
+        keep_off_folds();
+        union() {
+            difference() {
+                intersection() { lace("net"); net_holes(-X, X, 0, Ytot); }
+                lace("motifs");
+                rosettes("disc");
+            }
+            lace("motif_holes");
+            lace("holes");
+            lace("beads");
+        }
+    }
+    rosettes("holes");
     slits();
 }
 
@@ -229,7 +289,7 @@ module lettering() offset(r=text_grow) {
     caps(line_date,     2.5, c2 - 15.5, 1.1);
     caps(line_loc,      2.0, c2 - 21.5, 0.85);
     // inside the flap, under the lace: a small monogram
-    txt(monogram,  4.2,  y3a + 22,  script_font, 0.95);
+    txt(monogram,  4.2,  y3a + 15,  script_font, 0.95);
 }
 // evenly letter-spaced capitals: each glyph placed by its real advance width
 em_k = 1.3563;   // OpenSCAD text(size=1) em width in mm, measured
