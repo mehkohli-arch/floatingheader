@@ -55,7 +55,7 @@ y1a = 0;          y1b = P1h;
 y2a = P1h + g1;   y2b = y2a + P2h;
 y3a = y2b + g2;   y3r = y3a + P3rect;   y3t = y3a + P3h;
 Ytot = y3t;
-seal_r = 12.5;  seal_c = [0, y3t - seal_r];
+seal_r = 13.5;  seal_c = [0, y3t - seal_r];   // lace medallion at the flap tip
 
 // paper details card, tucked into four corner slits on P1
 insert_w = 127;  insert_h = 63.5;   // 5 x 2.5 in
@@ -245,15 +245,74 @@ module sheet_outline() {
         lace("strip");
         for (c=corners) translate(c) square(2*rose_r + 0.02, center=true);
     }
-    translate(seal_c) circle(seal_r, $fn=96);   // round tip under the seal
-    seal_blob();
+    medallion("disc");
     intersection() {
         union() { lace("scallop"); rosettes("disc"); }
         union() { offset(0.7) p1(); offset(0.7) p2(); offset(0.7) p3(); }
     }
 }
 
+// ---------------- lace fields ----------------
+// open-petal desert flower: 8 outer petals with open centres, 5 inner petals,
+// a pierced heart. inner=true gives the openings.
+module desert_flower(r, inner=false) {
+    if (!inner) {
+        for (a=[0:45:359]) rotate(a + 22.5) translate([r*0.55, 0]) scale([r*0.45, r*0.21]) circle(1, $fn=32);
+        for (a=[0:72:359]) rotate(a) translate([r*0.28, 0]) scale([r*0.24, r*0.15]) circle(1, $fn=24);
+    } else {
+        for (a=[0:45:359]) rotate(a + 22.5) translate([r*0.64, 0]) scale([r*0.27, r*0.095]) circle(1, $fn=24);
+        for (a=[0:72:359]) rotate(a + 36) translate([r*0.40, 0]) circle(d=0.75, $fn=10);
+        circle(d=0.9, $fn=12);
+    }
+}
+// open leaf: outline with a lens-shaped opening
+module open_leaf(l, w, inner=false) { if (!inner) leaf(l, w); else translate([l*0.2, 0]) leaf(l*0.6, w - 1.3); }
+// a scrolling vine that ends in a curl, with open leaves and buds along it
+function curl_pts(p0, len, rise, turns, dir) = concat(
+    [for (t=[0:0.05:1.001]) p0 + [dir*len*t, rise*sin(t*180)*0.6 + rise*t*0.4]],
+    [for (a=[0:20:turns*360]) let(rr = 2.6*(1 - a/(turns*400)))
+        p0 + [dir*len, rise] + [dir*(rr*sin(a)), rr*(1 - cos(a))*0.9 - 0.0]]);
+module vine_scroll(p0, len, rise, dir, inner=false) {
+    pts = curl_pts(p0, len, rise, 0.85, dir);
+    if (!inner) stroke(pts, 0.7);
+    for (k=[0.25, 0.55, 0.8]) let(i = floor(k*20), q = pts[i], up = (k*100) % 2 < 1 ? 1 : -1)
+        translate(q) rotate(dir > 0 ? (k < 0.5 ? 70 : -60) : (k < 0.5 ? 110 : 240)) open_leaf(3.4, 2.4, inner);
+    if (!inner) for (k=[0.4, 0.68]) translate(pts[floor(k*20)] + [0, 1.8]) circle(d=1.4, $fn=14);
+}
+// the flap: everything inside the two lace borders, above the fold
+module flap_field() difference() {
+    intersection() {
+        offset(-(lace_w + 2.4)) p3v();
+        translate([-X, y3a + 4.5]) square([PW, P3h]);
+    }
+    translate(seal_c) circle(seal_r + 2.2);
+}
+fc = [0, y3a + 13.5];   // centre flower on the flap
+module flap_motifs(inner=false) {
+    translate(fc) desert_flower(6.6, inner);
+    for (d=[-1,1]) {
+        vine_scroll(fc + [d*6.2, -1.8], 15, 1.5, d, inner);
+        translate(fc + [d*25, -6.5]) desert_flower(3.6, inner);
+        vine_scroll(fc + [d*28, -6.5], 7, 1.2, d, inner);
+    }
+}
+// the bottom panel (envelope front): allover net with small sprigs, solid pads
+// around the card slits and the snap stud
+p1f = [X - lace_w - 2.4, lace_w + 2.4, y1b - fold_rim - 1.5];
+module p1_field() difference() {
+    translate([-p1f[0], p1f[1]]) square([2*p1f[0], p1f[2] - p1f[1]]);
+    slit_pads();
+    translate(stud_c) circle(5.2);
+}
+module sprig_at(inner=false) { lace_blossom(2.5, 5, inner); if (!inner) for (s=[-1,1]) rotate(-90 + s*35) translate([2.2, 0]) leaf(2.0, 0.9); }
+module p1_motifs(inner=false) for (j=[0:4], i=[-5:5]) let(p = [i*12.5 + (j%2)*6.25, p1f[1] + 5 + j*11.5])
+    if (abs(p[0]) < p1f[0] - 3 && p[1] < p1f[2] - 3 && norm(p - stud_c) > 9) translate(p) rotate((i + j)*25) sprig_at(inner);
+
 // corner slits for the paper card
+module slit_pads() for (sx=[-1,1], sy=[-1,1]) {
+    c = [sx*insert_w/2, insert_cy + sy*insert_h/2];
+    hull() { translate(c + [-sx*(slit_d + 1.6), 0]) circle(3); translate(c + [0, -sy*(slit_d + 1.6)]) circle(3); }
+}
 module slits() for (sx=[-1,1], sy=[-1,1]) {
     c = [sx*insert_w/2, insert_cy + sy*insert_h/2];
     a = c + [-sx*(slit_d + 1.6), 0];  b = c + [0, -sy*(slit_d + 1.6)];
@@ -276,8 +335,33 @@ module through() {
         }
     }
     rosettes("holes");
+    // full-lace flap
+    difference() { intersection() { flap_field(); net_holes(-X, X, y3a, Ytot); } flap_motifs(); }
+    intersection() { flap_field(); flap_motifs(true); }
+    // lace front panel
+    difference() { intersection() { p1_field(); net_holes(-X, X, 0, y1b); } p1_motifs(); }
+    intersection() { p1_field(); p1_motifs(true); }
+    medallion("holes");
     slits();
-    translate(seal_c) circle(d=bore_d, $fn=40);
+}
+
+// raised cordonnet: a thin ridge tracing every motif and opening, printed on
+// the top face (the outside of the closed envelope), like the corded outline
+// of Alencon lace
+cord_w = 0.55;  cord_h = 0.4;
+module ring_out(w) difference() { offset(w) children(); children(); }
+module ring_in(w)  difference() { children(); offset(-w) children(); }
+module cordonnet() intersection() {
+    sheet2d();
+    union() {
+        ring_out(cord_w) { lace("holes"); rosettes("holes"); medallion("holes");
+                           intersection() { keep_off_folds(); lace("motif_holes"); } }
+        ring_in(cord_w) intersection() { keep_off_folds(); lace("motifs"); }
+        ring_in(cord_w) intersection() { flap_field(); flap_motifs(); }
+        ring_out(cord_w) intersection() { flap_field(); flap_motifs(true); }
+        ring_in(cord_w) intersection() { p1_field(); p1_motifs(); }
+        ring_in(cord_w + 0.1) union() { lace("scallop"); rosettes("disc"); medallion("disc"); }
+    }
 }
 
 // lettering engraved into the inside face: small, widely spaced capitals,
@@ -290,8 +374,6 @@ module lettering() offset(r=text_grow) {
     caps(upper(name_2), 3.3, c2 - 2,    1.25);
     caps(line_date,     2.5, c2 - 15.5, 1.1);
     caps(line_loc,      2.0, c2 - 21.5, 0.85);
-    // inside the flap, under the lace: a small monogram
-    translate([0, y3a + 15]) monogram2d(1);
 }
 // evenly letter-spaced capitals: each glyph placed by its real advance width
 em_k = 1.3563;   // OpenSCAD text(size=1) em width in mm, measured
@@ -317,7 +399,10 @@ module engraved() {
 //  3D (print coords: mirror-x of view coords, centred on the bed)
 // ============================================================================
 module to_print() translate([0, -Ytot/2]) mirror([1,0]) children();
-module sheet2d() difference() { sheet_outline(); through(); }
+// the small opening (shrink then grow by 0.02 mm) separates shapes that only
+// touch at a point, so every exported layer is a clean manifold
+module clean() offset(delta=0.02) offset(delta=-0.02) children();
+module sheet2d() clean() difference() { sheet_outline(); through(); }
 
 module hinges2d() {
     translate([-X + 6, y1b - 2.5]) square([PW - 12, g1 + 5]);
@@ -325,46 +410,49 @@ module hinges2d() {
 }
 
 // ============================================================================
-//  WAX SEAL SNAP
-//  The seal sits on the OUTSIDE of the flap tip (the print's top face) and
-//  hides a socket. A split stud on the outside of the bottom panel clicks up
-//  into it when the flap is folded down:
+//  LACE MEDALLION SNAP
+//  The flap tip is a round openwork lace medallion (a little doily). Its
+//  raised centre button carries the monogram and hides a socket; a split stud
+//  on the outside of the bottom panel clicks up into it when the flap closes.
 //
-//    seal (on flap)            heights above the flap's inner face
-//    ┌──────────────┐ 4.4  wax top (edges rounded in two steps)
-//    │  ▒▒ field ▒▒ │ 4.0  pressed field, monogram + beads raised to 4.4
-//    │   ┌──────┐   │ 3.2  socket roof
-//    │   │chamb.│   │ 2.5  chamber  Ø3.9
-//    │  ─┘ neck └─  │ 2.0  neck     Ø2.9  <- the stud's head snaps past this
-//    │   │ bore │   │      bore     Ø3.6  (Ø4.4 lead-in at the very bottom)
-//    └───┘      └───┘ 0
+//    button (on flap tip)      heights above the flap's inner face
+//    ┌────────────┐ 4.2  monogram raised on the button
+//    │  button    │ 3.8  button top (stepped edge)
+//    │  ┌──────┐  │ 3.2  socket roof
+//    │  │chamb.│  │ 2.5  chamber  Ø3.9
+//    │ ─┘ neck └─ │ 2.0  neck     Ø2.9  <- the stud's head snaps past this
+//    │  │ bore │  │      bore     Ø3.6  (Ø4.4 lead-in at the very bottom)
+//    └──┘      └──┘ 0
 //              ▲  stud on the bottom panel: stem Ø2.6, head Ø3.6, split 0.7
 // ============================================================================
-wax_top = 4.4;  field_z = 4.0;  field_r = 7.6;
+hub_r = 6.5;  hub_top = 3.8;  relief_top = 4.2;
 bore_d = 3.6;   lead_d = 4.4;   neck_d = 2.9;  neck_z = [2.0, 2.5];
 chamb_d = 3.9;  chamb_z = [2.5, 3.2];
 stem_d = 2.6;   stem_h = 2.6;   head_d = 3.6;  slot_w = 0.7;
-// where the seal lands on the bottom panel once both folds are closed
+// where the medallion lands on the bottom panel once both folds are closed
 stud_c = [0, 2*(y1b + g1/2) - (2*(y2b + g2/2) - seal_c[1])];
 
-// organic wax outline: a soft irregular blob with a few pooled lobes
-function wax_r(a) = 11.4 + 0.5*sin(3*a + 20) + 0.3*sin(7*a + 75) + 0.18*sin(13*a)
-                  + 1.1*exp(-pow((a - 62)/14, 2)) + 0.8*exp(-pow((a - 205)/11, 2))
-                  + 0.9*exp(-pow((a - 318)/13, 2));
-module seal_blob(o=0) translate(seal_c) offset(o)
-    polygon([for (a=[0:2:358]) wax_r(a)*[cos(a), sin(a)]]);
-
-// relief pressed by the "stamp": beaded border, fine ring, monogram, two sprigs.
-// Drawn rotated 180 deg so it reads upright once the flap folds down.
-module seal_relief() translate(seal_c) rotate(180) mirror([1,0]) {
-    for (a=[0:10:359]) translate((field_r - 0.75)*[cos(a), sin(a)]) circle(d=0.75, $fn=10);
-    difference() { circle(field_r - 1.75); circle(field_r - 2.2); }
-    offset(r=0.08) monogram2d(0.66);
-    for (sx=[-1,1]) translate([0, -2.9]) scale([sx*0.85,0.85]) {
-        stroke([[0.8, 0], [3.4, 0.5]], 0.45);
-        translate([2.0, 0.25]) rotate(40) leaf(1.3, 0.55);
-        translate([3.0, 0.45]) rotate(35) leaf(1.2, 0.5);
+module medallion(mode) translate(seal_c) {
+    if (mode=="disc") { circle(seal_r, $fn=96); for (a=[0:12:359]) translate(seal_r*[cos(a), sin(a)]) circle(0.62, $fn=12); }
+    if (mode=="holes") {
+        for (a=[0:30:359]) rotate(a + 15) translate([hub_r + 0.8, 0]) teardrop(2.6, 0.7, 1.3);
+        for (a=[0:15:359]) translate(11.7*[cos(a), sin(a)]) circle(d=0.75, $fn=12);
+        circle(d=bore_d, $fn=40);
     }
+}
+// monogram raised on the button, drawn rotated 180 deg so it reads upright
+// once the flap is folded down
+module button_art() translate(seal_c) rotate(180) mirror([1,0]) {
+    offset(r=0.06) monogram2d(0.6);
+    difference() { circle(hub_r - 0.7); circle(hub_r - 1.15); }
+}
+module button3d() difference() {
+    union() {
+        translate([0,0,T - 0.01]) linear_extrude(3.4 - T + 0.01) translate(seal_c) circle(hub_r, $fn=72);
+        translate([0,0,3.4]) linear_extrude(hub_top - 3.4) translate(seal_c) circle(hub_r - 0.45, $fn=72);
+        translate([0,0,hub_top - 0.01]) linear_extrude(relief_top - hub_top + 0.01) button_art();
+    }
+    socket3d();
 }
 
 module socket3d() translate([seal_c[0], seal_c[1], 0]) {
@@ -372,16 +460,6 @@ module socket3d() translate([seal_c[0], seal_c[1], 0]) {
     translate([0,0,-1]) cylinder(d=lead_d, h=deboss + 1, $fn=40);
     translate([0,0,neck_z[0] - 0.01]) cylinder(d=neck_d, h=neck_z[1] - neck_z[0] + 0.02, $fn=40);
     translate([0,0,chamb_z[0]]) cylinder(d=chamb_d, h=chamb_z[1] - chamb_z[0], $fn=40);
-}
-
-module seal3d() difference() {
-    union() {
-        translate([0,0,T - 0.01]) linear_extrude(3.6 - T + 0.01) seal_blob();
-        translate([0,0,3.6]) linear_extrude(0.4) seal_blob(-0.6);
-        translate([0,0,4.0]) linear_extrude(0.4) difference() { seal_blob(-1.3); translate(seal_c) circle(field_r, $fn=96); }
-        translate([0,0,field_z - 0.01]) linear_extrude(wax_top - field_z + 0.01) intersection() { seal_relief(); translate(seal_c) circle(field_r); }
-    }
-    socket3d();
 }
 
 module stud3d() translate([stud_c[0], stud_c[1], T - 0.01]) difference() {
@@ -393,10 +471,11 @@ module stud3d() translate([stud_c[0], stud_c[1], T - 0.01]) difference() {
     translate([-slot_w/2, -5, stem_h - 1.2]) cube([slot_w, 10, 5]);     // split so the head can squeeze
 }
 
-if (part == "layer_seal")  to_print() seal3d();
+if (part == "layer_seal")  to_print() button3d();
 if (part == "layer_stud")  to_print() stud3d();
+if (part == "layer_cord")  to_print() translate([0,0,T - 0.01]) linear_extrude(cord_h + 0.01) clean() cordonnet();
 if (part == "layer_face") to_print() linear_extrude(deboss) difference() { sheet2d(); engraved(); translate(seal_c) circle(d=lead_d, $fn=40); }
-if (part == "layer_main") to_print() translate([0,0,deboss]) linear_extrude(T - deboss) sheet2d();
+if (part == "layer_main") to_print() translate([0,0,deboss - 0.02]) linear_extrude(T - deboss + 0.02) sheet2d();
 if (part == "layer_hinge") to_print() linear_extrude(hinge_t) hinges2d();
 if (part == "inlay") to_print() linear_extrude(deboss) intersection() { engraved(); sheet2d(); }
 
@@ -416,11 +495,11 @@ module fold(f) translate([0, 2*f]) mirror([0,1]) children();
 if (part == "2d_closed_back")  p2();                          // middle panel, outside
 if (part == "2d_closed_p1")    fold(f1) sheet2d_p1();
 if (part == "2d_closed_p3")    fold(f2) sheet2d_p3();
-if (part == "2d_closed_seal")  fold(f2) seal_blob();
-if (part == "2d_closed_seal2") fold(f2) seal_blob(-0.6);
-if (part == "2d_closed_seal3") fold(f2) difference() { seal_blob(-1.3); translate(seal_c) circle(field_r); }
-if (part == "2d_closed_field") fold(f2) translate(seal_c) circle(field_r);
-if (part == "2d_closed_sealart") fold(f2) intersection() { seal_relief(); translate(seal_c) circle(field_r); }
+if (part == "2d_closed_cord1") fold(f1) intersection() { cordonnet(); translate([-X-5, -5]) square([PW+10, y1b + 5]); }
+if (part == "2d_closed_cord3") fold(f2) intersection() { cordonnet(); translate([-X-5, y3a]) square([PW+10, P3h + 5]); }
+if (part == "2d_closed_button") fold(f2) translate(seal_c) circle(hub_r, $fn=72);
+if (part == "2d_closed_button2") fold(f2) translate(seal_c) circle(hub_r - 0.45, $fn=72);
+if (part == "2d_closed_buttonart") fold(f2) button_art();
 module sheet2d_p1() intersection() { sheet2d(); translate([-X-5, -5]) square([PW+10, y1b + 5]); }
 module sheet2d_p3() intersection() { sheet2d(); translate([-X-5, y3a]) square([PW+10, P3h + 5]); }
 

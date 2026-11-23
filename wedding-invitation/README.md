@@ -8,22 +8,17 @@ One 3D-printed lace sheet that **folds into its own envelope** and **opens into 
   - **Middle panel:** six short lines of small, evenly spaced gold capitals with one script "&" and a gold hairline, surrounded by plenty of white space.
   - **Bottom panel:** four corner slits hold a **5 × 2½ in paper details card**.
 
-| Closed | Opened | Wax-seal snap | Lace close-up |
+| Closed | Opened | Medallion snap | Lace close-up |
 |---|---|---|---|
-| ![](renders/closed.png) | ![](renders/open.png) | ![](renders/seal_closeup.png) | ![](renders/lace_detail.png) |
+| ![](renders/closed.png) | ![](renders/open.png) | ![](renders/medallion_closeup.png) | ![](renders/lace_detail.png) |
 
-## The wax-seal snap
-The seal is a working closure, not a decoration.
-- **Look:** it's modeled as pressed wax: an irregular pooled blob with softly rounded edges, a pressed field with a beaded border, and a raised M & M with two small sprigs.
-- **Socket:** a hidden socket inside the seal has a narrow neck.
-- **Stud:** a split stud stands about 3.3 mm up from the outside of the bottom panel.
-- **Closing:** when you fold the flap down, the stud's head squeezes through the neck and clicks into place. Pull the seal up firmly to open it.
-
-The clearances are in the ENVELOPE / WAX SEAL SNAP section of `invitation.scad`:
+## The lace medallion snap
+The flap tip is a round openwork lace medallion, a little doily. Its raised center button carries the M & M
+and hides a socket with a narrow neck. A split stud stands about 3.3 mm up from the outside of the bottom panel.
+When you fold the flap down, the stud **clicks** into the button. Pull the medallion up firmly to open it.
+The clearances are in the LACE MEDALLION SNAP section of `invitation.scad`:
 - Neck Ø2.9 mm against a Ø3.6 mm head with a 0.7 mm split.
 - If your printer makes the snap too tight, raise `neck_d` by 0.1 mm. If it's too loose, lower it by 0.1 mm.
-
-**Wax colour:** the seal and stud are the only things above 1.2 mm. Add a **filament change at 1.2 mm (start of layer 7)** to print the seal in a wax colour, such as deep red, terracotta, dusty rose or gold silk, while the lace stays ivory.
 
 ## The lace
 The border is built the way real Chantilly-style lace is, working from the outer edge inward:
@@ -32,6 +27,16 @@ The border is built the way real Chantilly-style lace is, working from the outer
 3. **Inner edge:** a solid line finished with a beaded row of tiny holes.
 
 Large lace rosettes finish the two bottom corners.
+
+The **whole flap** is lace: an open-petal desert flower in the center, with scrolling vines, open leaves,
+buds and smaller flowers trailing to each side, all on fine net.
+The **bottom panel**, which is the envelope front when closed, is allover net scattered with small flower sprigs,
+so the details card shows through it like a lining.
+Every motif and opening has a **raised outline** (0.55 mm wide, 0.4 mm tall) on the outside surface.
+This is the corded outline that gives Alençon lace its dimensional look.
+
+**Optional gold outlines:** only the raised outlines, the medallion button and the stud sit above 1.2 mm.
+Add a **filament change at 1.2 mm (start of layer 7)** to a gold silk filament for gold-outlined ivory lace.
 Every printed strand is at least about 0.45 mm wide, so it prints with a 0.4 mm nozzle.
 
 ## Design notes
