@@ -2,7 +2,7 @@
 
 One 3D-printed lace sheet that **folds into its own envelope** and **opens into a full-page invitation**.
 
-- **Folded:** 6½ × 3½ in (165 × 90 mm), about the size of a #6¾ envelope, closed with a monogram wax seal.
+- **Folded:** 6½ × 3½ in (165 × 90 mm), about the size of a #6¾ envelope, closed with a lace medallion that snaps shut.
 - **Opened:** a 6½ × 9¾ in page (166 × 247 mm) with a Chantilly-style lace border on every outer edge. It has three panels:
   - **Top flap:** the pointed flap, with the lace running up both sides to a round tip where the seal sits.
   - **Middle panel:** six short lines of small, evenly spaced gold capitals with one script "&" and a gold hairline, surrounded by plenty of white space.
@@ -54,7 +54,7 @@ Every printed strand is at least about 0.45 mm wide, so it prints with a 0.4 mm 
 - **Bed:** the sheet is 166 × 247 mm, so it fits 250 × 250 mm and 256 × 256 mm beds. Print it as exported, **inside face down**. No supports are needed.
 - **Material:** PETG is best for the two fold hinges. PLA works if you make the first folds slowly. Warming the hinge with a hair dryer helps.
 - **Settings:** 0.4 mm nozzle, 0.2 mm layers (the hinges are the first two layers, 0.4 mm), 100% infill, Arachne / variable line width. Turn on **ironing** for the top surface, because that becomes the outside of the envelope.
-- **Gold lettering:** with an AMS / MMU, load both STLs as one object and assign gold to the inlay. On a one-colour printer, skip the inlay and rub gold wax (for example Rub 'n Buff) into the lettering and over the raised seal.
+- **Gold lettering:** with an AMS / MMU, load both STLs as one object and assign gold to the inlay. On a one-colour printer, skip the inlay and rub gold wax (for example Rub 'n Buff) into the lettering and over the raised outlines.
 
 ## Folding
 1. Tuck the corners of the paper details card into the four slits on the bottom panel.
