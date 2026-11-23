@@ -170,11 +170,14 @@ module p3x() union() { p3(); translate([-X, y3a - 30]) square([PW, 30 + P3rect])
 // ---------------- the lace border ----------------
 // lace edges: [from, to, margin at start, margin at end, a point inside the page]
 function vtan(sx) = let(P=[sx*X, y3r], L=sqrt(pow(norm(seal_c-P),2) - seal_r*seal_r)) P + vdir(sx)*L;
+// distance along the V edge at which a scallop clears the medallion by 1 mm
+med_gap = sqrt(pow(seal_r + sr + 1, 2) - pow(seal_r - sr, 2));
 lace_edges = [
     [[-X, 0],   [X, 0],      2*rose_r, 2*rose_r, [0, 30]],                 // bottom
     [[-X, 0],   [-X, y1b],   2*rose_r, 0, [0, 40]],  [[X, 0], [X, y1b], 2*rose_r, 0, [0, 40]],
     [[-X, y2a], [-X, y2b],   0, 0, [0, y2a+40]],     [[X, y2a], [X, y2b], 0, 0, [0, y2a+40]],
-    [[-X, y3a], vtan(-1),    0, 0, [0, y3a+15]],     [[X, y3a], vtan(1),  0, 0, [0, y3a+15]]
+    // the flap's lace stops with a whole scallop just short of the medallion
+    [[-X, y3a], vtan(-1),    0, med_gap, [0, y3a+15]],     [[X, y3a], vtan(1),  0, med_gap, [0, y3a+15]]
 ];
 corners = [[-X + rose_r, rose_r], [X - rose_r, rose_r]];
 
@@ -193,9 +196,11 @@ function e_len(e) = norm(e[1] - e[0]) - e[2] - e[3];
 module teardrop(l, w0, w1) hull() { circle(d=w0, $fn=12); translate([l,0]) circle(d=w1, $fn=16); }
 
 // one edge's worth of lace, in local coordinates; `mode` picks the layer
-module lace_run(L, mode) {
+// tail = extra length past the last scallop (used where the flap lace meets the
+// medallion): the edge line, net and beading continue there, scallops do not
+module lace_run(L, mode, tail=0) {
     n = max(1, round(L/unit));  U = L/n;
-    if (mode=="strip") translate([-0.01, -2]) square([L + 0.02, sr + 2]);
+    if (mode=="strip") translate([-0.01, -2]) square([L + tail + 0.02, sr + 2]);
     for (k=[0:n-1]) translate([U*(k+0.5), 0]) {
         if (mode=="scallop") translate([0, sr]) {
             circle(sr, $fn=48);
@@ -218,10 +223,10 @@ module lace_run(L, mode) {
         if (mode=="motifs") lace_blossom(2.75, 5);
         if (mode=="motif_holes") rotate(k*36) lace_blossom(2.75, 5, true);
     }
-    if (mode=="net") translate([0, sr + 0.7]) square([L, lace_w - 1.2 - sr - 0.7]);
-    if (mode=="beads") for (x=[1.1:2.2:L-0.5]) translate([x, lace_w + 0.9]) circle(d=0.75, $fn=10);
+    if (mode=="net") translate([0, sr + 0.7]) square([L + tail, lace_w - 1.2 - sr - 0.7]);
+    if (mode=="beads") for (x=[1.1:2.2:L + tail - 0.5]) translate([x, lace_w + 0.9]) circle(d=0.75, $fn=10);
 }
-module lace(mode) for (e=lace_edges) on_edge(e) lace_run(e_len(e), mode);
+module lace(mode) for (e=lace_edges) on_edge(e) lace_run(e_len(e), mode, e[3] == med_gap ? med_gap : 0);
 
 module rosette(mode) {
     if (mode=="disc") { circle(rose_r, $fn=72); for (a=[0:15:359]) translate(rose_r*[cos(a), sin(a)]) circle(0.62, $fn=12); }
@@ -236,7 +241,7 @@ module rosettes(mode) for (c=corners) translate(c) rosette(mode);
 module keep_off_folds() union() {
     translate([-X, y1a]) square([PW, P1h - fold_rim]);
     translate([-X, y2a + fold_rim]) square([PW, P2h - 2*fold_rim]);
-    difference() { translate([-X, y3a + fold_rim]) square([PW, P3h]); translate(seal_c) circle(seal_r + 1.5); }
+    difference() { translate([-X, y3a + fold_rim]) square([PW, P3h]); translate(seal_c) circle(seal_r + 3); }
 }
 
 module sheet_outline() {
@@ -285,7 +290,7 @@ module flap_field() difference() {
         offset(-(lace_w + 2.4)) p3v();
         translate([-X, y3a + 4.5]) square([PW, P3h]);
     }
-    translate(seal_c) circle(seal_r + 2.2);
+    translate(seal_c) circle(seal_r + 5);
 }
 fc = [0, y3a + 13.5];   // centre flower on the flap
 module flap_motifs(inner=false) {
@@ -306,7 +311,7 @@ module p1_field() difference() {
 }
 module sprig_at(inner=false) { lace_blossom(2.5, 5, inner); if (!inner) for (s=[-1,1]) rotate(-90 + s*35) translate([2.2, 0]) leaf(2.0, 0.9); }
 module p1_motifs(inner=false) for (j=[0:4], i=[-5:5]) let(p = [i*12.5 + (j%2)*6.25, p1f[1] + 5 + j*11.5])
-    if (abs(p[0]) < p1f[0] - 3 && p[1] < p1f[2] - 3 && norm(p - stud_c) > 9) translate(p) rotate((i + j)*25) sprig_at(inner);
+    if (abs(p[0]) < p1f[0] - 3 && p[1] < p1f[2] - 3 && norm(p - stud_c) > seal_r + 4.5) translate(p) rotate((i + j)*25) sprig_at(inner);
 
 // corner slits for the paper card
 module slit_pads() for (sx=[-1,1], sy=[-1,1]) {
@@ -361,6 +366,7 @@ module cordonnet() intersection() {
         ring_out(cord_w) intersection() { flap_field(); flap_motifs(true); }
         ring_in(cord_w) intersection() { p1_field(); p1_motifs(); }
         ring_in(cord_w + 0.1) union() { lace("scallop"); rosettes("disc"); medallion("disc"); }
+        translate(seal_c) difference() { circle(seal_r + 2.9, $fn=96); circle(seal_r + 2.9 - cord_w, $fn=96); }   // collar
     }
 }
 
