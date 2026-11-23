@@ -8,9 +8,22 @@ One 3D-printed lace sheet that **folds into its own envelope** and **opens into 
   - **Middle panel:** six short lines of small, evenly spaced gold capitals with one script "&" and a gold hairline, surrounded by plenty of white space.
   - **Bottom panel:** four corner slits hold a **5 × 2½ in paper details card**.
 
-| Closed | Opened | Lace close-up |
-|---|---|---|
-| ![](renders/closed.png) | ![](renders/open.png) | ![](renders/lace_detail.png) |
+| Closed | Opened | Wax-seal snap | Lace close-up |
+|---|---|---|---|
+| ![](renders/closed.png) | ![](renders/open.png) | ![](renders/seal_closeup.png) | ![](renders/lace_detail.png) |
+
+## The wax-seal snap
+The seal is a working closure, not a decoration.
+- **Look:** it's modeled as pressed wax: an irregular pooled blob with softly rounded edges, a pressed field with a beaded border, and a raised M & M with two small sprigs.
+- **Socket:** a hidden socket inside the seal has a narrow neck.
+- **Stud:** a split stud stands about 3.3 mm up from the outside of the bottom panel.
+- **Closing:** when you fold the flap down, the stud's head squeezes through the neck and clicks into place. Pull the seal up firmly to open it.
+
+The clearances are in the ENVELOPE / WAX SEAL SNAP section of `invitation.scad`:
+- Neck Ø2.9 mm against a Ø3.6 mm head with a 0.7 mm split.
+- If your printer makes the snap too tight, raise `neck_d` by 0.1 mm. If it's too loose, lower it by 0.1 mm.
+
+**Wax colour:** the seal and stud are the only things above 1.2 mm. Add a **filament change at 1.2 mm (start of layer 7)** to print the seal in a wax colour, such as deep red, terracotta, dusty rose or gold silk, while the lace stays ivory.
 
 ## The lace
 The border is built the way real Chantilly-style lace is, working from the outer edge inward:
@@ -41,7 +54,7 @@ Every printed strand is at least about 0.45 mm wide, so it prints with a 0.4 mm 
 ## Folding
 1. Tuck the corners of the paper details card into the four slits on the bottom panel.
 2. Fold the **bottom panel up** over the middle panel.
-3. Fold the **top flap down** over it. Hold it shut with a small removable glue dot under the seal.
+3. Fold the **top flap down** over it and press on the seal until it **clicks**.
 
 Once closed, the tips of the details card show in the bottom corners of the envelope front.
 It's a nice touch if the card is a colour (blush or terracotta).

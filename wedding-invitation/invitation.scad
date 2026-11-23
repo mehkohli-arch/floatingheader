@@ -55,7 +55,7 @@ y1a = 0;          y1b = P1h;
 y2a = P1h + g1;   y2b = y2a + P2h;
 y3a = y2b + g2;   y3r = y3a + P3rect;   y3t = y3a + P3h;
 Ytot = y3t;
-seal_r = 12.5;  seal_c = [0, y3t - seal_r];  seal_t = 1.9;  relief = 0.45;
+seal_r = 12.5;  seal_c = [0, y3t - seal_r];
 
 // paper details card, tucked into four corner slits on P1
 insert_w = 127;  insert_h = 63.5;   // 5 x 2.5 in
@@ -245,7 +245,8 @@ module sheet_outline() {
         lace("strip");
         for (c=corners) translate(c) square(2*rose_r + 0.02, center=true);
     }
-    translate(seal_c) circle(seal_r, $fn=96);   // clean round tip under the seal
+    translate(seal_c) circle(seal_r, $fn=96);   // round tip under the seal
+    seal_blob();
     intersection() {
         union() { lace("scallop"); rosettes("disc"); }
         union() { offset(0.7) p1(); offset(0.7) p2(); offset(0.7) p3(); }
@@ -276,6 +277,7 @@ module through() {
     }
     rosettes("holes");
     slits();
+    translate(seal_c) circle(d=bore_d, $fn=40);
 }
 
 // lettering engraved into the inside face: small, widely spaced capitals,
@@ -322,19 +324,80 @@ module hinges2d() {
     translate([-X + 6, y2b - 2.5]) square([PW - 12, g2 + 5]);
 }
 
-// wax-seal medallion on the OUTSIDE of the flap (the print's top face).
-// Art is drawn rotated 180 degrees so it reads upright once the flap folds down.
-module seal_disc() translate(seal_c)
-    polygon([for (a=[0:3:357]) let(r = seal_r + 0.45*sin(7*a) + 0.25*sin(13*a+40)) [r*cos(a), r*sin(a)]]);
-module seal_art() translate(seal_c) rotate(180) mirror([1,0]) {
-    difference() { circle(r=seal_r-1.8); circle(r=seal_r-2.4); }
-    offset(r=0.1) monogram2d(0.95);
+// ============================================================================
+//  WAX SEAL SNAP
+//  The seal sits on the OUTSIDE of the flap tip (the print's top face) and
+//  hides a socket. A split stud on the outside of the bottom panel clicks up
+//  into it when the flap is folded down:
+//
+//    seal (on flap)            heights above the flap's inner face
+//    ┌──────────────┐ 4.4  wax top (edges rounded in two steps)
+//    │  ▒▒ field ▒▒ │ 4.0  pressed field, monogram + beads raised to 4.4
+//    │   ┌──────┐   │ 3.2  socket roof
+//    │   │chamb.│   │ 2.5  chamber  Ø3.9
+//    │  ─┘ neck └─  │ 2.0  neck     Ø2.9  <- the stud's head snaps past this
+//    │   │ bore │   │      bore     Ø3.6  (Ø4.4 lead-in at the very bottom)
+//    └───┘      └───┘ 0
+//              ▲  stud on the bottom panel: stem Ø2.6, head Ø3.6, split 0.7
+// ============================================================================
+wax_top = 4.4;  field_z = 4.0;  field_r = 7.6;
+bore_d = 3.6;   lead_d = 4.4;   neck_d = 2.9;  neck_z = [2.0, 2.5];
+chamb_d = 3.9;  chamb_z = [2.5, 3.2];
+stem_d = 2.6;   stem_h = 2.6;   head_d = 3.6;  slot_w = 0.7;
+// where the seal lands on the bottom panel once both folds are closed
+stud_c = [0, 2*(y1b + g1/2) - (2*(y2b + g2/2) - seal_c[1])];
+
+// organic wax outline: a soft irregular blob with a few pooled lobes
+function wax_r(a) = 11.4 + 0.5*sin(3*a + 20) + 0.3*sin(7*a + 75) + 0.18*sin(13*a)
+                  + 1.1*exp(-pow((a - 62)/14, 2)) + 0.8*exp(-pow((a - 205)/11, 2))
+                  + 0.9*exp(-pow((a - 318)/13, 2));
+module seal_blob(o=0) translate(seal_c) offset(o)
+    polygon([for (a=[0:2:358]) wax_r(a)*[cos(a), sin(a)]]);
+
+// relief pressed by the "stamp": beaded border, fine ring, monogram, two sprigs.
+// Drawn rotated 180 deg so it reads upright once the flap folds down.
+module seal_relief() translate(seal_c) rotate(180) mirror([1,0]) {
+    for (a=[0:10:359]) translate((field_r - 0.75)*[cos(a), sin(a)]) circle(d=0.75, $fn=10);
+    difference() { circle(field_r - 1.75); circle(field_r - 2.2); }
+    offset(r=0.08) monogram2d(0.66);
+    for (sx=[-1,1]) translate([0, -2.9]) scale([sx*0.85,0.85]) {
+        stroke([[0.8, 0], [3.4, 0.5]], 0.45);
+        translate([2.0, 0.25]) rotate(40) leaf(1.3, 0.55);
+        translate([3.0, 0.45]) rotate(35) leaf(1.2, 0.5);
+    }
 }
 
-if (part == "layer_face") to_print() linear_extrude(deboss) difference() { sheet2d(); engraved(); }
+module socket3d() translate([seal_c[0], seal_c[1], 0]) {
+    translate([0,0,-1]) cylinder(d=bore_d, h=neck_z[0] + 1, $fn=40);
+    translate([0,0,-1]) cylinder(d=lead_d, h=deboss + 1, $fn=40);
+    translate([0,0,neck_z[0] - 0.01]) cylinder(d=neck_d, h=neck_z[1] - neck_z[0] + 0.02, $fn=40);
+    translate([0,0,chamb_z[0]]) cylinder(d=chamb_d, h=chamb_z[1] - chamb_z[0], $fn=40);
+}
+
+module seal3d() difference() {
+    union() {
+        translate([0,0,T - 0.01]) linear_extrude(3.6 - T + 0.01) seal_blob();
+        translate([0,0,3.6]) linear_extrude(0.4) seal_blob(-0.6);
+        translate([0,0,4.0]) linear_extrude(0.4) difference() { seal_blob(-1.3); translate(seal_c) circle(field_r, $fn=96); }
+        translate([0,0,field_z - 0.01]) linear_extrude(wax_top - field_z + 0.01) intersection() { seal_relief(); translate(seal_c) circle(field_r); }
+    }
+    socket3d();
+}
+
+module stud3d() translate([stud_c[0], stud_c[1], T - 0.01]) difference() {
+    union() {
+        cylinder(d=stem_d, h=stem_h + 0.01, $fn=40);
+        translate([0,0,stem_h]) cylinder(d1=stem_d, d2=head_d, h=0.2, $fn=40);
+        translate([0,0,stem_h + 0.2]) cylinder(d1=head_d, d2=2.3, h=0.55, $fn=40);
+    }
+    translate([-slot_w/2, -5, stem_h - 1.2]) cube([slot_w, 10, 5]);     // split so the head can squeeze
+}
+
+if (part == "layer_seal")  to_print() seal3d();
+if (part == "layer_stud")  to_print() stud3d();
+if (part == "layer_face") to_print() linear_extrude(deboss) difference() { sheet2d(); engraved(); translate(seal_c) circle(d=lead_d, $fn=40); }
 if (part == "layer_main") to_print() translate([0,0,deboss]) linear_extrude(T - deboss) sheet2d();
 if (part == "layer_hinge") to_print() linear_extrude(hinge_t) hinges2d();
-if (part == "layer_seal") to_print() { linear_extrude(seal_t) seal_disc(); translate([0,0,seal_t]) linear_extrude(relief) seal_art(); }
 if (part == "inlay") to_print() linear_extrude(deboss) intersection() { engraved(); sheet2d(); }
 
 // ---------------- 2D views for the previews ----------------
@@ -353,7 +416,24 @@ module fold(f) translate([0, 2*f]) mirror([0,1]) children();
 if (part == "2d_closed_back")  p2();                          // middle panel, outside
 if (part == "2d_closed_p1")    fold(f1) sheet2d_p1();
 if (part == "2d_closed_p3")    fold(f2) sheet2d_p3();
-if (part == "2d_closed_seal")  fold(f2) seal_disc();
-if (part == "2d_closed_sealart") fold(f2) seal_art();
+if (part == "2d_closed_seal")  fold(f2) seal_blob();
+if (part == "2d_closed_seal2") fold(f2) seal_blob(-0.6);
+if (part == "2d_closed_seal3") fold(f2) difference() { seal_blob(-1.3); translate(seal_c) circle(field_r); }
+if (part == "2d_closed_field") fold(f2) translate(seal_c) circle(field_r);
+if (part == "2d_closed_sealart") fold(f2) intersection() { seal_relief(); translate(seal_c) circle(field_r); }
 module sheet2d_p1() intersection() { sheet2d(); translate([-X-5, -5]) square([PW+10, y1b + 5]); }
 module sheet2d_p3() intersection() { sheet2d(); translate([-X-5, y3a]) square([PW+10, P3h + 5]); }
+
+// cutaway of the snap, closed: flap tip (with seal) lying on the bottom panel
+if (part == "snap_cutaway") difference() {
+    union() {
+        color([0.97,0.95,0.90]) translate([0,0,T]) mirror([0,0,1]) translate([-stud_c[0], -stud_c[1], 0]) linear_extrude(T) translate(stud_c) square(26, center=true);
+        color([0.97,0.95,0.90]) translate([-stud_c[0], -stud_c[1], 0]) stud3d();
+        // flap tip, flipped onto the panel (its inner face down on the panel's outer face)
+        translate([0, 0, T]) {
+            color([0.97,0.95,0.90]) translate(-seal_c) difference() { linear_extrude(T) translate(seal_c) square(26, center=true); socket3d(); }
+            color([0.60,0.29,0.23]) translate([-seal_c[0], -seal_c[1], 0]) seal3d();
+        }
+    }
+    translate([-20, 0, -5]) cube([40, 20, 20]);
+}
