@@ -30,7 +30,7 @@ part = "2d_inside";
 // ---------------- wording ----------------
 name_1    = "Meher Kohli";
 name_2    = "Marlon Oras Hidalgo";
-monogram  = "M&M";
+initial_1 = "M";  initial_2 = "M";   // monogram initials
 line_top  = "PLEASE JOIN US FOR THE WEDDING OF";
 line_date = "MAY 20, 2027";
 line_loc  = "VALLEY OF FIRE · LAS VEGAS, NEVADA";
@@ -289,7 +289,7 @@ module lettering() offset(r=text_grow) {
     caps(line_date,     2.5, c2 - 15.5, 1.1);
     caps(line_loc,      2.0, c2 - 21.5, 0.85);
     // inside the flap, under the lace: a small monogram
-    txt(monogram,  4.2,  y3a + 15,  script_font, 0.95);
+    translate([0, y3a + 15]) monogram2d(1);
 }
 // evenly letter-spaced capitals: each glyph placed by its real advance width
 em_k = 1.3563;   // OpenSCAD text(size=1) em width in mm, measured
@@ -299,6 +299,11 @@ module caps(t, size, y, tr) {
     w = tpos(t, size, tr, len(t)) - tr;
     for (i=[0:len(t)-1]) translate([-w/2 + tpos(t, size, tr, i), y - size*0.5])
         text(t[i], size=size, font=caps_font, valign="baseline");
+}
+// clean monogram: two capitals in the text face with a small script "&" between
+module monogram2d(k=1) scale(k) {
+    for (sx=[-1,1]) translate([sx*5.3, 0]) text(sx<0 ? initial_1 : initial_2, size=3.4, font=caps_font, halign="center", valign="center");
+    translate([-0.45, -0.35]) text("&", size=3.6, font=script_font, halign="center", valign="center");
 }
 function upper(t) = chr([for (c=t) let(o=ord(c)) (o>=97 && o<=122) ? o-32 : o]);
 module engraved() {
@@ -323,7 +328,7 @@ module seal_disc() translate(seal_c)
     polygon([for (a=[0:3:357]) let(r = seal_r + 0.45*sin(7*a) + 0.25*sin(13*a+40)) [r*cos(a), r*sin(a)]]);
 module seal_art() translate(seal_c) rotate(180) mirror([1,0]) {
     difference() { circle(r=seal_r-1.8); circle(r=seal_r-2.4); }
-    offset(r=0.1) text(monogram, size=3.8, font=script_font, halign="center", valign="center", spacing=0.95);
+    offset(r=0.1) monogram2d(0.95);
 }
 
 if (part == "layer_face") to_print() linear_extrude(deboss) difference() { sheet2d(); engraved(); }
