@@ -1,32 +1,39 @@
-# Lace wedding invitation: Meher & Marlon, Valley of Fire, May 20, 2027
+# Lace envelope-fold invitation: Meher & Marlon, Valley of Fire, May 20, 2027
 
-A flat, 3D-printed lace invitation sized to slip into a standard **A6 envelope (4¾ × 6½ in)**.
-- **Card:** 4½ × 6¼ in (114 × 159 mm) and 2.8 mm thick at the pockets.
-- **Front:** fine tulle-net lace with a cut-work floral vine, a scalloped picot edge, and an arched center panel with gold lettering.
-- **Back:** four corner pockets hold a **3½ × 5 in** paper details card.
+One 3D-printed lace sheet that **folds into its own envelope** and **opens into a full-page invitation**.
 
-| Front | Back with the details card | Pocket |
+- **Folded:** 6½ × 3½ in (165 × 90 mm), about the size of a #6¾ envelope, closed with a monogram wax seal.
+- **Opened:** a 6½ × 9¾ in page (168 × 248 mm). It has three panels:
+  - **Top flap:** the M & M monogram wreath on the inside, with the seal on the outside.
+  - **Middle panel:** the names, date and venue in gold.
+  - **Bottom panel:** four corner slits hold a **5 × 2½ in paper details card**.
+
+| Closed | Opened | As printed |
 |---|---|---|
-| ![](renders/front.png) | ![](renders/back.png) | ![](renders/pocket_closeup.png) |
+| ![](renders/closed.png) | ![](renders/open.png) | ![](renders/print_flat.png) |
 
 ## Files
-- `stl/invitation_body.stl`: the card (ivory / white)
-- `stl/invitation_inlay_gold.stl`: optional 0.6 mm inlay that fills the engraved lettering (gold)
-- `invitation.scad`: editable source (wording, card size, insert size, lace)
-- `tools/build.sh`: rebuilds the STLs (OpenSCAD plus `pip install manifold3d trimesh`)
-- `tools/previews.sh`: rebuilds `renders/front.png` (Node and Playwright)
+- `stl/envelope_invitation_body.stl`: the whole sheet (ivory / white), one piece
+- `stl/envelope_invitation_inlay_gold.stl`: optional 0.6 mm gold inlay for the lettering
+- `invitation.scad`: editable source (wording, panel sizes, card size)
+- `tools/build.sh`: rebuilds the STLs. `tools/previews.sh` rebuilds the images.
 
 ## Printing
-- Print the card **face-down**, exactly as the STL is oriented. No supports are needed.
-- Use a 0.4 mm nozzle, 0.2 mm layers, 100% infill, and Arachne / variable line width. The lace threads are about 0.63 mm wide.
-- **Two colours (AMS / MMU):** load both STLs as one object, with ivory for the body and gold for the inlay.
-- **One colour:** print only the body. Optionally rub gold wax (for example Rub 'n Buff) into the engraving.
-- A smooth plate gives a satin face. A textured plate gives a sparkle face.
+- **Bed:** the sheet is 168 × 248 mm, so it fits 250 × 250 mm and 256 × 256 mm beds. Print it as exported, **inside face down**. No supports are needed.
+- **Material:** PETG is best for the two fold hinges. PLA works if you make the first folds slowly. Warming the hinge with a hair dryer helps.
+- **Settings:** 0.4 mm nozzle, 0.2 mm layers (the hinges are the first two layers, 0.4 mm), 100% infill, Arachne / variable line width. Turn on **ironing** for the top surface, because that becomes the outside of the envelope.
+- **Gold lettering:** with an AMS / MMU, load both STLs as one object and assign gold to the inlay. On a one-colour printer, skip the inlay and rub gold wax (for example Rub 'n Buff) into the lettering and over the raised seal.
 
-## Envelope
-The card fits an A6 envelope with about ⅛ in to spare on each side. Because the card is rigid, US mail charges a
-non-machinable surcharge, so ask for hand-canceling or mail the envelopes inside an outer box.
-For a different envelope, change `W`, `H`, `insert_w` and `insert_h` in `invitation.scad`. For example,
-an A7 envelope (5¼ × 7¼ in) takes a 5 × 7 in card with a 4 × 6 in insert.
+## Folding
+1. Tuck the corners of the paper details card into the four slits on the bottom panel.
+2. Fold the **bottom panel up** over the middle panel.
+3. Fold the **top flap down** over it. Hold it shut with a small removable glue dot under the seal.
+
+Once closed, the tips of the details card show in the bottom corners of the envelope front.
+It's a nice touch if the card is a colour (blush or terracotta).
+
+## Mailing
+It's rigid and a little under 4 mm thick when closed, so in the US it needs the non-machinable surcharge.
+You can also put it inside a 7 × 4 in outer envelope or a padded mailer.
 
 Fonts: Great Vibes and Cinzel (SIL Open Font License, Google Fonts).
